@@ -1,0 +1,25 @@
+CACHE MANIFEST
+# 2016-03-15 v1.0.0
+res/login.png
+res/title.png
+res/messagebox.png
+res/regAndLoginButton.png
+res/loginbutton.png
+res/btnSellEnable.png
+res/sell_p.png
+res/btnCloseSell.png
+res/btnBuyEnable.png
+res/btnCloseBuy.png
+res/rotate_shadow.png
+res/load-bg.png
+res/btnSellDisable.png
+res/btnBuyDisable.png
+res/btnCloseDisable.png
+res/messageboxbutton.png
+res/rotate.png
+
+NETWORK:
+*
+
+FALLBACK:
+
