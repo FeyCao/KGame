@@ -321,8 +321,8 @@ var KLineScene = SceneBase.extend(
 	{
 		// window.location.href="myapp:myfunction:share";//"javascript:gotoshare()"; 
 		console.log("share:function()  visible = true");
-		window.open("shareGame.html");
-		//window.location.href="http://192.168.16.164/myProject/KGame/";
+		//window.open("shareGame.html");
+		window.location.href="shareGame.html";
 	},
 	
 	

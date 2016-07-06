@@ -304,7 +304,7 @@ var MatchInfoLayer= cc.Layer.extend({
 		//TEST
 //		var TEST_FLAG=TestClass.getConstant('TEST_FLAG');
 //		if(TEST_FLAG != true)
-		if(typeof(TestClass) == "undifined")
+		if(typeof(TestClass) == "undefined")
 		{
 			this.speedControlLayer.setVisible(true);
 		}else{
