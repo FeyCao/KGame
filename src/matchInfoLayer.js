@@ -302,8 +302,9 @@ var MatchInfoLayer= cc.Layer.extend({
 		this.btnShare.setVisible(false);
 
 		//TEST
-		var TEST_FLAG=TestClass.getConstant('TEST_FLAG');
-		if(TEST_FLAG != true)
+//		var TEST_FLAG=TestClass.getConstant('TEST_FLAG');
+//		if(TEST_FLAG != true)
+		if(typeof(TestClass) == "undifined")
 		{
 			this.speedControlLayer.setVisible(true);
 		}else{

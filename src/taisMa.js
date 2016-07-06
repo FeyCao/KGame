@@ -80,7 +80,7 @@ TaisMa.prototype.calculateRawData=function(startSaveIndex)
 	{
 		var tai=this.taiArray[i];
 		var dayCount=this.dayCountArray[i];
-		//console.log("开始计算MA数据,dayCount="+dayCount);
+		console.log("开始计算MA数据,dayCount="+dayCount);
 		var total=0;
 		var furthestValue=0;
 		for(var j=0;j<this.rawDataArray.length;j++)

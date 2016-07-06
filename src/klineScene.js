@@ -102,6 +102,7 @@ var KLineScene = SceneBase.extend(
 		//需要设置指标
 		this.klineLayerPrev.addNewTais(new TaisMa([10,20,30],0));
 		this.klineLayerMain.addNewTais(new TaisMa([10,20,30],0));
+		//this.klineLayerMain.addNewTais(new TaisMa([5,10,20,30],0));
 		
 		this.volumnTechLayerMain.addNewTais(new TaisMa([5,10],1));
 		this.volumnTechLayerPrev.addNewTais(new TaisMa([5,10],1));
@@ -318,7 +319,10 @@ var KLineScene = SceneBase.extend(
 	
 	share:function()
 	{
-		 window.location.href="myapp:myfunction:share";//"javascript:gotoshare()"; 
+		// window.location.href="myapp:myfunction:share";//"javascript:gotoshare()"; 
+		console.log("share:function()  visible = true");
+		window.open("shareGame.html");
+		//window.location.href="http://192.168.16.164/myProject/KGame/";
 	},
 	
 	
@@ -388,11 +392,20 @@ var KLineScene = SceneBase.extend(
 		if(this.klineLayerMain!=null && this.klineLayerPrev!=null)
 		{
 			//TEST
-			var TEST_FLAG=TestClass.getConstant('TEST_FLAG');
-			if(TEST_FLAG != true)
+//		var TEST_FLAG=TestClass.getConstant('TEST_FLAG');
+//		if(TEST_FLAG != true)
+
+
+         
+		 var testFlag = typeof(TestClass);
+		 console.log("typeof(TestClass)"+testFlag);
+			if(typeof(TestClass) == "undefined")
 			{
+				console.log("typeof(TestClass) == undefined");
 				this.setDataForLlineLayer();
 			}else{
+				console.log("typeof(TestClass) != undefined");
+				console.log(typeof(TestClass));
 				this.setDataForLlineLayerTEST();
 			}
 		}
