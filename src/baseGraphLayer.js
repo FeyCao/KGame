@@ -308,7 +308,7 @@ var BaseGraphLayer= cc.Layer.extend({
 			this.redrawExceptCandles();
 		}
 		
-		console.log("drawSingleCandleLineByCurrentIndex called currentIndex="+currentIndex);
+		//console.log("drawSingleCandleLineByCurrentIndex called currentIndex="+currentIndex);
 		//绘制K线
 		this.drawSingleDayGraphInfos(currentIndex);
 		return false;
@@ -491,7 +491,7 @@ var BaseGraphLayer= cc.Layer.extend({
 	//在某个时刻，画所有图像内容的函数，包括画蜡烛线，指标和其他内容
 	drawSingleDayGraphInfos:function(candleIndex)
 	{
-		console.log("drawSingleDayGraphInfos candleIndex="+candleIndex);
+		//console.log("drawSingleDayGraphInfos candleIndex="+candleIndex);
 		this.drawCandle(candleIndex);
 		this.drawCandleForAllTais(candleIndex);
 		this.drawTaisValueInfo(candleIndex);
