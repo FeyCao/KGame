@@ -234,10 +234,10 @@ var BaseGraphLayer= cc.Layer.extend({
 	//得到当前页面中历史蜡烛的索引，可能返回值为负数，如果为负数则表示历史蜡烛的索引是在klineDataPrev中
 	getHistoryCandleIndexByPageIndex:function()
 	{
-		console.log("getHistoryCandleIndexByPageIndex="+this.getHistoryCandleCountByPageIndex());
+		//console.log("getHistoryCandleIndexByPageIndex="+this.getHistoryCandleCountByPageIndex());
 		var historyCandleCount=this.getHistoryCandleCountByPageIndex();
 		var ret=this.pageIndex*(this.maxCandleCountPerPage-this.historyCandleCount)-historyCandleCount;
-		console.log("this.pageIndex="+this.pageIndex+" ret="+ret);
+		//console.log("this.pageIndex="+this.pageIndex+" ret="+ret);
 		return ret;
 	},
 	
@@ -364,7 +364,7 @@ var BaseGraphLayer= cc.Layer.extend({
 			return;
 		}
 		var endIndex=this.klineData.length-1;
-		console.log("||||drawAllCandlesAll var endIndex = " + endIndex);
+		//console.log("||||drawAllCandlesAll var endIndex = " + endIndex);
 		this.calculateMaxMinBetweenIndex(0,endIndex);
 		this.calculateMaxMinBetweenIndexForAllTais(0,endIndex);
 		for(var i=0;i<=endIndex;i++)

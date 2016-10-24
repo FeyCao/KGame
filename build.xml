@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.01"?>
 <project name="Javascript compress project" basedir="." default="compile">
 
     <!-- The classpath should be modified to the real closure compiler jar file path -->

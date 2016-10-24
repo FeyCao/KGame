@@ -37,8 +37,10 @@ var MatchInfoLayer= cc.Layer.extend({
 	
 	btnReplay:null,		//复盘
 	btnShare:null,		//分享
+    meBtnStart:null,        //我也要玩
 	againCallBackFunction:null,
 	shareCallBackFunction:null,
+    startCallBackFunction:null,
 	
 
 	ctor:function(width,height)
@@ -121,10 +123,29 @@ var MatchInfoLayer= cc.Layer.extend({
 		this.btnShare.setClickEvent(function(){
 			self.share();
 		});
-	
-	
+
+        this.meBtnStart=new Button("res/meBtnStart.png");
+        this.meBtnStart.setPosition(cc.p(363,46));
+        this.meBtnStart.setClickEvent(function(){
+            self.meStart();
+        });
+		
+		this.btnStart=new Button("res/btnStart.png");
+        this.btnStart.setPosition(cc.p(363,46));
+        this.btnStart.setClickEvent(function(){
+            self.start();
+        });
+
+        this.btnHome=new Button("res/home.png");
+        this.btnHome.setPosition(cc.p(363,46));
+        this.btnHome.setClickEvent(function(){
+            self.meStart();
+        });
+
 		this.addChild(this.btnAgain,3);
 		this.addChild(this.btnShare,3);
+        this.addChild(this.meBtnStart,3);
+		this.addChild(this.btnStart,3);
 		
 		/*
 		 this.buyButtonImage=new cc.MenuItemImage("res/buy.png","res/buy_p.png",this.buyButtonCallBack);
@@ -300,16 +321,13 @@ var MatchInfoLayer= cc.Layer.extend({
 		this.sellCloseButton.setVisible(false);
 		this.btnAgain.setVisible(false);
 		this.btnShare.setVisible(false);
-
-		//TEST
-//		var TEST_FLAG=TestClass.getConstant('TEST_FLAG');
-//		if(TEST_FLAG != true)
-		if(typeof(TestClass) == "undefined")
-		{
-			this.speedControlLayer.setVisible(true);
-		}else{
-			this.speedControlLayer.setVisible(false);
-		}
+        this.meBtnStart.setVisible(false);
+		this.btnStart.setVisible(false);
+		this.speedControlLayer.setVisible(false);
+	},
+	ableSpeedButtons:function()
+	{
+		this.speedControlLayer.setVisible(true);
 	},
 	
 	//将按钮设置为空仓的状态
@@ -342,9 +360,21 @@ var MatchInfoLayer= cc.Layer.extend({
 	buyClick:function()
 	{
 		var klineScene=this.parent.parent;
-		klineScene.buyClick();
+		var i=klineScene.selfOperations.length;
+		if(i>0&&Math.abs(klineScene.selfOperations[i-1])>=klineScene.currentCandleIndex)
+		{
+			console.log("selfOperations[" + i + "] = " + klineScene.selfOperations[i-1]);
+			console.log("drawCandlesAll this.currentCandleIndex = ",klineScene.currentCandleIndex);
+			return;
+		}	
+		else
+		{
+			klineScene.buyClick();
+			this.setButtonsToBuyPosition();
+		}
 		
-		this.setButtonsToBuyPosition();
+		
+		
 	},
 	
 	buyCloseClick:function()
@@ -358,9 +388,19 @@ var MatchInfoLayer= cc.Layer.extend({
 	sellClick:function()
 	{
 		var klineScene=this.parent.parent;
-		klineScene.sellClick();
+		var i=klineScene.selfOperations.length;
+		if(i>0&&Math.abs(klineScene.selfOperations[i-1])>=klineScene.currentCandleIndex)
+		{
+			console.log("selfOperations[" + i + "] = " + klineScene.selfOperations[i-1]);
+			console.log("drawCandlesAll this.currentCandleIndex = ",klineScene.currentCandleIndex);
+			return;
+		}	
+		else
+		{
+			klineScene.sellClick();
+			this.setButtonsToSellPosition();
+		}
 		
-		this.setButtonsToSellPosition();
 	},
 	
 	sellCloseClick:function()
@@ -419,10 +459,28 @@ var MatchInfoLayer= cc.Layer.extend({
 	
 	setReplayKLineScene:function()
 	{
-		this.speedControlLayer.setVisible(false);
+		//this.speedControlLayer.setVisible(false);
 		this.btnAgain.setVisible(true);
 		this.btnShare.setVisible(true);
 	},
+
+    setShareKLineScene:function()
+    {
+        this.meBtnStart.setVisible(true);
+    },
+	
+	setStart:function()
+    {
+        this.btnStart.setVisible(true);
+    },
+	
+	start:function()
+	{
+		var klineScene=this.parent.parent;
+        gSocketConn.SendBeginMessage();
+		klineScene.setCountDownSprite();
+	},
+	
 	again:function()
 	{
 		if(this.againCallBackFunction!=null)
@@ -438,4 +496,11 @@ var MatchInfoLayer= cc.Layer.extend({
 			this.shareCallBackFunction();
 		}
 	},
+    meStart:function()
+    {
+        if(this.startCallBackFunction!=null)
+        {
+            this.startCallBackFunction();
+        }
+    },
 });// JavaScript Document

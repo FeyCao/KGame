@@ -1,5 +1,4 @@
 // JavaScript Document
-// JavaScript Document
 function Packet()
 {
 	this.msgType="";
@@ -15,6 +14,5 @@ Packet.prototype.Parse=function(message)
 	packetReutrn.content=fields[1];
 	return packetReutrn;
 }
-
 
 

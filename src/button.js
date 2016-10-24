@@ -3,19 +3,12 @@ Button=cc.Sprite.extend({
 	clickevent:null,		//按钮按下的回调函数
 	clickeventparam:null,	//回调函数的参数
 	listener:null,
-	shrinkPixels_Width:null,
-	shrinkPixels_Height:null,
-	shrinkRatioWidth:null,
-	shrinkRatioHeight:null,
 	isPressedDown:false,
-	
+    isDisabled:false,		//是否是被禁用的
 	ctor: function (fileName, rect, rotated)
 	{
 		this._super(fileName, rect, rotated);
-		this.shrinkPixels_Width=4;
-		this.shrinkPixels_Height=4;
-		this.shrinkRatioWidth=(this.width-this.shrinkPixels_Width)/this.width;
-		this.shrinkRatioHeight=(this.height-this.shrinkPixels_Height)/this.height;
+
 	},
 	
 	setClickEvent:function(clickevent)
@@ -28,8 +21,9 @@ Button=cc.Sprite.extend({
 			// When "swallow touches" is true, then returning 'true' from the onTouchBegan method will "swallow" the touch event, preventing other listeners from using it.
 			swallowTouches: false,
 			//onTouchBegan event callback function						
-			onTouchBegan: function (touch, event) {	
-				if(self.isVisible()==true)
+			onTouchBegan: function (touch, event) {
+                console.log("Button onTouchBegan");
+				if(self.isVisible()==true&& self.isDisabled==false)
 				{
 					//var nextSceneM=new NextScene();
 					var target = event.getCurrentTarget();	
@@ -38,24 +32,30 @@ Button=cc.Sprite.extend({
 					var locationInNode = target.convertToNodeSpace(touchLocation);	
 					var s = target.getContentSize();
 					var rect = cc.rect(0, 0, s.width, s.height);
+
 					//Check the click area
 					if (cc.rectContainsPoint(rect, locationInNode)) 
-					{		
-						console.log("onTouchBegan");
-						self.shrink();
+					{
+                        cc.log("begin..x="+ locationInNode.x+",y="+locationInNode.y+",s.width="+s.width+",s.height="+ s.height);
+						//self.shrink();
 						this.isPressedDown=true;
 					}
 					else
-					{
-	
+                    {
+                        cc.log("begin..x="+ locationInNode.x+",y="+locationInNode.y+",s.width="+s.width+",s.height="+ s.height);
+                        console.log("Button onTouchBegan doesn't contain "+self.__instanceId);
 					}
 				}
 				return true;
 			},
-			
+            //onTouchMoved: null,
+            //onTouchEnded: null,
+            //onTouchCancelled: null,
+            //
 			onTouchEnded: function (touch, event) {	
-				if(self.isVisible()==true)
+				if(self.isVisible()==true&& self.isDisabled==false)
 				{
+                    console.log("Button onTouchEnded");
 					//var nextSceneM=new NextScene();
 					var target = event.getCurrentTarget();	
 					var touchLocation=touch.getLocation();
@@ -63,49 +63,79 @@ Button=cc.Sprite.extend({
 					var locationInNode = target.convertToNodeSpace(touchLocation);	
 					var s = target.getContentSize();
 					var rect = cc.rect(0, 0, s.width, s.height);
-					if(this.isPressedDown==true)
+					//Check the click area
+
+					if (this.isPressedDown==true&&cc.rectContainsPoint(rect, locationInNode))
 					{
-						console.log("onTouchEnded");
-						self.unshrink();
+                        cc.log("begin..x="+ locationInNode.x+",y="+locationInNode.y+",s.width="+s.width+"s.height="+ s.height);
+						//console.log("onTouchEnded");
+						//self.unshrink();
 						if(self.clickevent!=null)
 						{
 							self.clickevent();
 						}
-						this.isPressedDown=false;
+                        this.isPressedDown=false;
 					}
-					//Check the click area
-					//if (cc.rectContainsPoint(rect, locationInNode)) 
-					//{		
-					//	console.log("onTouchEnded");
-					//	self.unshrink();
-					//	if(self.clickevent!=null)
-					//	{
-					//		self.clickevent();
-					//	}
-					//}
-					//else
-					//{
-					//	console.log("doesn't contain "+self.__instanceId);
-					//}
+					else
+					{
+						console.log("Button onTouchEnded doesn't contain "+self.__instanceId);
+					}
 				}
 				
 			},
+            onTouchCancelled:function (touch, event) {
+                if(self.isVisible()==true&& self.isDisabled==false)
+                {
+                    //self.unshrink();
+                    console.log("Button onTouchCancelled");
+                    //var nextSceneM=new NextScene();
+                    var target = event.getCurrentTarget();
+                    var touchLocation=touch.getLocation();
+                    //Get the position of the current point relative to the button
+                    var locationInNode = target.convertToNodeSpace(touchLocation);
+                    var s = target.getContentSize();
+                    var rect = cc.rect(0, 0, s.width, s.height);
+                    //Check the click area
+
+                    if (this.isPressedDown==true&&!cc.rectContainsPoint(rect, locationInNode))
+                    {
+                        cc.log("begin..x="+ locationInNode.x+",y="+locationInNode.y+",s.width="+s.width+"s.height="+ s.height);
+                        //console.log("onTouchEnded");
+                       // self.unshrink();
+                        if(self.clickevent!=null)
+                        {
+                            self.clickevent();
+                        }
+                        this.isPressedDown=false;
+                    }
+                    else
+                    {
+                        console.log("Button onTouchCancelled doesn't contain "+self.__instanceId);
+                    }
+                }
+
+            },
 		});
 		
 		cc.eventManager.addListener(this.listener, this);
 	},
-	
+    setDisabled:function(isDisabled)
+    {
+        this.isDisabled=isDisabled;
+    },
 	///当按钮按下去的时候，缩小
 	shrink:function()
 	{
-		var actionNormal=new cc.ScaleTo(0.032,this.shrinkRatioWidth,this.shrinkRatioHeight);
+        var self=this;
+		var actionNormal=new cc.ScaleTo(0.032,self.scale*0.8,self.scale*0.8);
 		this.runAction(actionNormal);
 	},
-	
+
 	///当按钮弹起来的时候，放大
 	unshrink:function()
 	{
-		var actionNormal=new cc.ScaleTo(0.032,1,1);
+        var self=this;
+        var actionNormal=new cc.ScaleTo(0.032,self.scale*1.25,self.scale*1.25);
 		this.runAction(actionNormal);
 	},
 });

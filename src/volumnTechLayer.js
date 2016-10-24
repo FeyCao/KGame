@@ -90,7 +90,7 @@ var VolumnTechLayer= BaseGraphLayer.extend({
 	
 	drawCandle:function(candleIndex)
 	{
-		console.log("---------------drawCandle for volumn candleIndex="+candleIndex);
+		//console.log("---------------drawCandle for volumn candleIndex="+candleIndex);
 		//重载		
 		if(this.canVolumnShown()==true)
 		{

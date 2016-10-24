@@ -1,4 +1,5 @@
 // JavaScript Document
+
 function SocketConn()
 {
 	this.onopenevent=[];
@@ -22,6 +23,7 @@ SocketConn.prototype.Connect=function(url)
 		{
 			self.onmessageevent[i](evt.data);
 		}
+		console.log("onmessage");
 	};
 
 	// when the connection is established, this method is called
@@ -114,6 +116,18 @@ SocketConn.prototype.QuickLogin=function()
 	ws.send(quickLoginMsg);
 }
 
+SocketConn.prototype.SendBeginMessage=function()
+{
+    console.log("send sBegin msg= BEGIN||");
+    ws.send("BEGIN||");
+}
+
+SocketConn.prototype.SendRecordMessage=function(matchId,userId)
+{
+    var recordMsg = "Record||"+matchId+"#"+userId+"|";
+    console.log("send Recordmsg=="+recordMsg);
+    ws.send(recordMsg);
+}
 
 SocketConn.prototype.BeginMatch=function(mode)
 {
@@ -134,3 +148,38 @@ SocketConn.prototype.SendEndMessage=function()
 {
 	ws.send("E||");
 }
+
+SocketConn.prototype.SendShareMessage=function()
+{
+	console.log("send share msg= S||");
+	ws.send("S||");
+}
+
+SocketConn.prototype.ShareMessage=function(userId,matchId)
+{
+	var shareMsg="G|"+userId+"#"+matchId+"|";
+	//console.log("send share msg="+shareMsg);
+	ws.send(shareMsg);
+}
+
+SocketConn.prototype.SendEHMessage=function(userId,matchId)
+{
+    var ehMsg="P|"+userId+"#"+matchId+"|";
+    console.log("send H msg="+ehMsg);
+    ws.send(ehMsg);
+}
+
+
+SocketConn.prototype.SendZhanjiMessage=function(userId,pageIdx)
+{
+    var ehMsg="Z|"+userId+"#"+pageIdx+"|";
+    console.log("send Z msg="+ehMsg);
+    ws.send(ehMsg);
+}
+
+/*SocketConn.prototype.ShareMessage=function(shareMsg)
+{
+	var shareMsg="G|"+shareMsg+"|";
+	console.log("send share msg="+shareMsg);
+	ws.send(shareMsg);
+}*/

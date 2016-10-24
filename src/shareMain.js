@@ -1,16 +1,4 @@
 // JavaScript Document
-var gSocketConn=null;
-var gPlayerName=null;			//用户名
-var gPlayerAvatarSprite=null;	//头像
-
-var gLoginManager=null;
-
-var gDesignResolutionWidth=736;
-var gDesignResolutionHeight=414;
-
-var gKlineScene=null;
-var gMainMenuScene=null;
-
 window.onload = function()
 {
   cc.game.onStart = function(){

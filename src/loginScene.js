@@ -17,6 +17,7 @@ LoginScene = SceneBase.extend(
 	
 	username:null,
 	password:null,
+	source:null,
 	
 	operationType:0,	//1为登录，2为注册并登录
 	
@@ -313,7 +314,7 @@ LoginScene = SceneBase.extend(
 			
 			this.username=gPlayerName;
 			this.password=packet.content.split("#")[1];
-			
+			this.source=packet.content.split("#")[2];
 			this.usernameInputEx.setString(this.username);
 			this.pwdInputEx.setString(this.password);
 			this.stopProgress();

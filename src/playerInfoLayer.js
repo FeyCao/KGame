@@ -58,11 +58,37 @@ var PlayerInfoLayer= cc.Layer.extend({
 		 //this.playerInfoArea.drawRect(cc.p(0,0),cc.p(this.width, this.height),cc.color(0,0,0,0),1,cc.color(255,255,255,255));
 	},
 	
-	refreshScore:function(currentIndex,data,selfOperations,opponentOperations)
+	refreshScore:function(currentIndex,data,selfOperations,opponentOperations)//计算收益率
 	{
 		
 		this.refreshScoreForPlayer(currentIndex,data,selfOperations,true);
 		this.refreshScoreForPlayer(currentIndex,data,opponentOperations,false);
+		
+	},
+	
+	refreshScores:function(buyScore)//设置收益率
+	{
+		var score=0;
+		var upColor=cc.color(252,0,1,0);
+		var downColor=cc.color(6,226,0,0);
+		var scoreLabel=this.selfScoreLabel;
+		if(scoreLabel!=null && scoreLabel!=undefined)
+		{
+			score=buyScore;
+			scoreLabel.setString(score.toFixed(2)+"%");
+			if(score>0)
+			{
+				scoreLabel.setColor(upColor);
+			}
+			else if(score<0)
+			{
+				scoreLabel.setColor(downColor);
+			}
+			else
+			{
+				scoreLabel.setColor(cc.color(255,255,255,0));
+			}
+		}
 		
 	},
 	
