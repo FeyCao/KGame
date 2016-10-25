@@ -56,7 +56,14 @@ var TempLoadScene = SceneBase.extend(
             this.username=userInfo.userId;
             this.password=userInfo.deviceId;
             this.source=userInfo.source;
-            gLoginManager.Login(this.username,this.password,this.source,function(packet){self.messageCallback(packet)},function(){self.connectErrorCallBack()});
+			if(this.username!=""&&this.password!=""&&this.source!="")
+			{
+				gLoginManager.Login(this.username,this.password,this.source,function(packet){self.messageCallback(packet)},function(){self.connectErrorCallBack()});
+			}else
+			{
+				gLoginManager.QuickLogin(function(packet){self.messageCallback(packet)},function(){self.connectErrorCallBack()});
+			}
+
             //cc.director.runScene(new MainMenuScene());
         }
         //

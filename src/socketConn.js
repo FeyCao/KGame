@@ -146,6 +146,7 @@ SocketConn.prototype.Sell=function(index)
 
 SocketConn.prototype.SendEndMessage=function()
 {
+	console.log("send Endmsg==E||");
 	ws.send("E||");
 }
 
