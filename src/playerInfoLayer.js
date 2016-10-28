@@ -10,6 +10,11 @@ var PlayerInfoLayer= cc.Layer.extend({
 	playerInfo_bg2:null,
 	playerInfo_bg3:null,
 
+	playerLabel:null,				//自己的名字
+	playerScoreLabel:null,			//自己的分数
+
+	player1Label:null,				//自己的名字
+	playerScore1Label:null,			//自己的分数
 
 ctor:function(width,height)
 	{
@@ -73,11 +78,20 @@ ctor:function(width,height)
 			case 2:
 			{
 
+				var InfoposX = 60;
+				var InfoposY1 = 100;
+				var InfoposY2 = 20;
 				if(this.playerInfo_bg ==null)
 				{
 					this.playerInfo_bg=cc.Sprite.create("res/playerInfo_bg.png");
 					this.playerInfo_bg.setPosition(30,270);
 					this.playerInfo_bg.setScale(0.5);
+					this.playerLabel = cc.LabelTTF.create(userInfo.nickName, "Arial", 20);
+					this.playerScoreLabel = cc.LabelTTF.create("0.00%", "Arial", 24);
+					this.playerLabel.setPosition(60,100);
+					this.playerScoreLabel.setPosition(60,100);
+					this.playerInfo_bg.addChild(this.playerLabel);
+					this.playerInfo_bg.addChild(this.playerScoreLabel);
 					this.addChild(this.playerInfo_bg,5);
 				}
 				if(this.playerInfo_bg1 ==null)
@@ -85,6 +99,12 @@ ctor:function(width,height)
 					this.playerInfo_bg1=cc.Sprite.create("res/playerInfo_bg.png");
 					this.playerInfo_bg1.setPosition(30,140);
 					this.playerInfo_bg1.setScale(0.5);
+					this.player1Label = cc.LabelTTF.create("机器人", "Arial", 20);
+					this.playerScore1Label = cc.LabelTTF.create("0.00%", "Arial", 24);
+					this.player1Label.setPosition(InfoposX,InfoposY1);
+					this.playerScore1Label.setPosition(InfoposX,InfoposY2);
+					this.playerInfo_bg1.addChild(this.player1Label);
+					this.playerInfo_bg1.addChild(this.playerScore1Label);
 					this.addChild(this.playerInfo_bg1,5);
 				}
 
@@ -139,7 +159,39 @@ ctor:function(width,height)
 		}
 		
 	},
-	
+
+
+	refreshScoresByData:function()//从服务器得到数据设置收益率
+	{
+		var score=0;
+		var upColor=cc.color(252,0,1,0);
+		var downColor=cc.color(6,226,0,0);
+		var scoreLabel=this.selfScoreLabel;
+		//if(userInfo.playerListData!=null)
+		//{
+		//	if(userInfo.playerListData[0])
+		//}
+		//if(scoreLabel!=null && scoreLabel!=undefined)
+		//{
+		//	score=buyScore;
+		//	scoreLabel.setString(score.toFixed(2)+"%");
+		//	if(score>0)
+		//	{
+		//		scoreLabel.setColor(upColor);
+		//	}
+		//	else if(score<0)
+		//	{
+		//		scoreLabel.setColor(downColor);
+		//	}
+		//	else
+		//	{
+		//		scoreLabel.setColor(cc.color(255,255,255,0));
+		//	}
+		//}
+
+	},
+
+
 	refreshScoreForPlayer:function(currentIndex,data,operations,isSelf)
 	{
 		
