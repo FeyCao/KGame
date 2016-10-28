@@ -520,20 +520,15 @@ var MainMenuScene =SceneBase.extend(
                 break;
             }
 
-            case "M"://人机对战
+            case "M"://人机对战结束信息
             {
-                // if(gKlineScene==null)
-                //     gKlineScene=new KLineScene();
-                // //接收到了K线数据的消息
-                // // gSocketConn.UnRegisterEvent("onmessage",gKlineScene.messageCallBack);
-                // if(gKlineScene!=null)
-                // {
-                //     console.log("call get kline data");
-                //     gKlineScene.getklinedata(packet.content);
-                //     console.log("get kline passed");
-                // }
-                // self.stopProgress();
-                // break;
+                //收到对方买入的信息
+                if(gKlineScene==null)
+                    gKlineScene=new KLineScene();
+                if(gKlineScene!=null) {
+                    gKlineScene.showMatchEndInfo(packet.content);
+                }
+                break;
             }
             // case "":
             // {
@@ -548,19 +543,29 @@ var MainMenuScene =SceneBase.extend(
             case "8":
             {
                 //收到对方买入的信息
+                if(gKlineScene==null)
+                    gKlineScene=new KLineScene();
+                if(gKlineScene!=null) {
+                    var buyOperationIndex=parseInt(packet.content.split("#")[1]);
+                    gKlineScene.opponentOperations.push(buyOperationIndex);
+                    gKlineScene.refreshScores();
+                }
                 //alert("8="+packet.content);
-                var buyOperationIndex=parseInt(packet.content.split("#")[1]);
-                self.opponentOperations.push(buyOperationIndex);
-                self.refreshScores();
+
+
             }
 
             case "9":
             {
                 //收到对方卖出的信息
                 //alert("9="+packet.content);
-                var sellOperationIndex=parseInt(packet.content.split("#")[1]);
-                self.opponentOperations.push(-sellOperationIndex);
-                self.refreshScores();
+                if(gKlineScene==null)
+                    gKlineScene=new KLineScene();
+                if(gKlineScene!=null) {
+                    var sellOperationIndex=parseInt(packet.content.split("#")[1]);
+                    gKlineScene.opponentOperations.push(-sellOperationIndex);
+                    gKlineScene.refreshScores();
+                }
                 break;
             }
 
@@ -638,10 +643,12 @@ var MainMenuScene =SceneBase.extend(
                     gKlineScene=new KLineScene();
                 gKlineScene.showMatchEndInfo(packet.content);
                 break;
-                break;
             }
-            case "":
+            case "G":
             {
+                if(gKlineScene==null)
+                    gKlineScene=new KLineScene();
+                gKlineScene.showPlayerInfo(packet.content);
                 break;
             }
 

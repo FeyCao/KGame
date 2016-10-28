@@ -5,16 +5,17 @@ var PlayerInfoLayer= cc.Layer.extend({
 	selfNameLabel:null,				//自己的名字
 	selfScoreLabel:null,			//自己的分数
 	avatarSprite:null,				//自己的头像
-	playerInfo_bg:null,
-	playerInfo_bg1:null,
-	playerInfo_bg2:null,
-	playerInfo_bg3:null,
 
-	playerLabel:null,				//自己的名字
-	playerScoreLabel:null,			//自己的分数
+	// playerInfo_bg1:null,
+	// playerInfo_bg2:null,
+	// playerInfo_bg3:null,
 
-	player1Label:null,				//自己的名字
-	playerScore1Label:null,			//自己的分数
+    playerInfo_bg:null,//信息背景bg
+	playerNameLabel:null,				//名字
+	playerScoreLabel:null,			//分数
+
+	// player1Label:null,				//自己的名字
+	// playerScore1Label:null,			//自己的分数
 
 ctor:function(width,height)
 	{
@@ -29,6 +30,10 @@ ctor:function(width,height)
 		this.size = cc.director.getWinSize();
 		this.fXScale = this.size.width/1280;
 		this.fYScale = this.size.height/720;
+
+        this.playerInfo_bg =[];
+        this.playerNameLabel =[];
+        this.playerScoreLabel =[];
 
 		this.playerInfoArea=new cc.DrawNodeCanvas();
 		//设置K线图的区域
@@ -64,6 +69,7 @@ ctor:function(width,height)
 	},
 	setPlayerInfo:function()
 	{
+        //.setScale(this.fXScale,this.fYScale);
 		if(userInfo.matchMode==null)return;
 		switch(userInfo.matchMode)
 		{
@@ -81,32 +87,49 @@ ctor:function(width,height)
 				var InfoposX = 60;
 				var InfoposY1 = 100;
 				var InfoposY2 = 20;
-				if(this.playerInfo_bg ==null)
-				{
-					this.playerInfo_bg=cc.Sprite.create("res/playerInfo_bg.png");
-					this.playerInfo_bg.setPosition(30,270);
-					this.playerInfo_bg.setScale(0.5);
-					this.playerLabel = cc.LabelTTF.create(userInfo.nickName, "Arial", 20);
-					this.playerScoreLabel = cc.LabelTTF.create("0.00%", "Arial", 24);
-					this.playerLabel.setPosition(60,100);
-					this.playerScoreLabel.setPosition(60,100);
-					this.playerInfo_bg.addChild(this.playerLabel);
-					this.playerInfo_bg.addChild(this.playerScoreLabel);
-					this.addChild(this.playerInfo_bg,5);
-				}
-				if(this.playerInfo_bg1 ==null)
-				{
-					this.playerInfo_bg1=cc.Sprite.create("res/playerInfo_bg.png");
-					this.playerInfo_bg1.setPosition(30,140);
-					this.playerInfo_bg1.setScale(0.5);
-					this.player1Label = cc.LabelTTF.create("机器人", "Arial", 20);
-					this.playerScore1Label = cc.LabelTTF.create("0.00%", "Arial", 24);
-					this.player1Label.setPosition(InfoposX,InfoposY1);
-					this.playerScore1Label.setPosition(InfoposX,InfoposY2);
-					this.playerInfo_bg1.addChild(this.player1Label);
-					this.playerInfo_bg1.addChild(this.playerScore1Label);
-					this.addChild(this.playerInfo_bg1,5);
-				}
+                for(var i=0;i<2;i++)
+                {
+                    if(this.playerInfo_bg[i] ==null)
+                    {
+                        this.playerInfo_bg[i]=cc.Sprite.create("res/playerInfo_bg.png");
+                        this.playerInfo_bg[i].setPosition(60*this.fXScale,(500-252*i)*this.fYScale);
+                        this.playerInfo_bg[i].setScale(this.fXScale,this.fYScale);
+                        this.playerNameLabel[i] = cc.LabelTTF.create(userInfo.nickName, "Arial", 20);
+                        this.playerScoreLabel[i] = cc.LabelTTF.create("0.00%", "Arial", 24);
+                        this.playerNameLabel[i].setPosition(InfoposX,InfoposY1);
+                        this.playerScoreLabel[i].setPosition(InfoposX,InfoposY2);
+                        this.playerInfo_bg[i].addChild(this.playerNameLabel[i]);
+                        this.playerInfo_bg[i].addChild(this.playerScoreLabel[i]);
+                        this.addChild(this.playerInfo_bg[i],5);
+                    }
+                }
+                this.refreshScoresByData();
+				// if(this.playerInfo_bg ==null)
+				// {
+				// 	this.playerInfo_bg=cc.Sprite.create("res/playerInfo_bg.png");
+				// 	this.playerInfo_bg.setPosition(30,270);
+				// 	this.playerInfo_bg.setScale(0.5);
+				// 	this.playerLabel = cc.LabelTTF.create(userInfo.nickName, "Arial", 20);
+				// 	this.playerScoreLabel = cc.LabelTTF.create("0.00%", "Arial", 24);
+				// 	this.playerLabel.setPosition(60,100);
+				// 	this.playerScoreLabel.setPosition(60,100);
+				// 	this.playerInfo_bg.addChild(this.playerLabel);
+				// 	this.playerInfo_bg.addChild(this.playerScoreLabel);
+				// 	this.addChild(this.playerInfo_bg,5);
+				// }
+				// if(this.playerInfo_bg1 ==null)
+				// {
+				// 	this.playerInfo_bg1=cc.Sprite.create("res/playerInfo_bg.png");
+				// 	this.playerInfo_bg1.setPosition(30,140);
+				// 	this.playerInfo_bg1.setScale(0.5);
+				// 	this.player1Label = cc.LabelTTF.create("机器人", "Arial", 20);
+				// 	this.playerScore1Label = cc.LabelTTF.create("0.00%", "Arial", 24);
+				// 	this.player1Label.setPosition(InfoposX,InfoposY1);
+				// 	this.playerScore1Label.setPosition(InfoposX,InfoposY2);
+				// 	this.playerInfo_bg1.addChild(this.player1Label);
+				// 	this.playerInfo_bg1.addChild(this.playerScore1Label);
+				// 	this.addChild(this.playerInfo_bg1,5);
+				// }
 
 
 				break;
@@ -167,27 +190,31 @@ ctor:function(width,height)
 		var upColor=cc.color(252,0,1,0);
 		var downColor=cc.color(6,226,0,0);
 		var scoreLabel=this.selfScoreLabel;
-		//if(userInfo.playerListData!=null)
-		//{
-		//	if(userInfo.playerListData[0])
-		//}
-		//if(scoreLabel!=null && scoreLabel!=undefined)
-		//{
-		//	score=buyScore;
-		//	scoreLabel.setString(score.toFixed(2)+"%");
-		//	if(score>0)
-		//	{
-		//		scoreLabel.setColor(upColor);
-		//	}
-		//	else if(score<0)
-		//	{
-		//		scoreLabel.setColor(downColor);
-		//	}
-		//	else
-		//	{
-		//		scoreLabel.setColor(cc.color(255,255,255,0));
-		//	}
-		//}
+		if(userInfo.playerListData!=null)
+		{
+            for(var i=0;i<userInfo.playerListData.length&&i<this.playerInfo_bg.length;i++)
+            {
+
+                if(this.playerNameLabel[i]!=null && this.playerNameLabel[i]!=undefined)
+                {
+                    var score=parseFloat(userInfo.playerListData[i]["score"]);
+                    this.playerNameLabel[i].setString(userInfo.playerListData[i]["userName"]);
+                    this.playerScoreLabel[i].setString(score.toFixed(2)+"%");
+                    if(score>0)
+                    {
+                        this.playerScoreLabel[i].setColor(upColor);
+                    }
+                    else if(score<0)
+                    {
+                        this.playerScoreLabel[i].setColor(downColor);
+                    }
+                    else
+                    {
+                        this.playerScoreLabel[i].setColor(cc.color(255,255,255,0));
+                    }
+                }
+            }
+        }
 
 	},
 

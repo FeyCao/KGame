@@ -168,6 +168,7 @@ SocketConn.prototype.Step=function(index)
 
 SocketConn.prototype.SendEndMessage=function()
 {
+	console.log("send Endmsg==E||");
 	if(SocketConnLogFlag!=false)
 	console.log("send Endmsg==E||");
 	ws.send("E||");

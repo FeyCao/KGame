@@ -201,8 +201,10 @@ var KLineScene = SceneBase.extend(
 		}		
 		
 		this.matchEndInfoLayer=new MatchEndInfoLayer();
+		// this.matchEndInfoLayer.setAnchorPoint(0.5,0.5);
 		this.matchEndInfoLayer.setVisible(false);
 		this.matchEndInfoLayer.setPosition((this.size.width-this.matchEndInfoLayer.width) / 2, (this.size.height-this.matchEndInfoLayer.height) / 2);
+		// this.matchEndInfoLayer.setPosition(this.size.width / 2, this.size.height / 2);
 		this.otherMessageTipLayer.addChild(this.matchEndInfoLayer, 1,this.matchEndInfoLayer.getTag());
 
 		
@@ -246,9 +248,10 @@ var KLineScene = SceneBase.extend(
 			}
 			case 2:
 			{
-				this.KlineWidth = 670;
-				this.KlinePosX = 60;
+				this.KlineWidth = this.size.width-120*this.fXScale;
+				this.KlinePosX = 120*this.fXScale;
 
+				cc.log("this.KlineWidth ="+this.KlineWidth +"||this.KlinePosX="+this.KlinePosX+"||this.size.width="+this.size.width);//this.KlineWidth =667||this.KlinePosX=69||this.size.width=736
 
 				break;
 			}
@@ -447,7 +450,28 @@ var KLineScene = SceneBase.extend(
 		this.matchEndInfoLayer.showLayer();
 		this.pauseLowerLayer();
 	},
-	
+	showPlayerInfo:function(content)
+	{
+		console.log("showPlayerInfo  begin to parse json text");
+		var data=JSON.parse(content);
+		console.log("showPlayerInfo jsonText parse over");
+		var playerListData=data["playerList"];
+		userInfo.playerListData=[];
+		for(var i=0;playerListData!=null&&i<playerListData.length;i++)
+		{
+			var playerData=playerListData[i];
+			cc.log("showPlayerInfo playerData.userName="+playerData["userName"]);
+			userInfo.playerListData.push(playerData);
+		}
+		this.playerInfoLayer.refreshScoresByData();
+		// this.matchEndInfoLayer.applyParamsFromContent(content);
+		// //content的内容为:   总用户个数(假设为2)#用户名A#收益率A#得分A#用户名B#收益率B#得分B#品种名字#起始日期#终止日期
+		// this.matchEndInfoLayer.againCallBackFunction=function(){self.matchEndInfoLayer_Again()};
+		// this.matchEndInfoLayer.replayCallBackFunction=function(){self.matchEndInfoLayer_Replay()};
+		// this.matchEndInfoLayer.shareCallBackFunction=function(){self.matchEndInfoLayer_Share()};
+		// this.matchEndInfoLayer.showLayer();
+		// this.pauseLowerLayer();
+	},
 	matchEndInfoLayer_Replay:function()
 	{
 		if(gMainMenuScene!=null)
@@ -597,7 +621,6 @@ var KLineScene = SceneBase.extend(
 			var playerData=playerListData[i];
 			cc.log("playerData.userName="+playerData["userName"]);
 			userInfo.playerListData.push(playerData);
-			//this.klinedataMain.push({o:dailyData[5*i],x:dailyData[5*i+1],i:dailyData[5*i+2],c:dailyData[5*i+3],v:dailyData[5*i+4]});
 			//this.MatchListData.push({matchId:matchData["matchId"],matchTime:matchData["matchId"],playerNum:matchData["matchId"],score:matchData["matchId"],uid:matchData["matchId"]});
 		}
 
@@ -942,6 +965,8 @@ var KLineScene = SceneBase.extend(
 				this.sendEndMessage();
 				this.matchEnd();
 				return;
+			}else{
+				gSocketConn.Step(this.currentCandleIndex-1);
 			}
 
 			this.currentCandleIndex+=1;
@@ -1029,7 +1054,6 @@ var KLineScene = SceneBase.extend(
 				
 	refreshScores:function(indexEnd)
 	{
-		gSocketConn.Step(indexEnd-1);
 		if(indexEnd==null)
 		{
 			indexEnd=this.currentCandleIndex;

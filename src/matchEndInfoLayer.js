@@ -28,18 +28,28 @@ var MatchEndInfoLayer= cc.Layer.extend({
 	onEnter:function () 
 	{
 		this._super();
+		this.size = cc.director.getWinSize();
+		this.fXScale = this.size.width/1280;
+		this.fYScale = this.size.height/720;
+		// this.width = 985*this.fXScale;
+		// this.height = 483*this.fYScale;
+
 		var self=this;
 		
 		this.bgSprtie = cc.Sprite.create("res/matchEnd.png");
+
+		// this.width = this.bgSprtie.getContentSize().width*this.fXScale;
+		// this.height = this.bgSprtie.getContentSize().height*this.fYScale;
+
 		this.bgSprtie.setPosition(this.width / 2, this.height / 2);
-		this.bgSprtie.setScale(1);
+		this.bgSprtie.setScale(this.fXScale,this.fYScale);
 		this.addChild(this.bgSprtie,1);
 		
 		this.stockInfoLabel=cc.LabelTTF.create("", "Arial", 19);
 		//this.stockInfoLabel.setColor(cc.color(40,184,245,255));
 		this.stockInfoLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
 		this.stockInfoLabel.setAnchorPoint(0.5,0.5);
-		this.stockInfoLabel.setPosition(this.width / 2, 90);
+		this.stockInfoLabel.setPosition(this.width / 2, 100);
 		this.addChild(this.stockInfoLabel,2); 
 		
 		this.scoreLabel=cc.LabelTTF.create("", "黑体", 16);
@@ -63,18 +73,21 @@ var MatchEndInfoLayer= cc.Layer.extend({
 		
 		this.btnReplay=new Button("res/meBtnReplay.png");
 		this.btnReplay.setPosition(90,39);
+		this.btnReplay.setScale(this.fXScale,this.fYScale);
 		this.btnReplay.setClickEvent(function(){
 			self.replay();
 		});
 		
 		this.btnAgain=new Button("res/meBtnAgain.png");
 		this.btnAgain.setPosition(237,39);
+		this.btnAgain.setScale(this.fXScale,this.fYScale);
 		this.btnAgain.setClickEvent(function(){
 			self.again();
 		});
 		
 		
 		this.btnShare=new Button("res/meBtnShare.png");
+		this.btnShare.setScale(this.fXScale,this.fYScale);
 		this.btnShare.setPosition(384,39);
 		this.btnShare.setClickEvent(function(){
 			self.share();
@@ -142,23 +155,79 @@ var MatchEndInfoLayer= cc.Layer.extend({
 	//根据Content的内容，解析后赋予参数
 	applyParamsFromContent:function(content)
 	{
-		var fields=content.split("#");
-		var len=fields.length;
-		this.stockInfoLabel.setString("这是"+fields[len-3]+" "+fields[len-2]+"到"+fields[len-1]+"的日线图");
-		var ratio=parseFloat(fields[2]);
-		if(ratio>0)
+		switch(userInfo.matchMode)
 		{
-			this.scoreLabel2.setColor(cc.color(249,27,27,255));
+			case 0:
+			{
+				var fields=content.split("#");
+				var len=fields.length;
+				this.stockInfoLabel.setString("期货合约:"+fields[len-3]+" ("+fields[len-2]+" - "+fields[len-1]+")");
+				var ratio=parseFloat(fields[2]);
+				if(ratio>0)
+				{
+					this.scoreLabel2.setColor(cc.color(249,27,27,255));
+				}
+				else if(ratio<0)
+				{
+					this.scoreLabel2.setColor(cc.color(6,224,0,255));
+				}
+				else
+				{
+					this.scoreLabel2.setColor(cc.color(255,255,255,255));
+				}
+				this.scoreLabel2.setString(ratio.toFixed(2)+"%");
+				break;
+			}
+			case 1:
+			{
+				this.KlineWidth = 700;
+				this.KlinePosX = 60;
+				break;
+			}
+			case 2:
+			{
+
+				console.log("MatchEndInfoLayer to parse json text");
+				// {"codeInfo":"600970(上证)#2006-07-27#2007-01-23","endInfoOfAllPlayers":[{"nickName":"开心的钱多多","ranking":2,"matchId":6231,"score":-34.99,"level":0,"exp":0},{"nickName":"唐齐安通道","ranking":1,"matchId":6231,"score":-1.76,"level":0,"exp":0}]}
+				var ratio=parseFloat(0);
+				var data=JSON.parse(content);
+				this.stockInfoLabel.setString(data["codeInfo"]);
+				var endInfoData = data["endInfoOfAllPlayers"];
+				userInfo.endInfoOfAllPlayers=[];
+				for(var i=0;endInfoData!=null&&i<endInfoData.length;i++)
+				{
+					cc.log("showPlayerInfo playerData.userName="+endInfoData[i]["nickName"]);
+					if(userInfo.nickName==endInfoData[i]["nickName"])ratio=endInfoData[i]["score"];
+					userInfo.endInfoOfAllPlayers.push(endInfoData[i]);
+				}
+
+				if(ratio>0)
+				{
+					this.scoreLabel2.setColor(cc.color(249,27,27,255));
+				}
+				else if(ratio<0)
+				{
+					this.scoreLabel2.setColor(cc.color(6,224,0,255));
+				}
+				else
+				{
+					this.scoreLabel2.setColor(cc.color(255,255,255,255));
+				}
+				this.scoreLabel2.setString(ratio.toFixed(2)+"%");
+
+				break;
+			}
+			case 3:
+			{
+				break;
+			}
+			default:
+			{
+				cc.log("userInfo.matchMode ="+userInfo.matchMode);
+				break;
+			}
 		}
-		else if(ratio<0)
-		{
-			this.scoreLabel2.setColor(cc.color(6,224,0,255));
-		}
-		else
-		{
-			this.scoreLabel2.setColor(cc.color(255,255,255,255));
-		}
-		this.scoreLabel2.setString(ratio.toFixed(2)+"%");
+
 		console.log(content);
 	}
 	

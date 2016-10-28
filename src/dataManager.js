@@ -88,8 +88,12 @@ var userInfo ={
     businessInfo:null,//交易记录
 
     playerListData:null,//玩家列表
+
+
     //matchMode
     matchMode:0,//游戏模式0：练习场，1：多人战，2：人机战
+
+    endInfoOfAllPlayers:null,
 }
 
 var AIOperation ={
