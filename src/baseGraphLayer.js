@@ -30,7 +30,7 @@ var BaseGraphLayer= cc.Layer.extend({
 		this.width=width;
 		this.height=height;
 		this.taisArray=[];
-		
+		cc.log("this.width="+this.width);
 		//this.maxCandleCountPerPage=60;
 		//this.historyCandleCount=10;
 		//this.pageIndex=0;
@@ -122,7 +122,7 @@ var BaseGraphLayer= cc.Layer.extend({
 	//给这个图设置K线数据
 	setKLineData:function(klineData,klineDataPrev)
 	{
-		console.log("basegraphlayer setKLineData instanceid="+this.__instanceid+" klineData="+klineData+" klineDataPrev="+klineDataPrev);
+		// console.log("basegraphlayer setKLineData instanceid="+this.__instanceid+" klineData="+klineData+" klineDataPrev="+klineDataPrev);
 		this.klineData=klineData;
 		if(klineDataPrev!=undefined)
 		{
@@ -360,7 +360,7 @@ var BaseGraphLayer= cc.Layer.extend({
 		
 		if(this.klineData==null)
 		{
-			onsole.log("drawAllCandlesAll一klineData==null");
+			cc.log("drawAllCandlesAll一klineData==null");
 			return;
 		}
 		var endIndex=this.klineData.length-1;

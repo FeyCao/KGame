@@ -24,17 +24,17 @@ var Singleton = (function () {
 })();
 
 
-var gSocketConn=null;
-var gPlayerName=null;			//用户名
-var gPlayerAvatarSprite=null;	//头像
-
-var gLoginManager=null;
-
-var gDesignResolutionWidth=736;
-var gDesignResolutionHeight=414;
-
-var gKlineScene=null;//K 线界面
-var gMainMenuScene=null;// 大厅界面
+// var gSocketConn=null;
+// var gPlayerName=null;			//用户名
+// var gPlayerAvatarSprite=null;	//头像
+//
+// var gLoginManager=null;
+//
+// var gDesignResolutionWidth=736;
+// var gDesignResolutionHeight=414;
+//
+// var gKlineScene=null;//K 线界面
+// var gMainMenuScene=null;// 大厅界面
 
 
 
@@ -42,12 +42,14 @@ var gMainMenuScene=null;// 大厅界面
 Singleton.getInstance().publicMethod();
 
 //var wsURL = 'ws://222.66.97.203:5003/';//公网测试
-var wsURL = 'ws://222.66.97.203:5003/Kgamefeng/websocket';//晓峰环境
+//var wsURL = 'ws://222.66.97.203:5003/Kgamefeng/websocket';//晓峰环境
 //var wsURL = 'ws://180.169.108.231:5003/';//生产环境
 //var wsURL = 'ws://192.168.16.250:8484/';//测试
 //var wsURL = 'ws://192.168.16.250:8384/';//调试
 //var wsURL = 'ws://192.168.16.250:5180/Kgamefeng/websocket';//晓峰环境
-//var wsURL = 'ws://192.168.16.145:8080/Kgamefeng/websocket';//晓峰环境
+var wsURL = 'ws://192.168.16.145:9999/Kgamefeng/websocket';//晓峰环境
+// var wsURL = 'ws://192.168.16.145:8080/Kgamefeng/websocket';//晓峰环境
+
 SOURCE_DHJK = "DHJK";     //东航金控APP
 SOURCE_ZSQQ = "ZSQQ";     //掌上全球APP
 SOURCE_ZZFW = "ZZFW";     //增值服务中心网站
@@ -58,6 +60,7 @@ var RedColor=cc.color(255,27,27,255);//红色
 var YellowColor=cc.color(255,217,0,255);//黄色
 var GreenColor=cc.color(6,224,0,255);//绿色
 var WhiteColor=cc.color(189,240,255,255);//白色
+var BlueColor=cc.color(7,64,111,255);//蓝色
 
 
 var userInfo ={
@@ -67,6 +70,7 @@ var userInfo ={
     source:null,
 
     //
+    nickName:"塞外小王子",
     userName:null,
     userPassword:null,
 
@@ -81,6 +85,17 @@ var userInfo ={
     winRate:null,//胜率
     AvgGain:null,//平局收益率
     MatchListData:null,//比赛记录
+    businessInfo:null,//交易记录
+
+    playerListData:null,//玩家列表
+    //matchMode
+    matchMode:0,//游戏模式0：练习场，1：多人战，2：人机战
+}
+
+var AIOperation ={
+    isBuy:null,
+    index:null,
+    price:null,
 
 
 }

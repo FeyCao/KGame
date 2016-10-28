@@ -1,4 +1,5 @@
 // JavaScript Document
+var buttonLogFlag = false;
 Button=cc.Sprite.extend({
 	clickevent:null,		//按钮按下的回调函数
 	clickeventparam:null,	//回调函数的参数
@@ -36,12 +37,14 @@ Button=cc.Sprite.extend({
 					//Check the click area
 					if (cc.rectContainsPoint(rect, locationInNode)) 
 					{
+						if(buttonLogFlag!=false)
                         cc.log("begin..x="+ locationInNode.x+",y="+locationInNode.y+",s.width="+s.width+",s.height="+ s.height);
 						//self.shrink();
 						this.isPressedDown=true;
 					}
 					else
                     {
+						if(buttonLogFlag!=false)
                         cc.log("begin..x="+ locationInNode.x+",y="+locationInNode.y+",s.width="+s.width+",s.height="+ s.height);
                         console.log("Button onTouchBegan doesn't contain "+self.__instanceId);
 					}
@@ -55,6 +58,7 @@ Button=cc.Sprite.extend({
 			onTouchEnded: function (touch, event) {	
 				if(self.isVisible()==true&& self.isDisabled==false)
 				{
+					if(buttonLogFlag!=false)
                     console.log("Button onTouchEnded");
 					//var nextSceneM=new NextScene();
 					var target = event.getCurrentTarget();	
@@ -67,7 +71,8 @@ Button=cc.Sprite.extend({
 
 					if (this.isPressedDown==true&&cc.rectContainsPoint(rect, locationInNode))
 					{
-                        cc.log("begin..x="+ locationInNode.x+",y="+locationInNode.y+",s.width="+s.width+"s.height="+ s.height);
+						if(buttonLogFlag!=false)
+                        cc.log("Button onTouchEnded .x="+ locationInNode.x+",y="+locationInNode.y+",s.width="+s.width+"s.height="+ s.height);
 						//console.log("onTouchEnded");
 						//self.unshrink();
 						if(self.clickevent!=null)
@@ -78,6 +83,7 @@ Button=cc.Sprite.extend({
 					}
 					else
 					{
+						if(buttonLogFlag!=false)
 						console.log("Button onTouchEnded doesn't contain "+self.__instanceId);
 					}
 				}
@@ -87,6 +93,7 @@ Button=cc.Sprite.extend({
                 if(self.isVisible()==true&& self.isDisabled==false)
                 {
                     //self.unshrink();
+					if(buttonLogFlag!=false)
                     console.log("Button onTouchCancelled");
                     //var nextSceneM=new NextScene();
                     var target = event.getCurrentTarget();
@@ -99,6 +106,7 @@ Button=cc.Sprite.extend({
 
                     if (this.isPressedDown==true&&!cc.rectContainsPoint(rect, locationInNode))
                     {
+						if(buttonLogFlag!=false)
                         cc.log("begin..x="+ locationInNode.x+",y="+locationInNode.y+",s.width="+s.width+"s.height="+ s.height);
                         //console.log("onTouchEnded");
                        // self.unshrink();
@@ -110,6 +118,7 @@ Button=cc.Sprite.extend({
                     }
                     else
                     {
+						if(buttonLogFlag!=false)
                         console.log("Button onTouchCancelled doesn't contain "+self.__instanceId);
                     }
                 }

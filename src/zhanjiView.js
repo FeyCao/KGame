@@ -225,7 +225,7 @@ var ZhanjiViewLayer = cc.Layer.extend({
 
         if(this.mode1Button==null)
         {
-            this.mode1Button=new Button("res/btn_mode1.png");
+            this.mode1Button=new Button("res/btn_mode1d.png");
             this.mode1Button.setPosition(cc.p(300,520));
             this.mode1Button.setClickEvent(function(){
                 console.log("mode1Button ClickEvent");
@@ -235,7 +235,7 @@ var ZhanjiViewLayer = cc.Layer.extend({
         }
         if(this.mode2Button==null)
         {
-            this.mode2Button=new Button("res/btn_mode2.png");
+            this.mode2Button=new Button("res/btn_mode2u.png");
             this.mode2Button.setPosition(cc.p(525,520));
             this.mode2Button.setClickEvent(function(){
                 console.log("mode2Button ClickEvent");
@@ -245,7 +245,7 @@ var ZhanjiViewLayer = cc.Layer.extend({
         }
         if(this.mode3Button==null)
         {
-            this.mode3Button=new Button("res/btn_mode3.png");
+            this.mode3Button=new Button("res/btn_mode3u.png");
             this.mode3Button.setPosition(cc.p(750,520));
             this.mode3Button.setClickEvent(function(){
                 console.log("mode3Button ClickEvent");
@@ -255,7 +255,7 @@ var ZhanjiViewLayer = cc.Layer.extend({
         }
         if(this.mode4Button==null)
         {
-            this.mode4Button=new Button("res/btn_mode4.png");
+            this.mode4Button=new Button("res/btn_mode4u.png");
             this.mode4Button.setPosition(cc.p(975,520));
             this.mode4Button.setClickEvent(function(){
                 console.log("mode4Button ClickEvent");
@@ -265,7 +265,7 @@ var ZhanjiViewLayer = cc.Layer.extend({
             this.backgroundSprite.addChild(this.mode4Button,5);
         }
 
-        this.mode1Button.setDisabled(true);
+       // this.mode1Button.setDisabled(true);
         this.mode2Button.setDisabled(true);
         this.mode3Button.setDisabled(true);
         this.mode4Button.setDisabled(true);
@@ -286,6 +286,9 @@ var ZhanjiViewLayer = cc.Layer.extend({
 
     tableCellTouched:function (table, cell) {
         cc.log("cell touched at index: " + cell.getIdx());
+        // var matchId = userInfo.MatchListData[cell.getIdx()]["matchId"];
+        // var userId = userInfo.MatchListData[cell.getIdx()]["uid"];
+        // gSocketConn.SendRecordMessage(userId,matchId);
     },
     tableCellTouched2:function () {
         cc.log("cell touched at index: ");
