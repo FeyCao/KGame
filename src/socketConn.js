@@ -1,5 +1,6 @@
 // JavaScript Document
 
+var SocketConnLogFlag = false;
 function SocketConn()
 {
 	this.onopenevent=[];
@@ -74,7 +75,8 @@ SocketConn.prototype.GetEventArrayByName=function(eventname)
 
 SocketConn.prototype.RegisterEvent=function(eventname,callbackfunction)
 {
-	//console.log("RegisterEvent eventname="+eventname+", callbackfunction="+callbackfunction);
+	if(SocketConnLogFlag!=false)
+	console.log("RegisterEvent eventname="+eventname+", callbackfunction="+callbackfunction);
 	var eventArray=this.GetEventArrayByName(eventname);
 	if(eventArray==null) return;
 	for(var i=0;i<eventArray.length;i++)
@@ -105,6 +107,7 @@ SocketConn.prototype.UnRegisterEvent=function(eventname,callbackfunction)
 SocketConn.prototype.Login=function(username,password,source)
 {
 	var loginMsg="0|"+username+"#"+password+"#"+source+"|";
+	if(SocketConnLogFlag!=false)
 	console.log("send login msg="+loginMsg);
 	ws.send(loginMsg);
 }
@@ -112,19 +115,22 @@ SocketConn.prototype.Login=function(username,password,source)
 SocketConn.prototype.QuickLogin=function()
 {
 	var quickLoginMsg="A||";
+	if(SocketConnLogFlag!=false)
 	console.log("send QuickLogin msg="+quickLoginMsg);
 	ws.send(quickLoginMsg);
 }
 
 SocketConn.prototype.SendBeginMessage=function()
 {
+	if(SocketConnLogFlag!=false)
     console.log("send sBegin msg= BEGIN||");
     ws.send("BEGIN||");
 }
 
-SocketConn.prototype.SendRecordMessage=function(matchId,userId)
+SocketConn.prototype.SendRecordMessage=function(matchId,userId)//查看对战记录
 {
-    var recordMsg = "Record||"+matchId+"#"+userId+"|";
+    var recordMsg = "O|"+matchId+"#"+userId+"|";
+	if(SocketConnLogFlag!=false)
     console.log("send Recordmsg=="+recordMsg);
     ws.send(recordMsg);
 }
@@ -136,22 +142,40 @@ SocketConn.prototype.BeginMatch=function(mode)
 
 SocketConn.prototype.Buy=function(index)
 {
-	ws.send("6|"+index+"|");
+	var buyMsg = "6|"+index+"|";
+	if(SocketConnLogFlag!=false)
+	console.log("send Buymsg=="+buyMsg);
+	ws.send(buyMsg);
 }
 
 SocketConn.prototype.Sell=function(index)
 {
-	ws.send("7|"+index+"|");
+	var sellMsg = "7|"+index+"|";
+	if(SocketConnLogFlag!=false)
+	console.log("send Sellmsg=="+sellMsg);
+	ws.send(sellMsg);
+	//ws.send("7|"+index+"|");
+}
+
+SocketConn.prototype.Step=function(index)
+{
+	var stepMsg = "8|"+index+"|";
+	if(SocketConnLogFlag!=false)
+	console.log("send Stepmsg=="+stepMsg);
+	ws.send(stepMsg);
+	//ws.send("8|"+index+"|");
 }
 
 SocketConn.prototype.SendEndMessage=function()
 {
+	if(SocketConnLogFlag!=false)
 	console.log("send Endmsg==E||");
 	ws.send("E||");
 }
 
 SocketConn.prototype.SendShareMessage=function()
 {
+	if(SocketConnLogFlag!=false)
 	console.log("send share msg= S||");
 	ws.send("S||");
 }
@@ -177,7 +201,13 @@ SocketConn.prototype.SendZhanjiMessage=function(userId,pageIdx)
     console.log("send Z msg="+ehMsg);
     ws.send(ehMsg);
 }
-
+//
+// SocketConn.prototype.SendRecordMessage=function(userId,matchId)
+// {
+// 	var ehMsg="O|"+userId+"#"+matchId+"|";
+// 	console.log("send Z msg="+ehMsg);
+// 	ws.send(ehMsg);
+// }
 /*SocketConn.prototype.ShareMessage=function(shareMsg)
 {
 	var shareMsg="G|"+shareMsg+"|";

@@ -14,6 +14,7 @@ var MainMenuScene =SceneBase.extend(
 	//configButton:null,
 	
 	userNameLabel:null,				//自己的名字
+    selfNameLabel:null, //自己的名字
 	selfScoreLabel:null,			//自己的分数
    // "winOfMatchForOne":0,"sumOfMatchForOne":2,"winOfMatchForMore":0,"sumOfMatchForMore":0,"gainCumulation":0.0,"sumOfAllMatch":2}
 
@@ -33,11 +34,15 @@ var MainMenuScene =SceneBase.extend(
     loadTime:null,
     onEnteredFunction:null,	//OnEnter调用结束后的Function
 
+
+    _itemMenu:null,
+
     ctor: function ()
     {
         this._super();
         this.backgroundLayer=null;
         this.backgroundSprite=null;
+        this.selfNameLabel=null;
         this.infoLabel=null;
         this.winOneLabel=null;
         this.sumOneLabel=null;
@@ -51,7 +56,7 @@ var MainMenuScene =SceneBase.extend(
 
 
         this.zhanjiInfoLayer=null;
-        this.klineScene=null;
+       // this.klineScene=null;
         this.onEnteredFunction=null;
     },
 	onEnter:function () 
@@ -70,6 +75,10 @@ var MainMenuScene =SceneBase.extend(
 		var self=this;
         console.log("fXScale="+fXScale);
 		console.log("fYScale="+fYScale);
+
+
+
+
 		//先入队等待
 		//"res/mainMenu_bg.png","res/btn_control.png","res/btn_zhanji.png","res/btn_paihang.png","res/btn_help.png"，"res/btn_model1_u.png","res/btn_model1_d.png"，"res/btn_model2_u.png","res/btn_model2_d.png"，"res/btn_model3_u.png","res/btn_model3_d.png"，"res/btn_model4_u.png","res/btn_model4_d.png"
 		this.backgroundLayer=new cc.Layer();
@@ -80,9 +89,15 @@ var MainMenuScene =SceneBase.extend(
 		this.backgroundSprite.setPosition(size.width/2,size.height/2);
 
         this.touxiangSprite = cc.Sprite.create("res/touxiang.png");
-
         this.touxiangSprite.setScale(fXScale,fYScale);
         this.touxiangSprite.setPosition(cc.p(180*fXScale,500*fYScale));
+        this.backgroundLayer.addChild(this.touxiangSprite,2);
+
+        this.selfNameLabel = cc.LabelTTF.create(userInfo.nickName, "Arial", 15);
+        // this.selfNameLabel.setScale(fXScale,fYScale);
+        this.selfNameLabel.setAnchorPoint(0,0.5);
+        this.selfNameLabel.setPosition(cc.p(240*fXScale,520*fYScale));
+        this.backgroundLayer.addChild(this.selfNameLabel,2);
 
 
         self.infoLabel=cc.LabelTTF.create("练习场:", "Arial",15);
@@ -118,20 +133,26 @@ var MainMenuScene =SceneBase.extend(
 		//	//self.firstModeChanged();
 		//});
 
-        this.firstMode=new Button("res/btn_mode1_u.png");
+        // this.firstMode=new Button("res/btn_mode1_u.png");
+        // this.firstMode.setScale(fXScale,fYScale);
+        // this.firstMode.setPosition(cc.p(190*fXScale,pModeY*fYScale));
+        // this.firstMode.setClickEvent(function(){
+        //     console.log("firstMode ClickEvent");
+        //     self.firstModeChanged();
+        // });
+        this.firstMode=new CheckButton("res/btn_mode1_d.png","res/btn_mode1_u.png");
         this.firstMode.setScale(fXScale,fYScale);
-        this.firstMode.setPosition(cc.p(190*fXScale,pModeY*fYScale));
+        this.firstMode.setPosition(cc.p((190)*fXScale,pModeY*fYScale));
         this.firstMode.setClickEvent(function(){
-            console.log("firstMode ClickEvent");
             self.firstModeChanged();
         });
-		
-		this.secondMode=new CheckButton("res/btn_mode2_u.png","res/btn_mode2_d.png");
+
+		this.secondMode=new CheckButton("res/btn_mode2_d.png","res/btn_mode2_u.png");
         this.secondMode.setScale(fXScale,fYScale);
 		this.secondMode.setPosition(cc.p((190+pModeXdistance)*fXScale,pModeY*fYScale));
-//		this.secondMode.setClickEvent(function(){
-//			self.secondModeChanged();
-//		});
+		this.secondMode.setClickEvent(function(){
+            self.secondModeChanged();
+        });
 		
 		this.thirdMode=new CheckButton("res/btn_mode3_u.png","res/btn_mode3_d.png");
         this.thirdMode.setScale(fXScale,fYScale);
@@ -148,7 +169,7 @@ var MainMenuScene =SceneBase.extend(
 //		});
 		
 		this.backgroundLayer.addChild(this.backgroundSprite, 1);
-        this.backgroundLayer.addChild(this.touxiangSprite,2);
+
 		this.backgroundLayer.addChild(this.zhanjiButton, 2);
         this.backgroundLayer.addChild(this.configButton, 2);
         this.backgroundLayer.addChild(this.paimingButton, 2);
@@ -174,8 +195,72 @@ var MainMenuScene =SceneBase.extend(
         {
             this.onEnteredFunction();
         }
+
+
+//test
+
+
+        //
+        // this._itemMenu = new cc.Menu();
+        //
+        //
+        // var label = new cc.LabelTTF("setOpacity", "Arial", 25);
+        // var menuItem1 = new cc.MenuItemLabel(label,this.setOpacityTest,this);
+        // menuItem1.setPosition(cc.p(180*fXScale,500*fYScale));
+        // this._itemMenu.addChild(menuItem1,101);
+        //
+        // // var touxiangSprite = cc.MenuItemImage("res/touxiang.png","res/touxiang.png",this.setOpacityTest,this);
+        // // var touxiangSprite = cc.MenuItemImage("res/touxiang.png","res/touxiang.png",this.setOpacityTest,this);
+        // //     // cc.Sprite.create("res/touxiang.png");
+        // //touxiangSprite.setScale(fXScale,fYScale);
+        // //touxiangSprite.setPosition(cc.p(180*fXScale,500*fYScale));
+        //
+        // // this._itemMenu.addChild(touxiangSprite,101);
+        //
+        //
+        //
+        //
+        //
+        // this._itemMenu.setPosition(0,0);
+        // this.addChild(this._itemMenu,1);
+        // cc.log("menu.x",this._itemMenu.getPositionX());
+        //cc.log("menuItem.x",touxiangSprite.getPositionX());
 	},
 
+    setOpacityTest:function(){
+        cc.log(".....setOpacityTest Touch Down");
+
+    },
+    setTouxiangTest:function(){
+        cc.log(".....setTouxiangTest Touch Down");
+
+    },
+    touchEvent: function (sender, type) {
+        switch (type) {
+            case ccui.Widget.TOUCH_BEGAN:
+                cc.log(".....Touch Down");
+                // this._topDisplayLabel.setString("Touch Down");
+                break;
+
+            case ccui.Widget.TOUCH_MOVED:
+                cc.log(".....Touch Move");
+                //this._topDisplayLabel.setString("Touch Move");
+                break;
+
+            case ccui.Widget.TOUCH_ENDED:
+                cc.log(".....Touch Up");
+                //this._topDisplayLabel.setString("Touch Up");
+                break;
+
+            case ccui.Widget.TOUCH_CANCELED:
+                cc.log(".....Touch Cancelled");
+                // this._topDisplayLabel.setString("Touch Cancelled");
+                break;
+
+            default:
+                break;
+        }
+    },
     
     moveTofirstMode:function()
     {
@@ -191,27 +276,51 @@ var MainMenuScene =SceneBase.extend(
             setTimeout(function(){self.firstModeChanged,5000-(endTime-loadTime);});
         }
     },
-
+    //
+    // firstModeChanged:function()
+    // {
+    //     console.log("Waiting for .firstModeChanged"+this.secondMode.isSelected);
+    //     console.log("准备切换到KGameScene下一个场景");
+    //     this.stopProgress();
+    //     var self =gMainMenuScene;
+    //     if(self.klineScene==null)
+    //     {
+    //         self.klineScene=new KLineScene();
+    //     }
+    //
+    //     //self.klineScene.onEnteredFunction=function(){
+    //     //    self.klineScene.showProgress();
+    //     //};
+    //     gSocketConn.RegisterEvent("onmessage",self.klineScene.messageCallBack);
+    //     gSocketConn.BeginMatch(0);
+    //     //cc.director.runScene(cc.TransitionFade.create(0.5,klineSceneNext,cc.color(255,255,255,255)));
+    //     cc.director.runScene(self.klineScene);
+    //     console.log("切换KGameScene场景调用完毕");
+    //     console.log("Waiting for .firstModeChanged end");
+    // },
     firstModeChanged:function()
     {
-        console.log("Waiting for .firstModeChanged"+this.secondMode.isSelected);
-        console.log("准备切换到KGameScene下一个场景");
-        this.stopProgress();
-        var self =gMainMenuScene;
-        if(self.klineScene==null)
+        if(this.firstMode.isSelected==true)
         {
-            self.klineScene=new KLineScene();
-        }
+            console.log("Waiting for firstModeChanged");
+            this.showProgress();
+            var self =gMainMenuScene;
+            if(gKlineScene==null)
+            {
+                gKlineScene=new KLineScene();
+            }
 
-        //self.klineScene.onEnteredFunction=function(){
-        //    self.klineScene.showProgress();
-        //};
-        gSocketConn.RegisterEvent("onmessage",self.klineScene.messageCallBack);
-        gSocketConn.BeginMatch(0);
-        //cc.director.runScene(cc.TransitionFade.create(0.5,klineSceneNext,cc.color(255,255,255,255)));
-        cc.director.runScene(self.klineScene);
-        console.log("切换KGameScene场景调用完毕");
-        console.log("Waiting for .firstModeChanged end");
+            //self.klineScene.onEnteredFunction=function(){
+            //    self.klineScene.showProgress();
+            //};
+
+            userInfo.matchMode = 0;
+           // gSocketConn.RegisterEvent("onmessage",gKlineScene.messageCallBack);
+            gSocketConn.BeginMatch(userInfo.matchMode);
+            //cc.director.runScene(cc.TransitionFade.create(0.5,klineSceneNext,cc.color(255,255,255,255)));
+            // cc.director.runScene(gKlineScene);
+            console.log("切换KGameScene场景调用完毕");
+        }
     },
 
 	secondModeChanged:function()
@@ -219,6 +328,23 @@ var MainMenuScene =SceneBase.extend(
 		if(this.secondMode.isSelected==true)
 		{
 			console.log("Waiting for secondModeChanged");
+            this.showProgress();
+            var self =gMainMenuScene;
+            if(gKlineScene==null)
+            {
+                gKlineScene=new KLineScene();
+            }
+
+            //gKlineScene.onEnteredFunction=function(){
+            //    gKlineScene.showProgress();
+            //};
+            userInfo.matchMode = 2;
+            //gSocketConn.RegisterEvent("onmessage",gKlineScene.messageCallBack);
+            // gSocketConn.BeginMatch("0");
+            gSocketConn.BeginMatch("2#DON");
+            //cc.director.runScene(cc.TransitionFade.create(0.5,klineSceneNext,cc.color(255,255,255,255)));
+            // cc.director.runScene(gKlineScene);
+            console.log("切换KGameScene场景调用完毕");
 		}
 	},
 	
@@ -243,6 +369,7 @@ var MainMenuScene =SceneBase.extend(
         console.log("Waiting for zhanji...");
         //var userId=GetQueryString("userId");
         //userInfo.userId
+        this.showProgress();
 		gSocketConn.SendZhanjiMessage(userInfo.userId,0);
         console.log("Waiting for zhanji...");
 	},
@@ -333,7 +460,11 @@ var MainMenuScene =SceneBase.extend(
 
         var self =this;
 
-        if(userInfo.winOfMatchForOne!=null)
+        if(userInfo.nickName!=null&&self.selfNameLabel!=null)
+        {
+            self.selfNameLabel.setString(userInfo.nickName);
+        }
+        if(userInfo.winOfMatchForOne!=null&&self.winOneLabel!=null)
         {
             cc.log("setDataforInfoW="+userInfo.winOfMatchForOne);
             self.winOneLabel.setPosition(cc.pAdd(self.infoLabel.getPosition(),cc.p(self.infoLabel.getContentSize().width,0)));
@@ -350,6 +481,7 @@ var MainMenuScene =SceneBase.extend(
         var data=JSON.parse(jsonText);
         console.log("jsonText parse over");
 
+        userInfo.nickName=data["nickName"];
         userInfo.winOfMatchForOne=data["winOfMatchForOne"];
         userInfo.sumOfMatchForOne=data["sumOfMatchForOne"];
         userInfo.winOfMatchForMore=data["winOfMatchForMore"];
@@ -363,63 +495,164 @@ var MainMenuScene =SceneBase.extend(
 	{
 		var self=gMainMenuScene;
 		var packet=Packet.prototype.Parse(message);
-        console.log("messageCallBack mainScene message callback packet="+packet.msgType+" content="+packet.content);
+        console.log("messageCallBack mainScene message callback message=###"+message+"###");
 		if(packet==null) return;
-        if(packet.msgType=="P")
+        switch(packet.msgType)
         {
-            //self.moveToNextScene();
-            //接收到了K线数据的消息
-            console.log("call get MainMenuScene data");
-            //
-            self.setMainMenuScenedata(packet.content);
-            console.log("get MainMenuScene passed");
-
-            self.stopProgress();
-        }
-        else if(packet.msgType=="Z")
-        {
-        //接收到战绩的数据
-            self.showZhanjiInfo(packet.content);
-        }
-		else if(packet.msgType=="5")
-		{
-            self.klineScene=new KLineScene();
-			//接收到了K线数据的消息
-			gSocketConn.UnRegisterEvent("onmessage",self.messageCallBack);
-			if(self.klineScene!=null)
-			{
-				console.log("call get kline data");
-				self.klineScene.getklinedata(packet.content);
-				console.log("get kline passed");
-			}
-            self.stopProgress();
-		}
-        else if(packet.msgType=="4")
-        {
-            self.klineScene=new KLineScene();
-            //接收到了K线数据的消息
-            gSocketConn.UnRegisterEvent("onmessage",self.messageCallBack);
-            if(self.klineScene!=null)
+            case "":
             {
-                console.log("call get kline data");
-                self.klineScene.getklinedata(packet.content);
-                console.log("get kline passed");
+                cc.log("gMainMenuScene packet.msgType =''");
+                break;
             }
-            self.stopProgress();
+            case "P"://接收到了大厅数据的消息
+            {
+                console.log("call get MainMenuScene data");
+                self.setMainMenuScenedata(packet.content);
+                console.log("get MainMenuScene passed");
+                self.stopProgress();
+                break;
+            }
+
+            case "Z"://接收到战绩的数据
+            {
+                self.showZhanjiInfo(packet.content);
+                self.stopProgress();
+                break;
+            }
+
+            case "M"://人机对战
+            {
+                // if(gKlineScene==null)
+                //     gKlineScene=new KLineScene();
+                // //接收到了K线数据的消息
+                // // gSocketConn.UnRegisterEvent("onmessage",gKlineScene.messageCallBack);
+                // if(gKlineScene!=null)
+                // {
+                //     console.log("call get kline data");
+                //     gKlineScene.getklinedata(packet.content);
+                //     console.log("get kline passed");
+                // }
+                // self.stopProgress();
+                // break;
+            }
+            // case "":
+            // {
+            //     cc.log("gMainMenuScene packet.msgType =''");
+            //     break;
+            // }
+            // case "":
+            // {
+            //     cc.log("gMainMenuScene packet.msgType =''");
+            //     break;
+            // }
+            case "8":
+            {
+                //收到对方买入的信息
+                //alert("8="+packet.content);
+                var buyOperationIndex=parseInt(packet.content.split("#")[1]);
+                self.opponentOperations.push(buyOperationIndex);
+                self.refreshScores();
+            }
+
+            case "9":
+            {
+                //收到对方卖出的信息
+                //alert("9="+packet.content);
+                var sellOperationIndex=parseInt(packet.content.split("#")[1]);
+                self.opponentOperations.push(-sellOperationIndex);
+                self.refreshScores();
+                break;
+            }
+
+            case "4":
+            {
+                //
+                //cc.director.runScene(cc.TransitionSlideInL.create(0.5,klineScene));
+                self.opponentsInfo.push(packet.content);
+                self.stopProgress();
+                break;
+            }
+            case "5"://K线数据
+            {
+                if(gKlineScene==null)
+                    gKlineScene=new KLineScene();
+
+                //接收到了K线数据的消息
+                // gSocketConn.UnRegisterEvent("onmessage",gKlineScene.messageCallBack);
+                if(gKlineScene!=null)
+                {
+                    console.log("call get kline data");
+                    gKlineScene.getklinedata(packet.content);
+                    cc.director.runScene(gKlineScene);
+                    console.log("get kline passed");
+                }
+                self.stopProgress();
+                break;
+            }
+            case "S":
+            {
+                //接收到了K线数据的分享消息
+                self.share(packet.content);
+                console.log("get kline K线数据的分享消息passed"+packet.content);
+                break;
+            }
+            case "H":
+            {
+                //成功接收到了K线数据的分享数据
+                if(gKlineScene==null)
+                    gKlineScene=new KLineScene();
+                //接收到了分享的K线数据的消息
+                // gSocketConn.UnRegisterEvent("onmessage",self.messageCallBack);
+                if(gKlineScene!=null)
+                {
+                    console.log("call get kline data");
+                    gKlineScene.getShareKlinedata(packet.content);
+                    console.log("get kline passed");
+                }
+                self.stopProgress();
+                console.log("成功接收到了K线数据的分享数据");
+                break;
+            }
+            case "O"://观看记录
+            {
+                if(gKlineScene==null)
+                    gKlineScene=new KLineScene();
+                //接收到了K线数据的消息
+                // gSocketConn.UnRegisterEvent("onmessage",gKlineScene.messageCallBack);
+                if(gKlineScene!=null)
+                {
+                    console.log("call get kline data");
+                    //self.getShareKlinedata
+                    gKlineScene.getShareKlinedata(packet.content);
+                    console.log("get kline passed");
+                }
+                self.stopProgress();
+                break;
+            }
+            case "F":
+            {
+                //接收到对局结束
+                //接收到对局结束
+                //alert("接收到对局结束");
+                if(gKlineScene==null)
+                    gKlineScene=new KLineScene();
+                gKlineScene.showMatchEndInfo(packet.content);
+                break;
+                break;
+            }
+            case "":
+            {
+                break;
+            }
+
+            default:
+            {
+                console.log("KlineScene messageCallBack..."+message);
+                break;
+            }
         }
-		else if(packet.msgType=="H")
-		{
-			self.klineScene=new KLineScene();
-			//接收到了分享的K线数据的消息
-			gSocketConn.UnRegisterEvent("onmessage",self.messageCallBack);
-			if(self.klineScene!=null)
-			{
-				console.log("call get kline data");
-				self.klineScene.getShareKlinedata(packet.content);
-				console.log("get kline passed");
-			}
-            self.stopProgress();
-		}
+
+
 	},
 
     showZhanjiInfo:function(content)

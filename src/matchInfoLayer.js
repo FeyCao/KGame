@@ -70,22 +70,25 @@ var MatchInfoLayer= cc.Layer.extend({
 		this.addChild(this.buyCloseDisableSprite, 2);
 		this.addChild(this.sellDisableSprite, 2);
 		this.addChild(this.sellCloseDisableSprite, 2);		
-		
+
+
+		var posY = 40;
+
 		//////////////////////////////////////////////////////////////
 		this.buyButton=new Button("res/btnBuyEnable.png");
 		//this.buyButton.setPosition(cc.p(77,44));
-		this.buyButton.setPosition(cc.p(106,44));
+		this.buyButton.setPosition(cc.p(106,posY-5));
 		this.buyButton.setClickEvent(function(){
 			self.buyClick();
 		});
 		this.addChild(this.buyButton, 3);
 		
-		//this.sellCloseButton=new Button("res/btnCloseSell.png");
-		//this.sellCloseButton.setPosition(cc.p(136,44));
-		
+		this.sellCloseButton=new Button("res/btnCloseSell.png");
+		this.sellCloseButton.setPosition(cc.p(136,44));
+
 		this.sellCloseButton=new Button("res/btnSellEnable.png");
-		this.sellCloseButton.setPosition(cc.p(630,44));
-		
+		this.sellCloseButton.setPosition(cc.p(630,posY-5));
+
 		this.sellCloseButton.setClickEvent(function(){
 			self.sellCloseClick();
 		});
@@ -93,51 +96,51 @@ var MatchInfoLayer= cc.Layer.extend({
 		
 		this.sellButton=new Button("res/btnSellEnable.png");
 		//this.sellButton.setPosition(cc.p(600,44));
-		this.sellButton.setPosition(cc.p(630,44));
+		this.sellButton.setPosition(cc.p(630,posY-5));
 		this.sellButton.setClickEvent(function(){
 			self.sellClick();
 		});
 		this.addChild(this.sellButton, 3);
 		
-		//this.buyCloseButton=new Button("res/btnCloseBuy.png");
-		//this.buyCloseButton.setPosition(cc.p(659,44));
-		
+		this.buyCloseButton=new Button("res/btnCloseBuy.png");
+		this.buyCloseButton.setPosition(cc.p(659,44));
+
 		this.buyCloseButton=new Button("res/btnBuyEnable.png");
-		this.buyCloseButton.setPosition(cc.p(106,44));
-		
-		
+		this.buyCloseButton.setPosition(cc.p(106,posY));
+
+
 		this.buyCloseButton.setClickEvent(function(){
 			self.buyCloseClick();
 		});
 		this.addChild(this.buyCloseButton, 3);
 		
 		this.btnAgain=new Button("res/meBtnAgain.png");
-		this.btnAgain.setPosition(cc.p(276,44));
+		this.btnAgain.setPosition(cc.p(276,posY));
 		this.btnAgain.setClickEvent(function(){
 			self.again();
 		});
 		
 		
 		this.btnShare=new Button("res/meBtnShare.png");
-		this.btnShare.setPosition(cc.p(460,44));
+		this.btnShare.setPosition(cc.p(460,posY));
 		this.btnShare.setClickEvent(function(){
 			self.share();
 		});
 
         this.meBtnStart=new Button("res/meBtnStart.png");
-        this.meBtnStart.setPosition(cc.p(363,46));
+        this.meBtnStart.setPosition(cc.p(363,posY));
         this.meBtnStart.setClickEvent(function(){
             self.meStart();
         });
 		
-		this.btnStart=new Button("res/btnStart.png");
-        this.btnStart.setPosition(cc.p(363,46));
-        this.btnStart.setClickEvent(function(){
-            self.start();
-        });
+        // this.btnStart=new Button("res/btnStart.png");
+        // this.btnStart.setPosition(cc.p(363,posY));
+        // this.btnStart.setClickEvent(function(){
+        //     self.start();
+        // });
 
         this.btnHome=new Button("res/home.png");
-        this.btnHome.setPosition(cc.p(363,46));
+        this.btnHome.setPosition(cc.p(363,posY));
         this.btnHome.setClickEvent(function(){
             self.meStart();
         });
@@ -145,8 +148,22 @@ var MatchInfoLayer= cc.Layer.extend({
 		this.addChild(this.btnAgain,3);
 		this.addChild(this.btnShare,3);
         this.addChild(this.meBtnStart,3);
-		this.addChild(this.btnStart,3);
-		
+		// this.addChild(this.btnStart,3);
+		this.matchInfoArea=new cc.DrawNodeCanvas();
+		//设置K线图的区域
+		this.matchInfoArea.setPosition(cc.p(0,0));
+		this.matchInfoArea.width=this.width;
+		this.matchInfoArea.height=this.height;
+		this.addChild(this.matchInfoArea, 1);
+
+
+
+		//设置变速信息的区域
+		this.initSpeedControlArea();
+
+		this.setButtonsToNoPosition();
+		this.drawDisableButtons();
+		this.drawAreaBorder();
 		/*
 		 this.buyButtonImage=new cc.MenuItemImage("res/buy.png","res/buy_p.png",this.buyButtonCallBack);
 		 this.buyMenu=new cc.Menu(this.buyButtonImage);
@@ -183,21 +200,9 @@ var MatchInfoLayer= cc.Layer.extend({
 		 this.addChild(this.opponentScoreLabel,5);
 		 */
 		 
-		 this.matchInfoArea=new cc.DrawNodeCanvas();
- 		 //设置K线图的区域
-		 this.matchInfoArea.setPosition(cc.p(0,0));
-		 this.matchInfoArea.width=this.width;
-		 this.matchInfoArea.height=this.height;
-		 this.addChild(this.matchInfoArea, 1);
-		 
-		//设置变速信息的区域
-		 this.initSpeedControlArea();
-		 
-		 this.setButtonsToNoPosition();
-		 this.drawDisableButtons();
-		 this.drawAreaBorder();
+
 	},
-	
+
 	initSpeedControlArea:function()
 	{
 		 //设置变速信息的信息
@@ -205,18 +210,18 @@ var MatchInfoLayer= cc.Layer.extend({
 		 
 		 this.speedControlLayer=new cc.Layer();
 		 this.addChild(this.speedControlLayer,3);
-		 
+		 var posY = 35;
 		 this.scBackgroundSprite=cc.Sprite.create("res/btn_sc_bg.png");
 		 this.scPlayCheckButton=new CheckButton("res/btn_sc_pause.png","res/btn_sc_play.png");
 		 this.scHalfCheckButton=new CheckButton("res/btn_sc_a_half.png","res/btn_sc_d_half.png");
 		 this.scNormalCheckButton=new CheckButton("res/btn_sc_a_normal.png","res/btn_sc_d_normal.png");
 		 this.scDoubleCheckButton=new CheckButton("res/btn_sc_a_double.png","res/btn_sc_d_double.png");
 		 
-		  this.scBackgroundSprite.setPosition(cc.p(406,42));
-	   	  this.scPlayCheckButton.setPosition(cc.p(302,42));
-		  this.scHalfCheckButton.setPosition(cc.p(359,42));
-		  this.scNormalCheckButton.setPosition(cc.p(406,42));
-		  this.scDoubleCheckButton.setPosition(cc.p(453,42));
+		  this.scBackgroundSprite.setPosition(cc.p(406,posY));
+	   	  this.scPlayCheckButton.setPosition(cc.p(302,posY));
+		  this.scHalfCheckButton.setPosition(cc.p(359,posY));
+		  this.scNormalCheckButton.setPosition(cc.p(406,posY));
+		  this.scDoubleCheckButton.setPosition(cc.p(453,posY));
 		  
 		  this.scPlayCheckButton.setClickEvent(function(){
 			self.playCheckChanged();
@@ -322,7 +327,7 @@ var MatchInfoLayer= cc.Layer.extend({
 		this.btnAgain.setVisible(false);
 		this.btnShare.setVisible(false);
         this.meBtnStart.setVisible(false);
-		this.btnStart.setVisible(false);
+		// this.btnStart.setVisible(false);
 		this.speedControlLayer.setVisible(false);
 	},
 	ableSpeedButtons:function()
@@ -469,17 +474,12 @@ var MatchInfoLayer= cc.Layer.extend({
         this.meBtnStart.setVisible(true);
     },
 	
-	setStart:function()
-    {
-        this.btnStart.setVisible(true);
-    },
-	
-	start:function()
-	{
-		var klineScene=this.parent.parent;
-        gSocketConn.SendBeginMessage();
-		klineScene.setCountDownSprite();
-	},
+    // setStart:function()
+    // {
+		// cc.log("MatchInfoLayer setStart:function()");
+    //     this.btnStart.setVisible(true);
+    // },
+
 	
 	again:function()
 	{

@@ -5,8 +5,13 @@ var PlayerInfoLayer= cc.Layer.extend({
 	selfNameLabel:null,				//自己的名字
 	selfScoreLabel:null,			//自己的分数
 	avatarSprite:null,				//自己的头像
-	
-	ctor:function(width,height)
+	playerInfo_bg:null,
+	playerInfo_bg1:null,
+	playerInfo_bg2:null,
+	playerInfo_bg3:null,
+
+
+ctor:function(width,height)
 	{
 		this._super();
 		this.width=width;
@@ -16,40 +21,83 @@ var PlayerInfoLayer= cc.Layer.extend({
 	onEnter:function () 
 	{
 		this._super();
-		
-		 this.playerInfoArea=new cc.DrawNodeCanvas();
- 		 //设置K线图的区域
-		 this.playerInfoArea.setPosition(cc.p(0,0));
-		 this.playerInfoArea.width=this.width;
-		 this.playerInfoArea.height=this.height;
-		 this.addChild(this.playerInfoArea, 1);
-		 
-		 this.selfNameLabel=cc.LabelTTF.create("", "Arial", 20);
-		 //this.selfNameLabel=cc.LabelTTF.create(gPlayerName, "Arial", 20);
-		 this.selfNameLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
-		 this.selfNameLabel.setAnchorPoint(0,0.5);
-		 this.selfNameLabel.setPosition(44, 20);
-		 this.addChild(this.selfNameLabel,5); 
-		 
-		 this.selfScoreLabel=cc.LabelTTF.create("0.00%", "Arial", 24);
-		 this.selfScoreLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
-		 this.selfScoreLabel.setAnchorPoint(0,0.5);
-		 this.selfScoreLabel.setPosition(148, 20);
-		 this.addChild(this.selfScoreLabel,5); 
-		 
-		 if(gPlayerAvatarSprite==null)
-		 {
-			 gPlayerAvatarSprite=cc.Sprite.create("res/avatar"+(1+Math.round(Math.random()*10)%5)+".png");
-		 }
-		 
-		 this.avatarSprite=cc.Sprite.create(gPlayerAvatarSprite.getTexture());
-		 this.avatarSprite.setPosition(100,20);
-		 this.avatarSprite.setScale(0.27);
-		 this.addChild(this.avatarSprite,5); 
-		 
-		 this.drawAreaBorder();
+		this.size = cc.director.getWinSize();
+		this.fXScale = this.size.width/1280;
+		this.fYScale = this.size.height/720;
+
+		this.playerInfoArea=new cc.DrawNodeCanvas();
+		//设置K线图的区域
+		this.playerInfoArea.setPosition(cc.p(0,0));
+		this.playerInfoArea.width=this.width;
+		this.playerInfoArea.height=this.height;
+		this.addChild(this.playerInfoArea, 1);
+
+		// this.selfNameLabel=cc.LabelTTF.create(userInfo.nickName, "Arial", 20);
+		// //this.selfNameLabel=cc.LabelTTF.create(gPlayerName, "Arial", 20);
+		// this.selfNameLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
+		// this.selfNameLabel.setAnchorPoint(0,0.5);
+		// this.selfNameLabel.setPosition(60, this.height-20);
+		// this.addChild(this.selfNameLabel,5);
+
+		this.selfScoreLabel=cc.LabelTTF.create("0.00%", "Arial", 24);
+		this.selfScoreLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
+		this.selfScoreLabel.setAnchorPoint(0,0.5);
+		this.selfScoreLabel.setPosition(168, this.height-20);
+		this.addChild(this.selfScoreLabel,5);
+
+		if(gPlayerAvatarSprite==null)
+		{
+			gPlayerAvatarSprite=cc.Sprite.create("res/avatar"+(1+Math.round(Math.random()*10)%5)+".png");
+		}
+
+		this.avatarSprite=cc.Sprite.create(gPlayerAvatarSprite.getTexture());
+		this.avatarSprite.setPosition(120*this.fXScale,this.height-20);
+		this.avatarSprite.setScale(0.27);
+		this.addChild(this.avatarSprite,5);
+		this.setPlayerInfo();
+		this.drawAreaBorder();
 	},
-	
+	setPlayerInfo:function()
+	{
+		if(userInfo.matchMode==null)return;
+		switch(userInfo.matchMode)
+		{
+			case 0:
+			{
+				break;
+			}
+			case 1:
+			{
+				break;
+			}
+			case 2:
+			{
+
+				if(this.playerInfo_bg ==null)
+				{
+					this.playerInfo_bg=cc.Sprite.create("res/playerInfo_bg.png");
+					this.playerInfo_bg.setPosition(30,270);
+					this.playerInfo_bg.setScale(0.5);
+					this.addChild(this.playerInfo_bg,5);
+				}
+				if(this.playerInfo_bg1 ==null)
+				{
+					this.playerInfo_bg1=cc.Sprite.create("res/playerInfo_bg.png");
+					this.playerInfo_bg1.setPosition(30,140);
+					this.playerInfo_bg1.setScale(0.5);
+					this.addChild(this.playerInfo_bg1,5);
+				}
+
+
+				break;
+			}
+			default:
+			{
+				cc.log("PlayerInfoLayer setPlayerInfo userInfo.matchMode=",userInfo.matchMode);
+			}
+		}
+
+	},
 	drawAreaBorder:function()
 	{
 		 //给这个矩形区域添加红色的边框

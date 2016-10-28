@@ -278,15 +278,16 @@ var TempLoadScene = SceneBase.extend(
             cc.director.runScene(klineSceneNext);
             console.log("SWEB切换场景调用完毕");
         }else if(this.source=="DHJK"){
-            var mainMenuScene=new MainMenuScene();
+			if(gMainMenuScene==null)
+				gMainMenuScene=new MainMenuScene();
             //mainMenuScene.onEnteredFunction=function(){
             //    mainMenuScene.showProgress();
             //};
 
-            gSocketConn.RegisterEvent("onmessage",mainMenuScene.messageCallBack);
+            gSocketConn.RegisterEvent("onmessage",gMainMenuScene.messageCallBack);
             gSocketConn.SendEHMessage(this.username,this.password);
             //cc.director.runScene(cc.TransitionFade.create(0.5,klineSceneNext,cc.color(255,255,255,255)));
-            cc.director.runScene(mainMenuScene);
+            cc.director.runScene(gMainMenuScene);
             console.log("DHJK切换场景调用完毕");
         }
 

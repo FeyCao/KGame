@@ -34,8 +34,8 @@ var ShareLoadScene = SceneBase.extend(
 		var self=this;
 		this.showProgress();
 		loadTime=new Date().getTime();
-		self.userId=GetQueryString("userId");
-		self.matchId=GetQueryString("matchId");
+		self.userId=getQueryStringByName("userId");
+		self.matchId=getQueryStringByName("matchId");
         console.log("userId:"+self.userId);
 		console.log("matchId:"+self.matchId);
 

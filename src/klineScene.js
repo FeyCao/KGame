@@ -56,47 +56,86 @@ var KLineScene = SceneBase.extend(
 		this.borderArea=null;
 		this.onEnteredFunction=null;
 		this.currentCandleDrawInterval=null;
-		
-		
+
+		this.size=null;
+		this.fXScale = null;
+		this.fYScale = null;
+		this.KlineWidth = 726;
+		this.KlinePosX = 3;
 	},
 	
 	onEnter:function () 
 	{
 		this._super();
-        var size = cc.director.getWinSize();
-        var fXScale = size.width/1280;
-        var fYScale = size.height/720;
+        this.size = cc.director.getWinSize();
+        this.fXScale = this.size.width/1280;
+		this.fYScale = this.size.height/720;
 		//document.getElementById("mainBody").style
 		document.bgColor="#152936";
 		gKlineScene=this;
 		this.currentCandleDrawInterval=this.CANDAL_DRAW_INTERVAL;
-		
 		console.log("............klinescene on enter called");
-		var size = cc.director.getWinSize();
 		this.backgroundLayer=new cc.LayerColor(cc.color(21,41,54, 255));
 		this.backgroundLayer.ignoreAnchorPointForPosition(false);  
-		this.backgroundLayer.setPosition(size.width / 2, size.height / 2);  
+		this.backgroundLayer.setPosition(this.size.width / 2, this.size.height / 2);
 		this.addChild(this.backgroundLayer, 1,this.backgroundLayer.getTag());
 
+		this.backgroundSprite=cc.Sprite.create("res/battle_bg.png");
+		this.backgroundSprite.setScale(this.fXScale,this.fYScale);
+		this.backgroundSprite.setPosition(this.size.width/2,this.size.height/2);
+		this.backgroundLayer.addChild(this.backgroundSprite, 1);
+
+
+		// cc.Button()
 
 
 
-
+		this.setPlayerInfo();
+		// switch(userInfo.matchMode)
+		// {
+		// 	case 0:
+		// 	{
+		// 		this.KlineWidth = 726;
+		// 		this.KlinePosX = 3;
+		// 		break;
+		// 	}
+		// 	case 1:
+		// 	{
+		// 		this.KlineWidth = 700;
+		// 		this.KlinePosX = 3;
+		// 		break;
+		// 	}
+		// 	case 2:
+		// 	{
+		// 		this.KlineWidth = 700;
+		// 		this.KlinePosX = 40;
+		// 		break;
+		// 	}
+		// 	case 3:
+		// 	{
+		// 		break;
+		// 	}
+		// 	default:
+		// 	{
+		// 		cc.log("userInfo.matchMode ="+userInfo.matchMode);
+		// 		break;
+		// 	}
+		// }
  		 //设置K线图的区域
-		this.klineLayerMain=new KlineLayer(726,192);
-		this.klineLayerMain.setPosition(cc.p(5,184));
+		this.klineLayerMain=new KlineLayer(this.KlineWidth,192);
+		this.klineLayerMain.setPosition(cc.p(this.KlinePosX,170));
 		
-		this.volumnTechLayerMain=new VolumnTechLayer(726,100-6);
-		this.volumnTechLayerMain.setPosition(cc.p(5,83+6));
+		this.volumnTechLayerMain=new VolumnTechLayer(this.KlineWidth,94);
+		this.volumnTechLayerMain.setPosition(cc.p(this.KlinePosX,75));
 		
 		this.borderArea=new cc.DrawNodeCanvas();
-		this.borderArea.setPosition(cc.p(5,83));
+		this.borderArea.setPosition(cc.p(0,68));
 		this.borderArea.width=726;
 		this.borderArea.height=294;
 		this.addChild(this.borderArea, 2);
 		  //画边框
-		 this.drawAreaBorder();
-		 this.drawHorizontalLine();
+		//this.drawAreaBorder();
+		this.drawHorizontalLine();
 		
 		this.klineLayerPrev=new KlineLayer(this.klineLayerMain.width,this.klineLayerMain.height);
 		this.klineLayerPrev.setPosition(this.klineLayerMain.getPosition());
@@ -125,10 +164,17 @@ var KLineScene = SceneBase.extend(
 
 
         this.btnHome=new Button("res/home.png");
-        this.btnHome.setPosition(cc.p(40*fXScale,size.height-35*fYScale));
-        this.btnHome.setScale(fXScale*0.8,fYScale*0.8);
+        this.btnHome.setPosition(cc.p(40*this.fXScale,this.size.height-35*this.fYScale));
+        this.btnHome.setScale(this.fXScale*0.8,this.fYScale*0.8);
         this.btnHome.setClickEvent(function(){self.toHome();});
         this.addChild(this.btnHome,123);
+
+		this.btnStart=new Button("res/btnStart.png");
+		this.btnStart.setPosition(cc.p(363,40));
+		this.btnStart.setClickEvent(function(){
+			self.start();
+		});
+		this.addChild(this.btnStart,123);
 
 		//调用下面这个函数的时候，可能数据还未获取到，也可能获取到了
 		this.setDataForLlineLayer();
@@ -137,8 +183,9 @@ var KLineScene = SceneBase.extend(
 		this.matchInfoLayer.setPosition(cc.p(5,0));
 		this.addChild(this.matchInfoLayer, 8,this.matchInfoLayer.getTag());
 		
-		this.playerInfoLayer=new PlayerInfoLayer(726,36);
-		this.playerInfoLayer.setPosition(cc.p(5,377));
+		this.playerInfoLayer=new PlayerInfoLayer(this.size.width,this.size.height);
+		this.playerInfoLayer.setPosition(cc.p(0,0));
+		// this.playerInfoLayer.setPosition(cc.p(this.size.width/2,this.size.height/2));
 		this.addChild(this.playerInfoLayer, 8,this.playerInfoLayer.getTag());
 		
 		if(gSocketConn!=null && gSocketConn!=undefined)
@@ -155,7 +202,7 @@ var KLineScene = SceneBase.extend(
 		
 		this.matchEndInfoLayer=new MatchEndInfoLayer();
 		this.matchEndInfoLayer.setVisible(false);
-		this.matchEndInfoLayer.setPosition((size.width-this.matchEndInfoLayer.width) / 2, (size.height-this.matchEndInfoLayer.height) / 2);  
+		this.matchEndInfoLayer.setPosition((this.size.width-this.matchEndInfoLayer.width) / 2, (this.size.height-this.matchEndInfoLayer.height) / 2);
 		this.otherMessageTipLayer.addChild(this.matchEndInfoLayer, 1,this.matchEndInfoLayer.getTag());
 
 		
@@ -164,7 +211,59 @@ var KLineScene = SceneBase.extend(
 			this.onEnteredFunction();
 		}
 	},
-	
+
+	setPlayerInfo:function()
+	{
+		if(userInfo.matchMode==null)return;
+		// switch(userInfo.matchMode)
+		// {
+		// 	case 0:
+		// 	{
+		// 		break;
+		// 	}
+		// 	case 1:
+		// 	{
+		// 		break;
+		// 	}
+		// 	default:
+		// 	{
+		// 		cc.log("userInfo.matchMode=",userInfo.matchMode);
+		// 	}
+		// }
+		switch(userInfo.matchMode)
+		{
+			case 0:
+			{
+				this.KlineWidth = 726;
+				this.KlinePosX = 3;
+				break;
+			}
+			case 1:
+			{
+				this.KlineWidth = 700;
+				this.KlinePosX = 60;
+				break;
+			}
+			case 2:
+			{
+				this.KlineWidth = 670;
+				this.KlinePosX = 60;
+
+
+				break;
+			}
+			case 3:
+			{
+				break;
+			}
+			default:
+			{
+				cc.log("userInfo.matchMode ="+userInfo.matchMode);
+				break;
+			}
+		}
+
+	},
 	//修改副图的显示内容
 	changeTechLayer:function()
 	{
@@ -234,80 +333,104 @@ var KLineScene = SceneBase.extend(
 	
 	drawHorizontalLine:function()
 	{
-		var middleGapHeight=this.borderArea.height/(this.middleHorizontalLineCount+1);
-		for(var i=0;i<this.middleHorizontalLineCount;i++)
-		{
-			var pointBegin=cc.p(5,middleGapHeight*(i+1));
-			var pointEnd=cc.p(this.borderArea.width-5,middleGapHeight*(i+1));
-			
-			this.borderArea.drawSegment(pointBegin,pointEnd,0.5,cc.color(36,62,83,80));
-		}
+		var size = cc.director.getWinSize();
+		// var middleGapHeight=this.borderArea.height/(this.middleHorizontalLineCount+1);
+		// for(var i=0;i<this.middleHorizontalLineCount;i++)
+		// {
+		// 	var pointBegin=cc.p(5,middleGapHeight*(i+1));
+		// 	var pointEnd=cc.p(this.borderArea.width-5,middleGapHeight*(i+1));
+		// 	//
+		// 	//this.borderArea.drawSegment(pointBegin,pointEnd,0.4,cc.color(36,62,83,80));
+		// 	this.borderArea.drawSegment(pointBegin,pointEnd,0.4,WhiteColor);
+		// 	cc.log("drawHorizontalLine middleGapHeight i="+i+"||middleGapHeight=="+middleGapHeight);
+		// }
+		this.borderArea.drawSegment(cc.p(-5,100),cc.p(this.size.width,100),1,BlueColor);
 	},
 
 	
 	messageCallBack:function(message)
 	{
-		//console.log("KlineScene messageCallBack..." + message);
+		console.log("KlineScene messageCallBack..." + message);
 		var packet=Packet.prototype.Parse(message);
 		var self=gKlineScene;
 		if(packet==null) return;
-		if(packet.msgType=="8")
+		switch(packet.msgType)
 		{
-			//收到对方买入的信息
-			//alert("8="+packet.content);
-			var buyOperationIndex=parseInt(packet.content.split("#")[1]);
-			self.opponentOperations.push(buyOperationIndex);
-			self.refreshScores();
-		}
-		else if(packet.msgType=="9")
-		{
-			//收到对方卖出的信息
-			//alert("9="+packet.content);
-			var sellOperationIndex=parseInt(packet.content.split("#")[1]);
-			self.opponentOperations.push(-sellOperationIndex);
-			self.refreshScores();
-		}
-		else if(packet.msgType=="F")
-		{
-			//接收到对局结束
-			//alert("接收到对局结束");
-			self.showMatchEndInfo(packet.content);
-		}
-		else if(packet.msgType=="4")
-		{
-			//接收到了匹配成功的消息
-			console.log("New macth founded...");
-			//cc.director.runScene(cc.TransitionSlideInL.create(0.5,klineScene));
-			self.opponentsInfo.push(packet.content);
-			self.stopProgress();
-		}
-		else if(packet.msgType=="5")
-		{
-			//接收到了K线数据的消息
-			console.log("call get kline data");
-			self.getklinedata(packet.content);
-			console.log("get kline passed");
-		}
-		else if (packet.msgType=="S")
-		{
-			//接收到了K线数据的分享消息
-			console.log("call get kline data");
-			self.share(packet.content);
-			console.log("get kline passed"+packet.content);
-		}
-		else if (packet.msgType=="H")
-		{
-			//成功接收到了K线数据的分享数据
-			console.log("call get kline data");
-			self.getShareKlinedata(packet.content);
-			console.log("成功接收到了K线数据的分享数据get kline passed"+packet.content);
-		}
-		else if (packet.msgType=="I")
-		{
-			//接收到了K线数据的分享错误消息
-			console.log("call get kline data");
-			//self.share(packet.content);
-			console.log("get kline passed"+packet.content);
+			case "8":
+			{
+				//收到对方买入的信息
+				//alert("8="+packet.content);
+				var buyOperationIndex=parseInt(packet.content.split("#")[1]);
+				self.opponentOperations.push(buyOperationIndex);
+				self.refreshScores();
+			}
+
+			case "9":
+			{
+				//收到对方卖出的信息
+				//alert("9="+packet.content);
+				var sellOperationIndex=parseInt(packet.content.split("#")[1]);
+				self.opponentOperations.push(-sellOperationIndex);
+				self.refreshScores();
+				break;
+			}
+
+			case "4":
+			{
+				//
+				//cc.director.runScene(cc.TransitionSlideInL.create(0.5,klineScene));
+				self.opponentsInfo.push(packet.content);
+				self.stopProgress();
+				break;
+			}
+			case "5":
+			{
+				//接收到了K线数据的消息
+				console.log("call get K线数据 data");
+				self.getklinedata(packet.content);
+				console.log("get kline K线数据 passed");
+				break;
+			}
+			case "S":
+			{
+				//接收到了K线数据的分享消息
+				self.share(packet.content);
+				console.log("get kline K线数据的分享消息passed"+packet.content);
+				break;
+			}
+			case "H":
+			{
+				//成功接收到了K线数据的分享数据
+				console.log("call get kline data");
+				self.getShareKlinedata(packet.content);
+				console.log("成功接收到了K线数据的分享数据");
+				break;
+			}
+			case "I":
+			{
+				//接收到了K线数据的分享错误消息
+				console.log("call get kline data");
+				//self.share(packet.content);
+				console.log("get kline passed"+packet.content);
+				break;
+			}
+			case "F":
+			{
+				//接收到对局结束
+				//alert("接收到对局结束");
+				self.showMatchEndInfo(packet.content);
+				break;
+			}
+			case "":
+			{
+				break;
+			}
+
+			default:
+			{
+				console.log("KlineScene messageCallBack..."+message);
+				break;
+			}
 		}
 	},
 	
@@ -327,12 +450,17 @@ var KLineScene = SceneBase.extend(
 	
 	matchEndInfoLayer_Replay:function()
 	{
-		//复盘
-		this.matchEndInfoLayer.hideLayer();
-		this.resumeLowerLayer();
-		//gSocketConn.UnRegisterEvent("onmessage",this.messageCallBack);
-		//关闭后显示下方的按钮
-		this.beginReplayKLineScene();
+		if(gMainMenuScene!=null)
+		{
+			this.toHome();
+		}else{
+			//复盘
+			this.matchEndInfoLayer.hideLayer();
+			this.resumeLowerLayer();
+			//关闭后显示下方的按钮
+			this.beginReplayKLineScene();
+		}
+
 	},
 	
 	matchEndInfoLayer_Again:function()
@@ -413,17 +541,17 @@ var KLineScene = SceneBase.extend(
 	
 	beginNextKLineScene:function()
 	{
-		var klineSceneNext=new KLineScene();
-		var self=this;
-		klineSceneNext.onEnteredFunction=function(){
+		if(gKlineScene==null)
+			gKlineScene=new KLineScene();
+		gKlineScene.onEnteredFunction=function(){
 			
 			//klineSceneNext.matchEndInfoLayer.btnReplay.setVisible(self.matchEndInfoLayer.btnReplay.isVisible());
 			//klineSceneNext.matchEndInfoLayer.btnQuit.setVisible(self.matchEndInfoLayer.btnQuit.isVisible());
-			
-			klineSceneNext.showProgress();
+
+			gKlineScene.showProgress();
 			};
-		gSocketConn.RegisterEvent("onmessage",klineSceneNext.messageCallBack);
-		cc.director.runScene(klineSceneNext);
+		gSocketConn.RegisterEvent("onmessage",gKlineScene.messageCallBack);
+		cc.director.runScene(gKlineScene);
 		gSocketConn.BeginMatch(0);
 	},
 	
@@ -435,6 +563,14 @@ var KLineScene = SceneBase.extend(
 		console.log("jsonText parse over");
 		this.ongotklinedata(data);
 	},
+	// ///获取K线数据
+	// getklinedata:function(jsonText)
+	// {
+	// 	console.log("begin to parse json text");
+	// 	var data=JSON.parse(jsonText);
+	// 	console.log("jsonText parse over");
+	// 	this.ongotklinedata(data);
+	// },
 	
 	///获取分享的K线数据
 	getShareKlinedata:function(jsonText)
@@ -452,14 +588,25 @@ var KLineScene = SceneBase.extend(
 		var dailyData=data["data"];
 		var mainDataDayCount=data["count"][0];
 		var prevDataDayCount=data["count"][1];
+		//"count":[120,240]},playerList:[{"userName":"","score":"0.000"},{"userName":"唐齐安通道","score":"0.000"}]
 		console.log("ongotklinedata mainDataDayCount="+mainDataDayCount+" prevDataDayCount="+prevDataDayCount);
-		
+		var playerListData=data["playerList"];
+		userInfo.playerListData=[];
+		for(var i=0;playerListData!=null&&i<playerListData.length;i++)
+		{
+			var playerData=playerListData[i];
+			cc.log("playerData.userName="+playerData["userName"]);
+			userInfo.playerListData.push(playerData);
+			//this.klinedataMain.push({o:dailyData[5*i],x:dailyData[5*i+1],i:dailyData[5*i+2],c:dailyData[5*i+3],v:dailyData[5*i+4]});
+			//this.MatchListData.push({matchId:matchData["matchId"],matchTime:matchData["matchId"],playerNum:matchData["matchId"],score:matchData["matchId"],uid:matchData["matchId"]});
+		}
+
 		this.klinedataMain=[];
 		for(var i=prevDataDayCount;i<prevDataDayCount+mainDataDayCount;i++)
 		{
 			this.klinedataMain.push({o:dailyData[5*i],x:dailyData[5*i+1],i:dailyData[5*i+2],c:dailyData[5*i+3],v:dailyData[5*i+4]});
 		}
-		
+
 		this.prevKlineData=[];
 		for(var i=0;i<prevDataDayCount;i++)
 		{
@@ -469,23 +616,6 @@ var KLineScene = SceneBase.extend(
 		if(this.klineLayerMain!=null && this.klineLayerPrev!=null)
 		{
 			this.setDataForLlineLayer();
-			//TEST
-//		var TEST_FLAG=TestClass.getConstant('TEST_FLAG');
-//		if(TEST_FLAG != true)
-
-
-/*         
-		 var testFlag = typeof(TestClass);
-		 console.log("typeof(TestClass)"+testFlag);
-			if(typeof(TestClass) == "undefined")
-			{
-				console.log("typeof(TestClass) == undefined");
-				this.setDataForLlineLayer();
-			}else{
-				console.log("typeof(TestClass) != undefined");
-				console.log(typeof(TestClass));
-				this.setDataForLlineLayerShare();
-			}*/
 		}
 		else
 		{
@@ -495,7 +625,7 @@ var KLineScene = SceneBase.extend(
 	
 	onShareklinedata:function(data)
 	{
-		
+
 		var businessData=data["dataBusiness"];
 		console.log("dataBusiness="+businessData);
 		this.buyInfo=[];
@@ -570,20 +700,21 @@ var KLineScene = SceneBase.extend(
 	setDataForLlineLayer:function()
 	{
 		if(this.klinedataMain==null || this.prevKlineData==null) return;
-		
+		this.stopProgress();
 		this.phase2=false;
 		//设置前面的一副蜡烛图
-		this.klineLayerPrev.setKLineData(this.prevKlineData);
-		
+
 		this.removeChild(this.klineLayerMain);
 		this.removeChild(this.volumnTechLayerMain);
-		
+		this.klineLayerPrev.removeFromParent(false);
+		this.volumnTechLayerPrev.removeFromParent(false);
+		// this.removeChild(this.klineLayerPrev);
+		// this.removeChild(this.volumnTechLayerPrev);
 		//先显示前面一副蜡烛图（历史数据）
+		this.klineLayerPrev.setKLineData(this.prevKlineData);
 		this.addChild(this.klineLayerPrev,this.mainLayerNumber,this.klineLayerPrev.getTag());
-
 		this.volumnTechLayerPrev.setKLineData(this.prevKlineData);
 		this.addChild(this.volumnTechLayerPrev,this.volumnTechLayerNumber,this.volumnTechLayerPrev.getTag());
-
 		
 		console.log("drawAllCandlesTillIndexOrEnd");
 		this.klineLayerPrev.drawAllCandlesTillIndexOrEnd();
@@ -593,13 +724,23 @@ var KLineScene = SceneBase.extend(
 		if(this.matchInfoLayer!=null)
 		{
 			this.matchInfoLayer.disableAllButtons();
-			this.matchInfoLayer.setStart();
+			// this.matchInfoLayer.setStart();
 			//this.matchInfoLayer.ableSpeedButtons();
 		}
         if(this.btnHome!=null)
         {
             this.btnHome.setVisible(true);
         }
+		if(this.btnStart!=null)
+		{
+			this.btnStart.setVisible(true);
+		}
+        this.hidematchEndInfoLayer();
+		if(this.playerInfoLayer!=null)
+		{
+			this.playerInfoLayer.setPlayerInfo();
+		}
+        // this.setPlayerInfo();
 		//this.setCountDownSprite();
 	},
 	//SHARE_TEST
@@ -620,11 +761,14 @@ var KLineScene = SceneBase.extend(
 	//设置游戏倒计时
 	setCountDownSprite:function()
 	{
-
         if(this.btnHome!=null)
         {
             this.btnHome.setVisible(false);
         }
+		if(this.btnStart!=null)
+		{
+			this.btnStart.setVisible(false);
+		}
 		if(this.matchInfoLayer!=null)
 		{
 			this.matchInfoLayer.disableAllButtons();
@@ -645,9 +789,9 @@ var KLineScene = SceneBase.extend(
 			this.addChild(this.countDownSprite,8);
 		}
 		this.countDownSprite.setVisible(true);
-		var size = cc.director.getWinSize();
+
 		//this.countDownLabel.setScale(1,0.2);
-		this.countDownSprite.setPosition(size.width / 2, size.height / 2+25);
+		this.countDownSprite.setPosition(this.size.width / 2, this.size.height / 2+25);
 		this.countDownSprite.setOpacity(255);
 		this.countDownSprite.setString(this.countDownNumber);
 	//	this.countDownSprite.runAction(this.createAnimation_Move());
@@ -661,13 +805,13 @@ var KLineScene = SceneBase.extend(
 	
 	phase1Time:0.25,
 	phase2Time:0.5,
-	phase3Time:0.25,
+	// phase3Time:0.25,
 	
 	createAnimation_Move:function()
 	{
 		var actionMoveIn=new cc.moveBy(this.phase1Time,0,-25);
 		var actionBlank=new cc.ActionInterval(this.phase2Time);
-		var actionMoveOut=new cc.moveBy(this.phase3Time,0,-25);
+		var actionMoveOut=new cc.moveBy(this.phase1Time,0,-25);
 		return new cc.Sequence(actionMoveIn,actionBlank,actionMoveOut);
 	},
 	
@@ -675,7 +819,7 @@ var KLineScene = SceneBase.extend(
 	{
 		var actionScaleIn=new cc.ScaleBy(this.phase1Time,1,5);
 		var actionBlank=new cc.ActionInterval(this.phase2Time);
-		var actionScaleOut=new cc.ScaleBy(this.phase3Time,1,0.2);
+		var actionScaleOut=new cc.ScaleBy(this.phase1Time,1,0.2);
 		return new cc.Sequence(actionScaleIn,actionBlank,actionScaleOut);
 	},
 	
@@ -788,6 +932,7 @@ var KLineScene = SceneBase.extend(
 	{
 		if(this.drawCandleStoped==false)
 		{
+			this.refreshScores(this.currentCandleIndex);
 			var ended=this.klineLayerMain.drawSingleCandleLineByCurrentIndex(this.currentCandleIndex);
 			this.volumnTechLayerMain.drawSingleCandleLineByCurrentIndex(this.currentCandleIndex);
 			
@@ -798,7 +943,7 @@ var KLineScene = SceneBase.extend(
 				this.matchEnd();
 				return;
 			}
-			this.refreshScores(this.currentCandleIndex+1);
+
 			this.currentCandleIndex+=1;
 		}
 		var self=this; 
@@ -884,6 +1029,7 @@ var KLineScene = SceneBase.extend(
 				
 	refreshScores:function(indexEnd)
 	{
+		gSocketConn.Step(indexEnd-1);
 		if(indexEnd==null)
 		{
 			indexEnd=this.currentCandleIndex;
@@ -895,6 +1041,16 @@ var KLineScene = SceneBase.extend(
 	{
 		this.matchInfoLayer.disableAllButtons();
 	},
+
+	hidematchEndInfoLayer:function()
+	{
+		if(this.matchEndInfoLayer!=null){
+			this.matchEndInfoLayer.hideLayer();
+			this.resumeLowerLayer();
+		}
+	},
+
+
     toHome:function()
     {
         if(gMainMenuScene!=null)
@@ -913,5 +1069,14 @@ var KLineScene = SceneBase.extend(
         //this.matchInfoLayer.disableAllButtons();
     },
 
+	start:function()
+	{
+		if(gKlineScene!=null)
+		{
+			gSocketConn.SendBeginMessage();
+			gKlineScene.setCountDownSprite();
+		}
+
+	},
 
 });
