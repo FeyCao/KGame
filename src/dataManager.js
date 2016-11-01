@@ -91,7 +91,7 @@ var userInfo ={
 
 
     //matchMode
-    matchMode:0,//游戏模式0：练习场，1：多人战，2：人机战
+    matchMode:null,//游戏模式0：练习场，1：多人战，2：人机战
 
     endInfoOfAllPlayers:null,
 }

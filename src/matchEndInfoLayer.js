@@ -3,7 +3,7 @@ var MatchEndInfoLayer= cc.Layer.extend({
 	
 	bgSprtie:null,
 	stockInfoLabel:null,
-	btnReplay:null,		//复盘
+	btnReplay:null,		//复盘---退出游戏
 	btnAgain:null,		//再战
 	btnShare:null,		//分享
 	
@@ -36,7 +36,51 @@ var MatchEndInfoLayer= cc.Layer.extend({
 
 		var self=this;
 		
-		this.bgSprtie = cc.Sprite.create("res/matchEnd.png");
+
+		
+		this.stockInfoLabel=cc.LabelTTF.create("", "Arial", 19);
+		//this.stockInfoLabel.setColor(cc.color(40,184,245,255));
+		this.stockInfoLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
+		this.stockInfoLabel.setAnchorPoint(0.5,0.5);
+		var posBtnY = 39;
+		if(userInfo.matchMode>0)
+		{
+			this.stockInfoLabel.setPosition(this.width / 2, 240);
+			this.bgSprtie = cc.Sprite.create("res/matchMoreEnd.png");
+			posBtnY = 20
+
+		}
+		else
+		{
+			this.stockInfoLabel.setPosition(this.width / 2, 100);
+			this.bgSprtie = cc.Sprite.create("res/matchEnd.png");
+			this.scoreLabel=cc.LabelTTF.create("", "黑体", 16);
+			//this.stockInfoLabel.setColor(cc.color(40,184,245,255));
+			this.scoreLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
+			this.scoreLabel.setAnchorPoint(0,0.5);
+			this.scoreLabel.setPosition(180, 160);
+			this.scoreLabel.setColor(cc.color(33,158,187,255));
+			this.scoreLabel.setString("您这局的收益率为：");
+			this.addChild(this.scoreLabel,2);
+
+
+			this.scoreLabel2=cc.LabelTTF.create("", "Arial", 25);
+			//this.stockInfoLabel.setColor(cc.color(40,184,245,255));
+			this.scoreLabel2.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
+			this.scoreLabel2.setAnchorPoint(0,0.5);
+			this.scoreLabel2.setPosition(320, 160);
+			this.scoreLabel2.setColor(cc.color(33,158,187,255));
+			this.addChild(this.scoreLabel2,2);
+
+
+			this.avatarSprite=cc.Sprite.create(gPlayerAvatarSprite.getTexture());
+			this.avatarSprite.setPosition(130,160);
+			this.avatarSprite.setScale(0.4);
+			this.addChild(this.avatarSprite,5);
+			posBtnY =30;
+		}
+
+
 
 		// this.width = this.bgSprtie.getContentSize().width*this.fXScale;
 		// this.height = this.bgSprtie.getContentSize().height*this.fYScale;
@@ -44,42 +88,22 @@ var MatchEndInfoLayer= cc.Layer.extend({
 		this.bgSprtie.setPosition(this.width / 2, this.height / 2);
 		this.bgSprtie.setScale(this.fXScale,this.fYScale);
 		this.addChild(this.bgSprtie,1);
-		
-		this.stockInfoLabel=cc.LabelTTF.create("", "Arial", 19);
-		//this.stockInfoLabel.setColor(cc.color(40,184,245,255));
-		this.stockInfoLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
-		this.stockInfoLabel.setAnchorPoint(0.5,0.5);
-		this.stockInfoLabel.setPosition(this.width / 2, 100);
 		this.addChild(this.stockInfoLabel,2); 
 		
-		this.scoreLabel=cc.LabelTTF.create("", "黑体", 16);
-		//this.stockInfoLabel.setColor(cc.color(40,184,245,255));
-		this.scoreLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
-		this.scoreLabel.setAnchorPoint(0,0.5);
-		this.scoreLabel.setPosition(180, 160);
-		this.scoreLabel.setColor(cc.color(33,158,187,255));
-		this.scoreLabel.setString("您这局的收益率为：");
-		this.addChild(this.scoreLabel,2); 
+
 		
 		
-		this.scoreLabel2=cc.LabelTTF.create("", "Arial", 25);
-		//this.stockInfoLabel.setColor(cc.color(40,184,245,255));
-		this.scoreLabel2.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
-		this.scoreLabel2.setAnchorPoint(0,0.5);
-		this.scoreLabel2.setPosition(320, 160);
-		this.scoreLabel2.setColor(cc.color(33,158,187,255));
-		this.addChild(this.scoreLabel2,2); 
-		
-		
-		this.btnReplay=new Button("res/meBtnReplay.png");
-		this.btnReplay.setPosition(90,39);
+		// this.btnReplay=new Button("res/meBtnReplay.png");
+		this.btnReplay=new Button("res/btnEnd.png");
+
+		this.btnReplay.setPosition(90,posBtnY);
 		this.btnReplay.setScale(this.fXScale,this.fYScale);
 		this.btnReplay.setClickEvent(function(){
 			self.replay();
 		});
 		
 		this.btnAgain=new Button("res/meBtnAgain.png");
-		this.btnAgain.setPosition(237,39);
+		this.btnAgain.setPosition(237,posBtnY);
 		this.btnAgain.setScale(this.fXScale,this.fYScale);
 		this.btnAgain.setClickEvent(function(){
 			self.again();
@@ -88,7 +112,7 @@ var MatchEndInfoLayer= cc.Layer.extend({
 		
 		this.btnShare=new Button("res/meBtnShare.png");
 		this.btnShare.setScale(this.fXScale,this.fYScale);
-		this.btnShare.setPosition(384,39);
+		this.btnShare.setPosition(384,posBtnY);
 		this.btnShare.setClickEvent(function(){
 			self.share();
 		});
@@ -96,11 +120,7 @@ var MatchEndInfoLayer= cc.Layer.extend({
 		this.addChild(this.btnReplay,2);
 		this.addChild(this.btnAgain,2);
 		this.addChild(this.btnShare,2);
-		
-		 this.avatarSprite=cc.Sprite.create(gPlayerAvatarSprite.getTexture());
-		 this.avatarSprite.setPosition(130,160);
-		 this.avatarSprite.setScale(0.4);
-		 this.addChild(this.avatarSprite,5); 
+
 	},
 	
 	replay:function()
@@ -200,20 +220,7 @@ var MatchEndInfoLayer= cc.Layer.extend({
 					if(userInfo.nickName==endInfoData[i]["nickName"])ratio=endInfoData[i]["score"];
 					userInfo.endInfoOfAllPlayers.push(endInfoData[i]);
 				}
-
-				if(ratio>0)
-				{
-					this.scoreLabel2.setColor(cc.color(249,27,27,255));
-				}
-				else if(ratio<0)
-				{
-					this.scoreLabel2.setColor(cc.color(6,224,0,255));
-				}
-				else
-				{
-					this.scoreLabel2.setColor(cc.color(255,255,255,255));
-				}
-				this.scoreLabel2.setString(ratio.toFixed(2)+"%");
+				this.setPlayerEndInfo();
 
 				break;
 			}
@@ -229,6 +236,72 @@ var MatchEndInfoLayer= cc.Layer.extend({
 		}
 
 		console.log(content);
-	}
-	
+	},
+	setPlayerEndInfo:function()
+	{
+
+		if(userInfo.endInfoOfAllPlayers!=null&&userInfo.endInfoOfAllPlayers.length>0)
+		{
+
+			for(var i=0;i<userInfo.endInfoOfAllPlayers.length;i++)
+			{
+
+				var rankFlag = parseInt(userInfo.endInfoOfAllPlayers[i]["ranking"]);
+				var sprite = new cc.Sprite("res/line_bg.png");
+				// sprite.setScale(this.fXScale,this.fYScale);
+				sprite.setAnchorPoint(0,0);
+				sprite.setPosition(cc.p(15,380-88*rankFlag));
+				this.bgSprtie.addChild(sprite);
+				//"endInfoOfAllPlayers":[{"nickName":"开心的钱多多","ranking":2,"matchId":6231,"score":-34.99,"level":0,"exp":0},{"nickName":"唐齐安通道","ranking":1,"matchId":6231,"score":-1.76,"level":0,"exp":0}]}
+				//设置用户名
+				strNameText= userInfo.endInfoOfAllPlayers[i]["nickName"];
+				textNameLabel = new cc.LabelTTF(strNameText, "Arial", 35.0);
+				textNameLabel.setPosition(cc.p(100,40));
+				textNameLabel.setAnchorPoint(0,0.5);
+				sprite.addChild(textNameLabel);
+
+				//strText= "名字:"+userInfo.MatchListData[idx]["uid"]+"  收益:"+userInfo.MatchListData[idx]["score"]+"  "+userInfo.MatchListData[idx]["matchTime"];
+
+				//设置收益
+				strScoreText= userInfo.endInfoOfAllPlayers[i]["score"]+"%";
+				textScoreLabel = new cc.LabelTTF(strScoreText, "Arial", 35.0);
+				textScoreLabel.setPosition(cc.p(500,40));
+				textScoreLabel.setAnchorPoint(0.5,0.5);
+				if(userInfo.endInfoOfAllPlayers[i]["score"]>0)
+				{
+					textScoreLabel.setColor(RedColor);
+				}
+				else if(userInfo.endInfoOfAllPlayers[i]["score"]<0)
+				{
+					textScoreLabel.setColor(GreenColor);
+				}
+				else
+				{
+					textScoreLabel.setColor(WhiteColor);
+				}
+				sprite.addChild(textScoreLabel);
+
+				//设置查看交易记录按钮
+				this.recordButton=new Button("res/btnRecord.png");
+				this.recordButton.setAnchorPoint(0,0.5);
+				this.recordButton.setPosition(cc.p(800,40));
+				sprite.addChild(this.recordButton);
+				var matchId = userInfo.endInfoOfAllPlayers[i]["score"]["matchId"];
+				var userId = userInfo.endInfoOfAllPlayers[i]["nickName"];
+				this.recordButton.setClickEvent(function(){
+					console.log("recordButton ClickEvent");
+					gSocketConn.SendRecordMessage(userId,matchId);
+
+				});
+
+			}
+		}
+
+
+
+
+	},
+
+
+
 });

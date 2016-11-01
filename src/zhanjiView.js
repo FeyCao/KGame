@@ -65,7 +65,7 @@ var ZhanjiTableViewCell = cc.TableViewCell.extend({
             var userId = userInfo.MatchListData[idx]["uid"];
             this.recordButton.setClickEvent(function(){
                 console.log("recordButton ClickEvent");
-                //this.recordView(matchId,userId);
+                gSocketConn.SendRecordMessage(userId,matchId);
             });
 
 

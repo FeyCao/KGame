@@ -72,7 +72,7 @@ SceneBase = cc.Scene.extend(
 		this.messageBoxLayer.setVisible(false);
 		cc.log("SceneBase onEnter begin");
 	},
-	
+
 	showProgress:function()
 	{
 		if(this.isShowingProgress==false)

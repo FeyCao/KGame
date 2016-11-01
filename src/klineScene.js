@@ -63,7 +63,14 @@ var KLineScene = SceneBase.extend(
 		this.KlineWidth = 726;
 		this.KlinePosX = 3;
 	},
-	
+	onExit:function()
+	{
+		this._super();
+		cc.eventManager.removeAllListeners();
+		this.removeAllChildrenWithCleanup(true);
+
+		cc.log("KLineScene onExit end");
+	},
 	onEnter:function () 
 	{
 		this._super();
@@ -199,7 +206,7 @@ var KLineScene = SceneBase.extend(
 			this.matchInfoLayer.disableAllButtons();
 			//this.matchInfoLayer.ableSpeedButtons();
 		}		
-		
+
 		this.matchEndInfoLayer=new MatchEndInfoLayer();
 		// this.matchEndInfoLayer.setAnchorPoint(0.5,0.5);
 		this.matchEndInfoLayer.setVisible(false);
@@ -337,17 +344,28 @@ var KLineScene = SceneBase.extend(
 	drawHorizontalLine:function()
 	{
 		var size = cc.director.getWinSize();
-		// var middleGapHeight=this.borderArea.height/(this.middleHorizontalLineCount+1);
-		// for(var i=0;i<this.middleHorizontalLineCount;i++)
-		// {
-		// 	var pointBegin=cc.p(5,middleGapHeight*(i+1));
-		// 	var pointEnd=cc.p(this.borderArea.width-5,middleGapHeight*(i+1));
-		// 	//
-		// 	//this.borderArea.drawSegment(pointBegin,pointEnd,0.4,cc.color(36,62,83,80));
-		// 	this.borderArea.drawSegment(pointBegin,pointEnd,0.4,WhiteColor);
-		// 	cc.log("drawHorizontalLine middleGapHeight i="+i+"||middleGapHeight=="+middleGapHeight);
-		// }
-		this.borderArea.drawSegment(cc.p(-5,100),cc.p(this.size.width,100),1,BlueColor);
+		var middleGapHeight=this.borderArea.height/(this.middleHorizontalLineCount+1);
+		for(var i=0;i<this.middleHorizontalLineCount;i++)
+		{
+			// var pointBegin=cc.p(5,middleGapHeight*(i+1));
+			// var pointEnd=cc.p(this.borderArea.width-5,middleGapHeight*(i+1));
+
+			// var WhiteColor=cc.color(189,240,255,255);//白色
+			if(i!=3)
+			for(var j=0;this.borderArea.width>3*j;j++)//画虚线
+			{
+				var pointBegin=cc.p(5+3*j,middleGapHeight*(i+1));
+				var pointEnd=cc.p(6+3*j,middleGapHeight*(i+1));
+				// var pointMiddle = cc.p(5+3*j,middleGapHeight*(i+1));
+				this.borderArea.drawSegment(pointBegin,pointEnd,0.4,cc.color(189,240,255,100));
+			}
+
+			//
+			//this.borderArea.drawSegment(pointBegin,pointEnd,0.4,cc.color(36,62,83,80));
+			// this.borderArea.drawSegment(pointBegin,pointEnd,0.4,WhiteColor);
+			cc.log("drawHorizontalLine middleGapHeight i="+i+"||middleGapHeight=="+middleGapHeight);
+		}
+		this.borderArea.drawSegment(cc.p(0,100),cc.p(this.size.width,100),1,BlueColor);
 	},
 
 	
@@ -565,18 +583,59 @@ var KLineScene = SceneBase.extend(
 	
 	beginNextKLineScene:function()
 	{
-		if(gKlineScene==null)
-			gKlineScene=new KLineScene();
-		gKlineScene.onEnteredFunction=function(){
-			
+		// if(gKlineScene==null)
+		// 	gKlineScene=new KLineScene();
+		// gKlineScene.onEnteredFunction=function(){
+		//
+		// 	//klineSceneNext.matchEndInfoLayer.btnReplay.setVisible(self.matchEndInfoLayer.btnReplay.isVisible());
+		// 	//klineSceneNext.matchEndInfoLayer.btnQuit.setVisible(self.matchEndInfoLayer.btnQuit.isVisible());
+        //
+		// 	// gKlineScene.showProgress();
+		// };
+		// // gSocketConn.RegisterEvent("onmessage",gKlineScene.messageCallBack);
+		// cc.director.runScene(gKlineScene);
+		var klineSceneNext=new KLineScene();
+		var self=this;
+		klineSceneNext.onEnteredFunction=function(){
+
 			//klineSceneNext.matchEndInfoLayer.btnReplay.setVisible(self.matchEndInfoLayer.btnReplay.isVisible());
 			//klineSceneNext.matchEndInfoLayer.btnQuit.setVisible(self.matchEndInfoLayer.btnQuit.isVisible());
 
-			gKlineScene.showProgress();
-			};
-		gSocketConn.RegisterEvent("onmessage",gKlineScene.messageCallBack);
-		cc.director.runScene(gKlineScene);
-		gSocketConn.BeginMatch(0);
+			// klineSceneNext.showProgress();
+		};
+		gSocketConn.RegisterEvent("onmessage",klineSceneNext.messageCallBack);
+		cc.director.runScene(klineSceneNext);
+
+		switch(userInfo.matchMode)
+		{
+			case 0:
+			{
+				gSocketConn.BeginMatch(0);
+				break;
+			}
+			case 1:
+			{
+				// this.KlineWidth = 700;
+				// this.KlinePosX = 60;
+				break;
+			}
+			case 2:
+			{
+				gSocketConn.BeginMatch("2#DON");
+				break;
+			}
+			case 3:
+			{
+				break;
+			}
+			default:
+			{
+				cc.log("userInfo.matchMode ="+userInfo.matchMode);
+				break;
+			}
+		}
+		// gKlineScene.stopProgress();
+		// gSocketConn.BeginMatch(userInfo.matchMode);
 	},
 	
 	///获取K线数据
@@ -608,7 +667,7 @@ var KLineScene = SceneBase.extend(
 	
 	ongotklinedata:function(data)
 	{
-		
+		this.clearDataForLineLayer();
 		var dailyData=data["data"];
 		var mainDataDayCount=data["count"][0];
 		var prevDataDayCount=data["count"][1];
@@ -718,6 +777,31 @@ var KLineScene = SceneBase.extend(
 		{
 			this.matchInfoLayer.disableAllButtons();
 		}
+		if(this.countDownSprite!=null)
+		{
+			this.countDownSprite.removeFromParent(false);
+			this.countDownSprite=null;
+		}
+
+		if(this.matchInfoLayer!=null)
+		{
+			this.matchInfoLayer.disableAllButtons();
+			// this.matchInfoLayer.setStart();
+			//this.matchInfoLayer.ableSpeedButtons();
+		}
+		if(this.btnHome!=null)
+		{
+			this.btnHome.setVisible(true);
+		}
+		if(this.btnStart!=null)
+		{
+			this.btnStart.setVisible(true);
+		}
+		this.hidematchEndInfoLayer();
+		if(this.playerInfoLayer!=null)
+		{
+			this.playerInfoLayer.setPlayerInfo();
+		}
 	},
 	
 	setDataForLlineLayer:function()
@@ -727,10 +811,14 @@ var KLineScene = SceneBase.extend(
 		this.phase2=false;
 		//设置前面的一副蜡烛图
 
-		this.removeChild(this.klineLayerMain);
-		this.removeChild(this.volumnTechLayerMain);
-		this.klineLayerPrev.removeFromParent(false);
-		this.volumnTechLayerPrev.removeFromParent(false);
+		// this.removeChild(this.klineLayerMain);
+		// this.removeChild(this.volumnTechLayerMain);
+		// if(this.klineLayerPrev!=null)
+		// this.klineLayerPrev.removeFromParent(false);
+		// if(this.volumnTechLayerPrev!=null)
+		// this.volumnTechLayerPrev.removeFromParent(false);
+
+
 		// this.removeChild(this.klineLayerPrev);
 		// this.removeChild(this.volumnTechLayerPrev);
 		//先显示前面一副蜡烛图（历史数据）
@@ -744,25 +832,7 @@ var KLineScene = SceneBase.extend(
 		this.volumnTechLayerPrev.drawAllCandlesTillIndexOrEnd();
 		console.log("drawAllCandlesTillIndexOrEnd Over....");
 		
-		if(this.matchInfoLayer!=null)
-		{
-			this.matchInfoLayer.disableAllButtons();
-			// this.matchInfoLayer.setStart();
-			//this.matchInfoLayer.ableSpeedButtons();
-		}
-        if(this.btnHome!=null)
-        {
-            this.btnHome.setVisible(true);
-        }
-		if(this.btnStart!=null)
-		{
-			this.btnStart.setVisible(true);
-		}
-        this.hidematchEndInfoLayer();
-		if(this.playerInfoLayer!=null)
-		{
-			this.playerInfoLayer.setPlayerInfo();
-		}
+
         // this.setPlayerInfo();
 		//this.setCountDownSprite();
 	},
@@ -932,6 +1002,10 @@ var KLineScene = SceneBase.extend(
             self.matchInfoLayer.disableAllButtons();
             self.matchInfoLayer.setShareKLineScene();
         }
+		if(this.btnStart!=null)
+		{
+			this.btnStart.setVisible(false);
+		}
         self.matchInfoLayer.startCallBackFunction=function(){self.matchInfoLayer_Start()};
 		//一次性画出当前数据图
 		this.drawCandlesAll();
@@ -1077,7 +1151,7 @@ var KLineScene = SceneBase.extend(
 
     toHome:function()
     {
-        if(gMainMenuScene!=null)
+        if(gMainMenuScene!=undefined||gMainMenuScene!=null)
         {
             gSocketConn.RegisterEvent("onmessage",gMainMenuScene.messageCallBack);
             gSocketConn.SendEHMessage(userInfo.userId,userInfo.deviceId);

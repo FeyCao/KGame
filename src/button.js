@@ -80,6 +80,7 @@ Button=cc.Sprite.extend({
 							self.clickevent();
 						}
                         this.isPressedDown=false;
+						console.log("Button onTouchEnded "+self.__instanceId);
 					}
 					else
 					{
@@ -110,10 +111,10 @@ Button=cc.Sprite.extend({
                         cc.log("begin..x="+ locationInNode.x+",y="+locationInNode.y+",s.width="+s.width+"s.height="+ s.height);
                         //console.log("onTouchEnded");
                        // self.unshrink();
-                        if(self.clickevent!=null)
-                        {
-                            self.clickevent();
-                        }
+                       //  if(self.clickevent!=null)
+                       //  {
+                       //      self.clickevent();
+                       //  }
                         this.isPressedDown=false;
                     }
                     else

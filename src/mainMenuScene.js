@@ -227,6 +227,15 @@ var MainMenuScene =SceneBase.extend(
         //cc.log("menuItem.x",touxiangSprite.getPositionX());
 	},
 
+    onExit:function()
+    {
+        this._super();
+        cc.eventManager.removeAllListeners();
+        this.removeAllChildrenWithCleanup(true);
+
+        cc.log("MainMenuScene onExit end");
+    },
+
     setOpacityTest:function(){
         cc.log(".....setOpacityTest Touch Down");
 
@@ -305,20 +314,23 @@ var MainMenuScene =SceneBase.extend(
             console.log("Waiting for firstModeChanged");
             this.showProgress();
             var self =gMainMenuScene;
-            if(gKlineScene==null)
-            {
-                gKlineScene=new KLineScene();
-            }
+            // if(gKlineScene==null)
+            // {
+            //     gKlineScene=new KLineScene();
+            // }
 
-            //self.klineScene.onEnteredFunction=function(){
-            //    self.klineScene.showProgress();
-            //};
+            var klineSceneNext=new KLineScene();
+            klineSceneNext.onEnteredFunction=function(){
+
+                // klineSceneNext.showProgress();
+            };
+            gSocketConn.RegisterEvent("onmessage",klineSceneNext.messageCallBack);
 
             userInfo.matchMode = 0;
            // gSocketConn.RegisterEvent("onmessage",gKlineScene.messageCallBack);
             gSocketConn.BeginMatch(userInfo.matchMode);
             //cc.director.runScene(cc.TransitionFade.create(0.5,klineSceneNext,cc.color(255,255,255,255)));
-            // cc.director.runScene(gKlineScene);
+            cc.director.runScene(klineSceneNext);
             console.log("切换KGameScene场景调用完毕");
         }
     },
@@ -330,11 +342,18 @@ var MainMenuScene =SceneBase.extend(
 			console.log("Waiting for secondModeChanged");
             this.showProgress();
             var self =gMainMenuScene;
-            if(gKlineScene==null)
-            {
-                gKlineScene=new KLineScene();
-            }
+            // if(gKlineScene==null)
+            // {
+            //     gKlineScene=new KLineScene();
+            // }
 
+            var klineSceneNext=new KLineScene();
+            klineSceneNext.onEnteredFunction=function(){
+
+                // klineSceneNext.showProgress();
+            };
+            // gSocketConn.RegisterEvent("onmessage",klineSceneNext.messageCallBack);
+            // cc.director.runScene(klineSceneNext);
             //gKlineScene.onEnteredFunction=function(){
             //    gKlineScene.showProgress();
             //};
@@ -343,7 +362,7 @@ var MainMenuScene =SceneBase.extend(
             // gSocketConn.BeginMatch("0");
             gSocketConn.BeginMatch("2#DON");
             //cc.director.runScene(cc.TransitionFade.create(0.5,klineSceneNext,cc.color(255,255,255,255)));
-            // cc.director.runScene(gKlineScene);
+            cc.director.runScene(klineSceneNext);
             console.log("切换KGameScene场景调用完毕");
 		}
 	},
@@ -528,6 +547,7 @@ var MainMenuScene =SceneBase.extend(
                 if(gKlineScene!=null) {
                     gKlineScene.showMatchEndInfo(packet.content);
                 }
+                self.stopProgress();
                 break;
             }
             // case "":
@@ -596,8 +616,10 @@ var MainMenuScene =SceneBase.extend(
             }
             case "S":
             {
+                if(gKlineScene==null)
+                    gKlineScene=new KLineScene();
                 //接收到了K线数据的分享消息
-                self.share(packet.content);
+                gKlineScene.share(packet.content);
                 console.log("get kline K线数据的分享消息passed"+packet.content);
                 break;
             }

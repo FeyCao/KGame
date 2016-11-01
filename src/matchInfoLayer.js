@@ -41,7 +41,8 @@ var MatchInfoLayer= cc.Layer.extend({
 	againCallBackFunction:null,
 	shareCallBackFunction:null,
     startCallBackFunction:null,
-	
+
+	statusFlag:0,
 
 	ctor:function(width,height)
 	{
@@ -56,20 +57,20 @@ var MatchInfoLayer= cc.Layer.extend({
 		this._super();
 		var self=this;
 		
-		this.buyDisableSprite=cc.Sprite.create("res/btnBuyDisable.png");
-		this.buyCloseDisableSprite=cc.Sprite.create("res/btnCloseDisable.png");
-		this.sellDisableSprite=cc.Sprite.create("res/btnSellDisable.png");
-		this.sellCloseDisableSprite=cc.Sprite.create("res/btnCloseDisable.png");
-		
-		this.buyDisableSprite.setScale(0.7);
-		this.buyCloseDisableSprite.setScale(0.7);
-		this.sellDisableSprite.setScale(0.7);
-		this.sellCloseDisableSprite.setScale(0.7);
-		
-		this.addChild(this.buyDisableSprite, 2);
-		this.addChild(this.buyCloseDisableSprite, 2);
-		this.addChild(this.sellDisableSprite, 2);
-		this.addChild(this.sellCloseDisableSprite, 2);		
+		// this.buyDisableSprite=cc.Sprite.create("res/btnBuyDisable.png");
+		// this.buyCloseDisableSprite=cc.Sprite.create("res/btnCloseDisable.png");
+		// this.sellDisableSprite=cc.Sprite.create("res/btnSellDisable.png");
+		// this.sellCloseDisableSprite=cc.Sprite.create("res/btnCloseDisable.png");
+		//
+		// this.buyDisableSprite.setScale(0.7);
+		// this.buyCloseDisableSprite.setScale(0.7);
+		// this.sellDisableSprite.setScale(0.7);
+		// this.sellCloseDisableSprite.setScale(0.7);
+		//
+		// this.addChild(this.buyDisableSprite, 2);
+		// this.addChild(this.buyCloseDisableSprite, 2);
+		// this.addChild(this.sellDisableSprite, 2);
+		// this.addChild(this.sellCloseDisableSprite, 2);
 
 
 		var posY = 40;
@@ -83,16 +84,16 @@ var MatchInfoLayer= cc.Layer.extend({
 		});
 		this.addChild(this.buyButton, 3);
 		
-		this.sellCloseButton=new Button("res/btnCloseSell.png");
-		this.sellCloseButton.setPosition(cc.p(136,44));
-
-		this.sellCloseButton=new Button("res/btnSellEnable.png");
-		this.sellCloseButton.setPosition(cc.p(630,posY-5));
-
-		this.sellCloseButton.setClickEvent(function(){
-			self.sellCloseClick();
-		});
-		this.addChild(this.sellCloseButton, 3);
+		// this.sellCloseButton=new Button("res/btnCloseSell.png");
+		// this.sellCloseButton.setPosition(cc.p(136,44));
+        //
+		// this.sellCloseButton=new Button("res/btnSellEnable.png");
+		// this.sellCloseButton.setPosition(cc.p(630,posY-5));
+        //
+		// this.sellCloseButton.setClickEvent(function(){
+		// 	self.sellCloseClick();
+		// });
+		// this.addChild(this.sellCloseButton, 3);
 		
 		this.sellButton=new Button("res/btnSellEnable.png");
 		//this.sellButton.setPosition(cc.p(600,44));
@@ -102,17 +103,17 @@ var MatchInfoLayer= cc.Layer.extend({
 		});
 		this.addChild(this.sellButton, 3);
 		
-		this.buyCloseButton=new Button("res/btnCloseBuy.png");
-		this.buyCloseButton.setPosition(cc.p(659,44));
-
-		this.buyCloseButton=new Button("res/btnBuyEnable.png");
-		this.buyCloseButton.setPosition(cc.p(106,posY));
-
-
-		this.buyCloseButton.setClickEvent(function(){
-			self.buyCloseClick();
-		});
-		this.addChild(this.buyCloseButton, 3);
+		// this.buyCloseButton=new Button("res/btnCloseBuy.png");
+		// this.buyCloseButton.setPosition(cc.p(659,44));
+        //
+		// this.buyCloseButton=new Button("res/btnBuyEnable.png");
+		// this.buyCloseButton.setPosition(cc.p(106,posY));
+        //
+        //
+		// this.buyCloseButton.setClickEvent(function(){
+		// 	self.buyCloseClick();
+		// });
+		// this.addChild(this.buyCloseButton, 3);
 		
 		this.btnAgain=new Button("res/meBtnAgain.png");
 		this.btnAgain.setPosition(cc.p(276,posY));
@@ -321,9 +322,10 @@ var MatchInfoLayer= cc.Layer.extend({
 	disableAllButtons:function()
 	{
 		this.buyButton.setVisible(false);
-		this.buyCloseButton.setVisible(false);
+
 		this.sellButton.setVisible(false);
-		this.sellCloseButton.setVisible(false);
+		// this.buyCloseButton.setVisible(false);
+		// this.sellCloseButton.setVisible(false);
 		this.btnAgain.setVisible(false);
 		this.btnShare.setVisible(false);
         this.meBtnStart.setVisible(false);
@@ -335,31 +337,41 @@ var MatchInfoLayer= cc.Layer.extend({
 		this.speedControlLayer.setVisible(true);
 	},
 	
-	//将按钮设置为空仓的状态
+	//将按钮设置为平仓的状态
 	setButtonsToNoPosition:function()
 	{
 		this.buyButton.setVisible(true);
-		this.buyCloseButton.setVisible(false);
 		this.sellButton.setVisible(true);
-		this.sellCloseButton.setVisible(false);
+		this.buyButton.setDisabled(false);
+		this.sellButton.setDisabled(false);
+		this.statusFlag = 0;
+		// this.buyCloseButton.setVisible(false);
+		// this.sellCloseButton.setVisible(false);
 	},
 	
 	//将按钮设置为多仓的状态
 	setButtonsToBuyPosition:function()
 	{
 		this.buyButton.setVisible(false);
-		this.buyCloseButton.setVisible(false);
-		this.sellButton.setVisible(false);
-		this.sellCloseButton.setVisible(true);
+		this.sellButton.setVisible(true);
+
+		this.buyButton.setDisabled(true);
+		this.sellButton.setDisabled(false);
+		this.statusFlag = 1;
+		// this.buyCloseButton.setVisible(false);
+		// this.sellCloseButton.setVisible(true);
 	},
 	
-	//将按钮设置为多仓的状态
+	//将按钮设置为空仓的状态
 	setButtonsToSellPosition:function()
 	{
-		this.buyButton.setVisible(false);
-		this.buyCloseButton.setVisible(true);
+		this.buyButton.setVisible(true);
 		this.sellButton.setVisible(false);
-		this.sellCloseButton.setVisible(false);
+		this.buyButton.setDisabled(false);
+		this.sellButton.setDisabled(true);
+		this.statusFlag = -1;
+		// this.buyCloseButton.setVisible(true);
+		// this.sellCloseButton.setVisible(false);
 	},
 	
 	buyClick:function()
@@ -375,20 +387,25 @@ var MatchInfoLayer= cc.Layer.extend({
 		else
 		{
 			klineScene.buyClick();
-			this.setButtonsToBuyPosition();
+			if(this.statusFlag==0)
+			{
+				this.setButtonsToBuyPosition();
+			}
+			else
+			{
+				this.setButtonsToNoPosition();
+			}
+
 		}
-		
-		
-		
 	},
 	
-	buyCloseClick:function()
-	{
-		var klineScene=this.parent.parent;
-		klineScene.buyClick();
-		
-		this.setButtonsToNoPosition();
-	},
+	// buyCloseClick:function()
+	// {
+	// 	var klineScene=this.parent.parent;
+	// 	klineScene.buyClick();
+	//
+	// 	this.setButtonsToNoPosition();
+	// },
 	
 	sellClick:function()
 	{
@@ -403,7 +420,15 @@ var MatchInfoLayer= cc.Layer.extend({
 		else
 		{
 			klineScene.sellClick();
-			this.setButtonsToSellPosition();
+			if(this.statusFlag==0)
+			{
+				this.setButtonsToSellPosition();
+			}
+			else
+			{
+				this.setButtonsToNoPosition();
+			}
+
 		}
 		
 	},
@@ -419,10 +444,10 @@ var MatchInfoLayer= cc.Layer.extend({
 	//画买卖开平等按钮
 	drawDisableButtons:function()
 	{
-		this.buyDisableSprite.setVisible(false);
-		this.buyCloseDisableSprite.setVisible(false);
-		this.sellDisableSprite.setVisible(false);
-		this.sellCloseDisableSprite.setVisible(false);
+		// this.buyDisableSprite.setVisible(false);
+		// this.buyCloseDisableSprite.setVisible(false);
+		// this.sellDisableSprite.setVisible(false);
+		// this.sellCloseDisableSprite.setVisible(false);
 		
 		
 		/*
@@ -449,19 +474,19 @@ var MatchInfoLayer= cc.Layer.extend({
 		 this.matchInfoArea.drawRect(cc.p(0,0),cc.p(this.width, this.height),cc.color(0,0,0,0),1,cc.color(255,255,255,255));
 		 */
 	},
-	
+
 	buyButtonCallBack:function()
 	{
 		var klineScene=arguments[0].parent.parent.parent.parent;
 		klineScene.buyClick();
 	},
-	
+
 	sellButtonCallBack:function()
 	{
 		var klineScene=arguments[0].parent.parent.parent.parent;
 		klineScene.sellClick();
 	},
-	
+
 	setReplayKLineScene:function()
 	{
 		//this.speedControlLayer.setVisible(false);
