@@ -199,6 +199,7 @@ var TempLoadScene = SceneBase.extend(
 	messageBoxClosed:function()
 	{
 		//this.showOrHideTextBoxUILabel(false);
+		window.location.href="http://analyse.kiiik.com/";
 	},
 	
 	saveCheckboxState:function()

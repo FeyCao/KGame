@@ -21,10 +21,10 @@ var ProgressLayer= cc.Layer.extend({
 	{
 		this._super();
 		
-		this.loadbgSprite = cc.Sprite.create("res/load-bg.png");
-		this.loadbgSprite.setPosition(this.width / 2, this.height / 2);
-		this.loadbgSprite.setScale(1);
-		this.addChild(this.loadbgSprite,1);
+		// this.loadbgSprite = cc.Sprite.create("res/load-bg.png");
+		// this.loadbgSprite.setPosition(this.width / 2, this.height / 2);
+		// this.loadbgSprite.setScale(1);
+		// this.addChild(this.loadbgSprite,1);
 		
 		
 		var rotAction1=new cc.RotateTo(0.5,90,90);
@@ -78,13 +78,14 @@ var ProgressLayer= cc.Layer.extend({
 	
 	stop:function()
 	{
-		this.rotateSprite.stopAllActions();
-		this.rotateSpriteInner.stopAllActions();
-		
-		this.rotateSprite.removeFromParent(true);
-		this.rotateSpriteInner.removeFromParent(true);
-		
-		this.setVisible(false);
+		if(this.rotateSprite!=null&&this.rotateSpriteInner!=null)
+		{
+			this.rotateSprite.stopAllActions();
+			this.rotateSpriteInner.stopAllActions();
+			this.rotateSprite.removeFromParent(true);
+			this.rotateSpriteInner.removeFromParent(true);
+			this.setVisible(false);
+		}
 	}
 	
 });

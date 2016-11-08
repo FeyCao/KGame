@@ -117,19 +117,25 @@ var MatchInfoLayer= cc.Layer.extend({
 		
 		this.btnAgain=new Button("res/meBtnAgain.png");
 		this.btnAgain.setPosition(cc.p(276,posY));
+		this.btnAgain.setScale(0.5);
 		this.btnAgain.setClickEvent(function(){
 			self.again();
 		});
 		
 		
 		this.btnShare=new Button("res/meBtnShare.png");
-		this.btnShare.setPosition(cc.p(460,posY));
+		this.btnShare.setPosition(cc.p(460,posY));this.btnShare.setScale(0.5);
+		this.btnShare.setScale(0.5);
 		this.btnShare.setClickEvent(function(){
 			self.share();
 		});
 
+
+
+
         this.meBtnStart=new Button("res/meBtnStart.png");
         this.meBtnStart.setPosition(cc.p(363,posY));
+		this.meBtnStart.setScale(0.5);
         this.meBtnStart.setClickEvent(function(){
             self.meStart();
         });
@@ -139,12 +145,12 @@ var MatchInfoLayer= cc.Layer.extend({
         // this.btnStart.setClickEvent(function(){
         //     self.start();
         // });
-
-        this.btnHome=new Button("res/home.png");
-        this.btnHome.setPosition(cc.p(363,posY));
-        this.btnHome.setClickEvent(function(){
-            self.meStart();
-        });
+        //
+        // this.btnHome=new Button("res/home.png");
+        // this.btnHome.setPosition(cc.p(363,posY));
+        // this.btnHome.setClickEvent(function(){
+        //     self.meStart();
+        // });
 
 		this.addChild(this.btnAgain,3);
 		this.addChild(this.btnShare,3);

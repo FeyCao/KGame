@@ -11,7 +11,15 @@ Button=cc.Sprite.extend({
 		this._super(fileName, rect, rotated);
 
 	},
-	
+	onExit:function()
+	{
+		cc.log("Button onExit end"+self.__instanceId);
+		this._super();
+		cc.eventManager.removeListener(this.listener);
+		this.removeAllChildrenWithCleanup(true);
+
+
+	},
 	setClickEvent:function(clickevent)
 	{
 		this.clickevent=clickevent;
@@ -23,7 +31,7 @@ Button=cc.Sprite.extend({
 			swallowTouches: false,
 			//onTouchBegan event callback function						
 			onTouchBegan: function (touch, event) {
-                console.log("Button onTouchBegan");
+                console.log("Button onTouchBegan"+self.__instanceId);
 				if(self.isVisible()==true&& self.isDisabled==false)
 				{
 					//var nextSceneM=new NextScene();
@@ -59,7 +67,7 @@ Button=cc.Sprite.extend({
 				if(self.isVisible()==true&& self.isDisabled==false)
 				{
 					if(buttonLogFlag!=false)
-                    console.log("Button onTouchEnded");
+                     console.log("Button onTouchEnded");
 					//var nextSceneM=new NextScene();
 					var target = event.getCurrentTarget();	
 					var touchLocation=touch.getLocation();
@@ -80,6 +88,7 @@ Button=cc.Sprite.extend({
 							self.clickevent();
 						}
                         this.isPressedDown=false;
+						if(buttonLogFlag!=false)
 						console.log("Button onTouchEnded "+self.__instanceId);
 					}
 					else

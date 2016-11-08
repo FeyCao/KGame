@@ -55,7 +55,7 @@ CheckButton=cc.Sprite.extend({
 					//Check the click area
 					if (cc.rectContainsPoint(rect, locationInNode)) 
 					{		
-						console.log("onTouchBegan");
+						console.log("CheckButton onTouchBegan");
 						self.shrink();
 						this.isPressedDown=true;
 					}
@@ -79,11 +79,12 @@ CheckButton=cc.Sprite.extend({
 					var rect = cc.rect(0, 0, s.width, s.height);
 					if(this.isPressedDown==true)
 					{
-						console.log("onTouchEnded");
+						console.log("CheckButton onTouchEnded");
 						self.unshrink();
 						this.isPressedDown=false;
 						self.isSelected=!self.isSelected;
 						self.setChecked(self.isSelected);
+
 					}
 					//Check the click area
 					//if (cc.rectContainsPoint(rect, locationInNode)) 
@@ -109,8 +110,8 @@ CheckButton=cc.Sprite.extend({
 	
 	setChecked:function(isChecked)
 	{
-		this.isSelected=isChecked;
-		this.setTextureByStatus();
+		// this.isSelected=isChecked;
+		this.setTextureByStatus(isChecked);
 		if(this.clickevent!=null)
 		{
 			this.clickevent();
@@ -122,14 +123,16 @@ CheckButton=cc.Sprite.extend({
 		this.isDisabled=isDisabled;
 	},
 	
-	setTextureByStatus:function()
+	setTextureByStatus:function(isChecked)
 	{
-		if(this.isSelected==true)
+		if(isChecked==true)
 		{
+			this.isSelected=true;
 			this.setTexture(this.textureNameSelected);
 		}
 		else
 		{
+			this.isSelected=false;
 			this.setTexture(this.textureNameUnselected);
 		}
 	},

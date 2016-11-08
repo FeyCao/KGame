@@ -30,7 +30,7 @@ var BaseGraphLayer= cc.Layer.extend({
 		this.width=width;
 		this.height=height;
 		this.taisArray=[];
-		cc.log("this.width="+this.width);
+		cc.log("this.width="+this.width+"this.height="+this.height);
 		//this.maxCandleCountPerPage=60;
 		//this.historyCandleCount=10;
 		//this.pageIndex=0;
@@ -138,7 +138,10 @@ var BaseGraphLayer= cc.Layer.extend({
 		if(this.klineData==null)
 		{
 			//清除所有数据
-			this.graphArea.clear();
+			if(this.graphArea!=null)
+			{
+				this.graphArea.clear();
+			}
 			for(var i=0;i<this.taisInfoLabelArray.length;i++)
 			{
 				this.taisInfoLabelArray[i].setVisible(false);

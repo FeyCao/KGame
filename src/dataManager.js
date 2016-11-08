@@ -42,13 +42,13 @@ var Singleton = (function () {
 Singleton.getInstance().publicMethod();
 
 //var wsURL = 'ws://222.66.97.203:5003/';//公网测试
-//var wsURL = 'ws://222.66.97.203:5003/Kgamefeng/websocket';//晓峰环境
-//var wsURL = 'ws://180.169.108.231:5003/';//生产环境
-//var wsURL = 'ws://192.168.16.250:8484/';//测试
+var wsURL = 'ws://222.66.97.203:5003/Kgamefeng/websocket';//晓峰环境
+// var wsURL = 'ws://180.169.108.231:5003/';//生产环境
+// var wsURL = 'ws://192.168.16.250:8484/';//测试
 //var wsURL = 'ws://192.168.16.250:8384/';//调试
-//var wsURL = 'ws://192.168.16.250:5180/Kgamefeng/websocket';//晓峰环境
-var wsURL = 'ws://192.168.16.145:9999/Kgamefeng/websocket';//晓峰环境
-// var wsURL = 'ws://192.168.16.145:8080/Kgamefeng/websocket';//晓峰环境
+// var wsURL = 'ws://192.168.16.250:5180/Kgamefeng/websocket';//晓峰环境
+// var wsURL = 'ws://192.168.16.145:9999/Kgamefeng/websocket';//晓峰环境
+//   var wsURL = 'ws://192.168.16.145:8080/Kgamefeng/websocket';//晓峰环境
 
 SOURCE_DHJK = "DHJK";     //东航金控APP
 SOURCE_ZSQQ = "ZSQQ";     //掌上全球APP
@@ -61,6 +61,7 @@ var YellowColor=cc.color(255,217,0,255);//黄色
 var GreenColor=cc.color(6,224,0,255);//绿色
 var WhiteColor=cc.color(189,240,255,255);//白色
 var BlueColor=cc.color(7,64,111,255);//蓝色
+var lightBlueColor=cc.color(7,64,111,100);//浅蓝色
 
 
 var userInfo ={
@@ -73,10 +74,13 @@ var userInfo ={
     nickName:"塞外小王子",
     userName:null,
     userPassword:null,
-
+// "winOfMatchForOne":0,"sumOfMatchForOne":3,"winOfMatchForMore":0,"sumOfMatchForMore":0,"winOfMatchForAI":8,"sumOfMatchForAI":11,"gainCumulation":"-6.223","sumOfAllMatch":3}
     winOfMatchForOne:0,//练习场胜利次数
     sumOfMatchForOne:0,//练习场总次数
-    winOfMatchForMore:0,//
+    winOfMatchForMore:0,//多人赛胜利次数
+    winOfMatchForMore:0,//多人赛总次数
+    winOfMatchForAI:0,//人机赛胜利次数
+    sumOfMatchForAI:0,//人机赛总次数
     gainCumulation:0,//收益率
     sumOfAllMatch:0,//比赛总场数
 
@@ -91,7 +95,9 @@ var userInfo ={
 
 
     //matchMode
-    matchMode:null,//游戏模式0：练习场，1：多人战，2：人机战
+    matchMode:0,//游戏模式0：练习场，1：多人战，2：人机战
+
+    recordMode:0,//战绩模式0：练习场，1：多人战，2：人机战
 
     endInfoOfAllPlayers:null,
 }

@@ -135,6 +135,14 @@ SocketConn.prototype.SendRecordMessage=function(matchId,userId)//查看对战记
     ws.send(recordMsg);
 }
 
+SocketConn.prototype.SendRecordMatchMessage=function(matchId,userId)//查看比赛的对战记录
+{
+	var recordMsg = "Y|"+matchId+"#"+userId+"|";
+	if(SocketConnLogFlag!=false)
+		console.log("send SendRecordMatchMessage=="+recordMsg);
+	ws.send(recordMsg);
+}
+
 SocketConn.prototype.BeginMatch=function(mode)
 {
 	ws.send("3|"+mode+"|");
@@ -184,21 +192,24 @@ SocketConn.prototype.SendShareMessage=function()
 SocketConn.prototype.ShareMessage=function(userId,matchId)
 {
 	var shareMsg="G|"+userId+"#"+matchId+"|";
-	//console.log("send share msg="+shareMsg);
+	if(SocketConnLogFlag!=false)
+	console.log("send share msg="+shareMsg);
 	ws.send(shareMsg);
 }
 
 SocketConn.prototype.SendEHMessage=function(userId,matchId)//进入大厅的请求
 {
     var ehMsg="P|"+userId+"#"+matchId+"|";
+	if(SocketConnLogFlag!=false)
     console.log("send H msg="+ehMsg);
     ws.send(ehMsg);
 }
 
 
-SocketConn.prototype.SendZhanjiMessage=function(userId,pageIdx)//战绩请求
+SocketConn.prototype.SendZhanjiMessage=function(userId,pageIdx,matchType)//战绩请求
 {
-    var ehMsg="Z|"+userId+"#"+pageIdx+"|";
+    var ehMsg="Z|"+userId+"#"+pageIdx+"#"+matchType+"|";
+	if(SocketConnLogFlag!=false)
     console.log("send Z msg="+ehMsg);
     ws.send(ehMsg);
 }
@@ -206,6 +217,7 @@ SocketConn.prototype.SendZhanjiMessage=function(userId,pageIdx)//战绩请求
 SocketConn.prototype.SendRecordMessage=function(userId,matchId)//观看对战记录的请求
 {
 	var ehMsg="O|"+userId+"#"+matchId+"|";
+	if(SocketConnLogFlag!=false)
 	console.log("send Z msg="+ehMsg);
 	ws.send(ehMsg);
 }

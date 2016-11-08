@@ -74,7 +74,11 @@ var ShareLoadScene = SceneBase.extend(
 		this.stopProgress();
 		this.showMessageBox("服务器连接失败，请稍候再试！",function(){this.messageBoxClosed();});
 	},
-	
+	messageBoxClosed:function()
+	{
+		cc.log("服务器连接失败确认按钮。。。");
+		window.location.href="http://analyse.kiiik.com/";
+	},
 	messageCallback:function(packet)
 	{
 		console.log("login scene message callback packet.msgType="+packet.msgType);

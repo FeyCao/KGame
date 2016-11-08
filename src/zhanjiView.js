@@ -17,9 +17,10 @@ var ZhanjiTableViewCell = cc.TableViewCell.extend({
         if(userInfo.MatchListData!=null)
         {
 
-            //{"matchId":811,"uid":3434343770,"score":"0.00","matchTime":"10-20 12:37","playerNum":1},
+            //{"matchId":6736,"uid":3434343770,"nickName":"红莲奥斯卡","score":"0.00","matchTime":"11-02 16:47","playerNum":1,"matchType":2}
             //设置用户名
-            strNameText= userInfo.MatchListData[idx]["uid"];
+            // strNameText= userInfo.MatchListData[idx]["uid"];
+            strNameText= userInfo.MatchListData[idx]["nickName"];
             textNameLabel = new cc.LabelTTF(strNameText, "Arial", 35.0);
             textNameLabel.setPosition(cc.p(20,40));
             textNameLabel.setAnchorPoint(0,0.5);
@@ -57,23 +58,27 @@ var ZhanjiTableViewCell = cc.TableViewCell.extend({
 
 
             //设置查看交易记录按钮
-            this.recordButton=new Button("res/btnRecord.png");
-            this.recordButton.setAnchorPoint(0,0.5);
-            this.recordButton.setPosition(cc.p(800,40));
-            this.addChild(this.recordButton);
+            //设置查看交易记录按钮
+            recordButton=new Button("res/btnRecord.png");
+            recordButton.setAnchorPoint(0,0.5);
+            recordButton.setPosition(cc.p(800,40));
+            sprite.addChild(recordButton);
             var matchId = userInfo.MatchListData[idx]["matchId"];
-            var userId = userInfo.MatchListData[idx]["uid"];
-            this.recordButton.setClickEvent(function(){
-                console.log("recordButton ClickEvent");
+            var userId = userInfo.MatchListData[idx]["nickName"];
+            console.log("recordButton ClickEvent userId["+i+"] ="+userId+"||matchId="+matchId);
+            recordButton.setClickEvent(function(){
+
+                var klineSceneNext=new KLineScene();
+                klineSceneNext.onEnteredFunction=function(){
+
+                };
+                userInfo.matchMode=userInfo.recordMode;
                 gSocketConn.SendRecordMessage(userId,matchId);
+                cc.director.runScene(klineSceneNext);
+
             });
-
-
         }
     },
-    //recordView:function(matchId,userId){
-    //    console.log(" .....recordView matchId="+matchId+"||userId="+userId);
-    //},
 
 });
 
@@ -97,7 +102,26 @@ var ZhanjiViewLayer = cc.Layer.extend({
   //  gainCumulation:null,
   //  sumOfAllMatch:null,
 
+    // m_touchListener:null,
+    onEnter: function () {
+        this._super();
+        // this.setColor();
+        this.setOpacity(160);
+        var listener = cc.EventListener.create({
+            event: cc.EventListener.TOUCH_ONE_BY_ONE,
+            swallowTouches: true,
+            onTouchBegan: function (touch, event) {
+                return true;
+            }
+        });
+        cc.eventManager.addListener(listener, this);
+        this._listener = listener;
+    },
 
+    onExit: function () {
+        cc.eventManager.removeListener(this._listener);
+        this._super();
+    },
     ctor:function () {
         this._super();
         this.init();
@@ -107,9 +131,13 @@ var ZhanjiViewLayer = cc.Layer.extend({
         //this.totalCount=null;
         //this.winRate=null;
         //this.AvgGain=null;
-        this.infoLabel=null;
-        this.tableView=null;
+        // this.infoLabel=null;
+        // this.tableView=null;
+
     },
+
+
+
 
     init:function () {
         var winSize = cc.director.getWinSize();
@@ -157,23 +185,23 @@ var ZhanjiViewLayer = cc.Layer.extend({
         {
             //var strValue = "平均收益率:"+userInfo.AvgGain+"       总局数:"+userInfo.totalCount+"     胜率:"+userInfo.winRate;
             //cc.log(strValue);
-            avgGainLabel = new cc.LabelTTF( userInfo.AvgGain+"%", "Arial", 25.0);
-            avgGainLabel.setPosition(cc.p(150,280));
-            avgGainLabel.setAnchorPoint(0,0);
-            avgGainLabel.setColor(RedColor);
-            this.addChild(avgGainLabel);
+            this.avgGainLabel = new cc.LabelTTF( userInfo.AvgGain+"%", "Arial", 25.0);
+            this.avgGainLabel.setPosition(cc.p(150,280));
+            this.avgGainLabel.setAnchorPoint(0,0);
+            this.avgGainLabel.setColor(RedColor);
+            this.addChild(this.avgGainLabel);
 
-            totalCountLabel = new cc.LabelTTF( userInfo.totalCount, "Arial", 25.0);
-            totalCountLabel.setPosition(cc.p(400,280));
-            totalCountLabel.setAnchorPoint(0,0);
-            totalCountLabel.setColor(YellowColor);
-            this.addChild(totalCountLabel);
+            this.totalCountLabel = new cc.LabelTTF( userInfo.totalCount, "Arial", 25.0);
+            this.totalCountLabel.setPosition(cc.p(400,280));
+            this.totalCountLabel.setAnchorPoint(0,0);
+            this.totalCountLabel.setColor(YellowColor);
+            this.addChild(this.totalCountLabel);
 
-            winRateLabel = new cc.LabelTTF( userInfo.winRate+"%", "Arial", 25.0);
-            winRateLabel.setPosition(cc.p(580,280));
-            winRateLabel.setAnchorPoint(0,0);
-            winRateLabel.setColor(YellowColor);
-            this.addChild(winRateLabel);
+            this.winRateLabel = new cc.LabelTTF( userInfo.winRate+"%", "Arial", 25.0);
+            this.winRateLabel.setPosition(cc.p(580,280));
+            this.winRateLabel.setAnchorPoint(0,0);
+            this.winRateLabel.setColor(YellowColor);
+            this.addChild(this.winRateLabel);
         }
 
 
@@ -187,7 +215,6 @@ var ZhanjiViewLayer = cc.Layer.extend({
         //    this.infoLabel.setPosition(cc.p(50,280));
         //    this.addChild(this.infoLabel,5);
         //}
-
 
         this.closeButton.setClickEvent(function(){
             console.log("closeButton ClickEvent");
@@ -225,54 +252,127 @@ var ZhanjiViewLayer = cc.Layer.extend({
 
         if(this.mode1Button==null)
         {
-            this.mode1Button=new Button("res/btn_mode1d.png");
+            //this.mode1Button=new CheckButton("res/btn_mode1d.png","res/btn_mode1u.png");//new Button("res/btn_mode1d.png");
+            this.mode1Button=new Button("res/btn_mode1u.png");//new Button("res/btn_mode1d.png");
             this.mode1Button.setPosition(cc.p(300,520));
             this.mode1Button.setClickEvent(function(){
                 console.log("mode1Button ClickEvent");
-                //self.zhanji();
+                userInfo.recordMode=0;
+                if(gMainMenuScene!=null)
+                {
+                    gMainMenuScene.zhanji();
+                }
             });
             this.backgroundSprite.addChild(this.mode1Button,5);
+            this.mode1DisAbleSprite=cc.Sprite.create("res/btn_mode1d.png");
+            this.mode1DisAbleSprite.setPosition(cc.p(300,520));
+            this.backgroundSprite.addChild(this.mode1DisAbleSprite,5);
+
         }
         if(this.mode2Button==null)
         {
+            // this.mode2Button=new CheckButton("res/btn_mode2d.png","res/btn_mode2u.png");
             this.mode2Button=new Button("res/btn_mode2u.png");
             this.mode2Button.setPosition(cc.p(525,520));
             this.mode2Button.setClickEvent(function(){
                 console.log("mode2Button ClickEvent");
+                userInfo.recordMode=2;
+                if(gMainMenuScene!=null)
+                {
+                    gMainMenuScene.zhanji();
+                }
+
                 //self.zhanji();
             });
             this.backgroundSprite.addChild(this.mode2Button,5);
+            this.mode2DisAbleSprite=cc.Sprite.create("res/btn_mode2d.png");
+            this.mode2DisAbleSprite.setPosition(cc.p(525,520));
+            this.backgroundSprite.addChild(this.mode2DisAbleSprite,5);
         }
         if(this.mode3Button==null)
         {
-            this.mode3Button=new Button("res/btn_mode3u.png");
+            this.mode3Button=new CheckButton("res/btn_mode3d.png","res/btn_mode3u.png");
             this.mode3Button.setPosition(cc.p(750,520));
             this.mode3Button.setClickEvent(function(){
                 console.log("mode3Button ClickEvent");
-                //self.zhanji();
+                userInfo.recordMode=1;
+                // if(gMainMenuScene!=null)gMainMenuScene.zhanji();
             });
             this.backgroundSprite.addChild(this.mode3Button,5);
         }
         if(this.mode4Button==null)
         {
-            this.mode4Button=new Button("res/btn_mode4u.png");
+            this.mode4Button=new CheckButton("res/btn_mode4d.png","res/btn_mode4u.png");
             this.mode4Button.setPosition(cc.p(975,520));
             this.mode4Button.setClickEvent(function(){
                 console.log("mode4Button ClickEvent");
-                //self.zhanji();
+                userInfo.recordMode=3;
+                // if(gMainMenuScene!=null)gMainMenuScene.zhanji();
             });
 
             this.backgroundSprite.addChild(this.mode4Button,5);
         }
 
-       // this.mode1Button.setDisabled(true);
-        this.mode2Button.setDisabled(true);
-        this.mode3Button.setDisabled(true);
-        this.mode4Button.setDisabled(true);
+        this.setDisableAllmodeButton();
+        this.setAbleAllmodeButton();
+        switch (userInfo.recordMode)
+        {
+
+            case 0:
+            {
+                this.mode1Button.setDisabled(true);
+                this.mode1DisAbleSprite.setVisible(true);
+                break;
+            }
+            case 1:
+            {
+                // this.mode3Button.setDisabled(true);
+                break;
+            }
+            case 2:
+            {
+                this.mode2Button.setDisabled(true);
+                this.mode2DisAbleSprite.setVisible(true);
+                break;
+            }
+            case 3:
+            {
+                break;
+            }
+            default:
+            {
+                cc.log("userInfo.recordMode=="+userInfo.recordMode);
+                break;
+            }
+        }
+        // this.mode1Button.setDisabled(true);
+        // this.mode1Button.setChecked(true);
+        // this.mode2Button.setDisabled(false);
+        // this.mode1Button.setDisabled(true);
+        // this.mode2Button.setDisabled(true);
+        // this.mode3Button.setDisabled(true);
+        // this.mode4Button.setDisabled(true);
 
 
 
     },
+    setDisableAllmodeButton:function()
+    {
+        this.mode1Button.setDisabled(true);
+        this.mode2Button.setDisabled(true);
+        this.mode3Button.setDisabled(true);
+        this.mode4Button.setDisabled(true);
+    },
+    setAbleAllmodeButton:function()
+    {
+        this.mode1Button.setDisabled(false);
+        this.mode1DisAbleSprite.setVisible(false);
+        this.mode2Button.setDisabled(false);
+        this.mode2DisAbleSprite.setVisible(false);
+        // this.mode3Button.setDisabled(false);
+        // this.mode4Button.setDisabled(false);
+    },
+
     toMainScene:function () {
         if(this.closeCallBackFunction!=null){
             this.closeCallBackFunction();
@@ -411,6 +511,61 @@ var ZhanjiViewLayer = cc.Layer.extend({
         this.actionManager && this.actionManager.pauseTarget(this);
         cc.eventManager.pauseTarget(this,true);
     },
+    refreshZhanjiViewLayer:function()
+    {
+        if(this.tableView!=null)
+        {
+            this.tableView.reloadData();
+        }
+        // this.tableView.reloadData();
+        if(userInfo!=null)
+        {
+            //var strValue = "平均收益率:"+userInfo.AvgGain+"       总局数:"+userInfo.totalCount+"     胜率:"+userInfo.winRate;
+            //cc.log(strValue);
+            if(this.avgGainLabel!=null)
+                this.avgGainLabel.setString(userInfo.AvgGain+"%");
+
+            if(this.totalCountLabel!=null)
+                this.totalCountLabel.setString(userInfo.totalCount);
+            if(this.winRateLabel!=null)
+                this.winRateLabel.setString(userInfo.winRate+"%");
+            this.setDisableAllmodeButton();
+            this.setAbleAllmodeButton();
+            switch (userInfo.recordMode)
+            {
+
+                case 0:
+                {
+                    this.mode1Button.setDisabled(true);
+                    this.mode1DisAbleSprite.setVisible(true);
+                    break;
+                }
+                case 1:
+                {
+                    // this.mode3Button.setDisabled(true);
+                    break;
+                }
+                case 2:
+                {
+                    this.mode2Button.setDisabled(true);
+                    this.mode2DisAbleSprite.setVisible(true);
+                    break;
+                }
+                case 3:
+                {
+                    break;
+                }
+                default:
+                {
+                    cc.log("userInfo.recordMode=="+userInfo.recordMode);
+                    break;
+                }
+            }
+        }
+
+
+
+    }
 });
 
 

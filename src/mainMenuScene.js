@@ -39,6 +39,7 @@ var MainMenuScene =SceneBase.extend(
 
     ctor: function ()
     {
+
         this._super();
         this.backgroundLayer=null;
         this.backgroundSprite=null;
@@ -46,6 +47,12 @@ var MainMenuScene =SceneBase.extend(
         this.infoLabel=null;
         this.winOneLabel=null;
         this.sumOneLabel=null;
+        this.winAILabel=null;
+        this.sumAILabel=null;
+        // this.winOneLabel=null;
+        // this.sumOneLabel=null;
+        // this.winOneLabel=null;
+        // this.sumOneLabel=null;
         //this.winOfMatchForMore=null;
         //this.gainCumulation=null;
         //this.sumOfAllMatch=null;
@@ -61,6 +68,7 @@ var MainMenuScene =SceneBase.extend(
     },
 	onEnter:function () 
 	{
+        cc.log("MainMenuScene onEnter begin");
 		this._super();
         gMainMenuScene=this;
 		//gMainMenusSceneInst=this;
@@ -117,6 +125,26 @@ var MainMenuScene =SceneBase.extend(
         self.sumOneLabel.setColor(WhiteColor);
         self.sumOneLabel.setPosition(cc.pAdd(self.winOneLabel.getPosition(),cc.p(self.winOneLabel.getContentSize().width,0)));
         this.backgroundLayer.addChild(self.sumOneLabel,5);
+
+        self.infoLabelAI=cc.LabelTTF.create("人机战:", "Arial",15);
+        //this.zhanjiLabel=cc.LabelTTF.create(gPlayerName, "Arial", 20);
+        self.infoLabelAI.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
+        self.infoLabelAI.setAnchorPoint(0,0.5);
+        self.infoLabelAI.setPosition(cc.p(450*fXScale,(pButtonY-30)*fYScale));
+        self.backgroundLayer.addChild(self.infoLabelAI,5);
+
+        self.winAILabel= cc.LabelTTF.create("", "Arial",15);
+        self.winAILabel.setAnchorPoint(0,0.5);
+        self.winAILabel.setColor(YellowColor);
+        self.winAILabel.setPosition(cc.pAdd(self.infoLabelAI.getPosition(),cc.p(self.infoLabelAI.getContentSize().width,0)));
+        this.backgroundLayer.addChild(self.winAILabel,5);
+        self.sumAILabel= cc.LabelTTF.create("", "Arial",15);
+        self.sumAILabel.setAnchorPoint(0,0.5);
+        self.sumAILabel.setColor(WhiteColor);
+        self.sumAILabel.setPosition(cc.pAdd(self.winAILabel.getPosition(),cc.p(self.winAILabel.getContentSize().width,0)));
+        this.backgroundLayer.addChild(self.sumAILabel,5);
+
+
         //设置对战信息时数据可能还没取到
         this.setDataforInfo();
 
@@ -125,21 +153,6 @@ var MainMenuScene =SceneBase.extend(
         var pModeXdistance = 300;
 		var pModeY = 240;
 
-		//this.firstMode=new CheckButton("res/btn_mode1_u.png","res/btn_mode1_u.png");
-        //this.firstMode.setScale(fXScale,fYScale);
-		//this.firstMode.setPosition(cc.p(190*fXScale,pModeY*fYScale));
-		//this.firstMode.setClickEvent(function(){
-         //   console.log("zhanjiButton ClickEvent");
-		//	//self.firstModeChanged();
-		//});
-
-        // this.firstMode=new Button("res/btn_mode1_u.png");
-        // this.firstMode.setScale(fXScale,fYScale);
-        // this.firstMode.setPosition(cc.p(190*fXScale,pModeY*fYScale));
-        // this.firstMode.setClickEvent(function(){
-        //     console.log("firstMode ClickEvent");
-        //     self.firstModeChanged();
-        // });
         this.firstMode=new CheckButton("res/btn_mode1_d.png","res/btn_mode1_u.png");
         this.firstMode.setScale(fXScale,fYScale);
         this.firstMode.setPosition(cc.p((190)*fXScale,pModeY*fYScale));
@@ -231,7 +244,10 @@ var MainMenuScene =SceneBase.extend(
     {
         this._super();
         cc.eventManager.removeAllListeners();
+        if(gSocketConn!=null)
+            gSocketConn.UnRegisterEvent("onmessage",this.messageCallBack);
         this.removeAllChildrenWithCleanup(true);
+        gMainMenuScene=false;
 
         cc.log("MainMenuScene onExit end");
     },
@@ -389,8 +405,9 @@ var MainMenuScene =SceneBase.extend(
         //var userId=GetQueryString("userId");
         //userInfo.userId
         this.showProgress();
-		gSocketConn.SendZhanjiMessage(userInfo.userId,0);
-        console.log("Waiting for zhanji...");
+        if(userInfo.recordMode!=null)
+		gSocketConn.SendZhanjiMessage(userInfo.userId,0,userInfo.recordMode);
+        console.log("zhanji...end");
 	},
 
     paiming:function()
@@ -493,17 +510,31 @@ var MainMenuScene =SceneBase.extend(
             self.sumOneLabel.setString("/"+userInfo.sumOfMatchForOne);
             self.sumOneLabel.setPosition(cc.pAdd(self.winOneLabel.getPosition(),cc.p(self.winOneLabel.getContentSize().width,0)));
         }
+        if(userInfo.winOfMatchForAI!=null&&self.winAILabel!=null)
+        {
+            cc.log("setDataforInfoW="+userInfo.winOfMatchForAI);
+            self.winAILabel.setPosition(cc.pAdd(self.infoLabelAI.getPosition(),cc.p(self.infoLabelAI.getContentSize().width,0)));
+            self.winAILabel.setString(userInfo.winOfMatchForAI);
+
+            cc.log("setDataforInfoS="+ userInfo.sumOfMatchForAI);
+            self.sumAILabel.setString("/"+userInfo.sumOfMatchForAI);
+            self.sumAILabel.setPosition(cc.pAdd(self.winAILabel.getPosition(),cc.p(self.winAILabel.getContentSize().width,0)));
+        }
 
     },
     setMainMenuScenedata:function(jsonText)
     {
         var data=JSON.parse(jsonText);
-        console.log("jsonText parse over");
+        console.log("setMainMenuScenedata jsonText parse over");
+        // "winOfMatchForOne":0,"sumOfMatchForOne":3,"winOfMatchForMore":0,"sumOfMatchForMore":0,"winOfMatchForAI":8,"sumOfMatchForAI":11,"gainCumulation":"-6.223","sumOfAllMatch":3}
 
         userInfo.nickName=data["nickName"];
         userInfo.winOfMatchForOne=data["winOfMatchForOne"];
         userInfo.sumOfMatchForOne=data["sumOfMatchForOne"];
         userInfo.winOfMatchForMore=data["winOfMatchForMore"];
+        userInfo.sumOfMatchForMore=data["sumOfMatchForMore"];
+        userInfo.winOfMatchForAI=data["winOfMatchForAI"];
+        userInfo.sumOfMatchForAI=data["sumOfMatchForAI"];
         userInfo.gainCumulation=data["gainCumulation"];
         userInfo.sumOfAllMatch=data["sumOfAllMatch"];
 
@@ -642,18 +673,41 @@ var MainMenuScene =SceneBase.extend(
             }
             case "O"://观看记录
             {
+
                 if(gKlineScene==null)
                     gKlineScene=new KLineScene();
-                //接收到了K线数据的消息
-                // gSocketConn.UnRegisterEvent("onmessage",gKlineScene.messageCallBack);
+                //接收到了分享的K线数据的消息
+                // gSocketConn.UnRegisterEvent("onmessage",self.messageCallBack);
                 if(gKlineScene!=null)
                 {
-                    console.log("call get kline data");
-                    //self.getShareKlinedata
-                    gKlineScene.getShareKlinedata(packet.content);
-                    console.log("get kline passed");
+                    console.log("begin to parse 观看记录json text");
+                    var data=JSON.parse(packet.content);
+                    console.log("jsonText parse 观看记录over");
+                    gKlineScene.toSetklinedata(data);
+
+                    if(gKlineScene.klineLayerMain!=null && gKlineScene.klineLayerPrev!=null)
+                    {
+                        gKlineScene.advanceToMainKLine_Record();
+                    }
+                    cc.director.runScene(gKlineScene);
+
                 }
                 self.stopProgress();
+                // var klineSceneNext=new KLineScene();
+                // klineSceneNext.onEnteredFunction=function(){
+                //
+                //     // klineSceneNext.showProgress();
+                // };
+                // //接收到了K线观看记录数据的消息
+                // // gSocketConn.UnRegisterEvent("onmessage",gKlineScene.messageCallBack);
+                // if(klineSceneNext!=null)
+                // {
+                //     console.log("call 观看记录 kline data");
+                //     //self.getShareKlinedata
+                //     klineSceneNext.getShareKlinedata(packet.content);
+                //     console.log("get 观看记录 passed");
+                // }
+                // cc.director.runScene(klineSceneNext);
                 break;
             }
             case "F":
@@ -718,7 +772,11 @@ var MainMenuScene =SceneBase.extend(
             //this.zhanjiInfoLayer.applyParamsFromContent(content);
             //content的内容为:   总用户个数(假设为2)#用户名A#收益率A#得分A#用户名B#收益率B#得分B#品种名字#起始日期#终止日期
             this.zhanjiInfoLayer.closeCallBackFunction=function(){self.zhanjiInfoLayer_Close()};
-            this.zhanjiInfoLayer.replayCallBackFunction=function(){self.matchEndInfoLayer_Replay()};
+            this.zhanjiInfoLayer.replayCallBackFunction=function(){self.MatchMoreEndInfoLayer_Replay()};
+        }
+        else
+        {
+            this.zhanjiInfoLayer.refreshZhanjiViewLayer();
         }
 
 
