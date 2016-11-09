@@ -26,7 +26,7 @@ var KLineScene = SceneBase.extend(
 	middleHorizontalLineCount:11,	//在中间的横线的个数
 	
 	currentCandleIndex:0,		//当前显示的是第几个蜡烛，从0开始
-	CANDAL_DRAW_INTERVAL:100,		//每个K线相隔的时间
+	CANDAL_DRAW_INTERVAL:500,		//每个K线相隔的时间
 	currentCandleDrawInterval:null,	//当前的K线绘画间隔
 	drawCandleStoped:false,			//是否绘画停止了
 	
@@ -107,14 +107,9 @@ var KLineScene = SceneBase.extend(
 		this.klineLayerMain=new KlineLayer(this.KlineWidth,192);
 		this.klineLayerMain.setPosition(cc.p(this.KlinePosX,170));
 
-
-
 		this.volumnTechLayerMain=new VolumnTechLayer(this.KlineWidth,94);
 		this.volumnTechLayerMain.setPosition(cc.p(this.KlinePosX,75));
 
-		cc.log("this.playerInfoLayer.getTag()="+this.playerInfoLayer.getTag());
-		cc.log("this.klineLayerMain.getTag()="+this.klineLayerMain.getTag());
-		cc.log("this.volumnTechLayerMain.getTag()="+this.volumnTechLayerMain.getTag());
 
 		this.borderArea=new cc.DrawNodeCanvas();
 		this.borderArea.setPosition(cc.p(0,68));
@@ -339,7 +334,7 @@ var KLineScene = SceneBase.extend(
 			//
 			//this.borderArea.drawSegment(pointBegin,pointEnd,0.4,cc.color(36,62,83,80));
 			// this.borderArea.drawSegment(pointBegin,pointEnd,0.4,WhiteColor);
-			cc.log("drawHorizontalLine middleGapHeight i="+i+"||middleGapHeight=="+middleGapHeight);
+			// cc.log("drawHorizontalLine middleGapHeight i="+i+"||middleGapHeight=="+middleGapHeight);
 		}
 		this.borderArea.drawSegment(cc.p(0,100),cc.p(this.size.width,100),1,BlueColor);
 	},
@@ -531,6 +526,11 @@ var KLineScene = SceneBase.extend(
 			//复盘
 			this.matchEndInfoLayer.hideLayer();
 			this.resumeLowerLayer();
+
+			if(this.btnHome!=null)//显示返回
+			{
+				this.btnHome.setVisible(true);
+			}
 			//关闭后显示下方的按钮
 			this.beginReplayKLineScene();
 		}
@@ -598,6 +598,11 @@ var KLineScene = SceneBase.extend(
 	{
 		console.log("beginReplayKLineScene  visible = true");
 		var self=this;
+		if(self.matchInfoLayer!=null)
+		{
+			self.matchInfoLayer.disableAllButtons();
+			self.matchInfoLayer.setReplayKLineScene();
+		}
 		if(self.matchInfoLayer!=null)
 		{
 			self.matchInfoLayer.disableAllButtons();
@@ -675,24 +680,7 @@ var KLineScene = SceneBase.extend(
 	// 	console.log("jsonText parse over");
 	// 	this.ongotklinedata(data);
 	// },
-	
-	// ///获取分享的K线数据
-	// getShareKlinedata:function(jsonText)
-	// {
-	// 	console.log("begin to parse json text");
-	// 	var data=JSON.parse(jsonText);
-	// 	console.log("jsonText parse over");
-	// 	this.onShareklinedata(data);
-	// },
 
-	// ///获取比赛记录的K线数据
-	// getRecordKlinedata:function(jsonText)
-	// {
-	// 	console.log("begin to parse json text");
-	// 	var data=JSON.parse(jsonText);
-	// 	console.log("jsonText parse over");
-	// 	this.onRecordklinedata(data);
-	// },
 
 	toSetklinedata:function(data)
 	{
@@ -1012,19 +1000,7 @@ var KLineScene = SceneBase.extend(
 		var actionFadeOut=new cc.FadeTo(this.phase3Time,0);
 		return new cc.Sequence(actionFadeIn,actionBlank,actionFadeOut);
 	},
-	
-	// advanceToMainKline:function()
-	// {
-	// 	//var actionMoveOut=new cc.moveBy(0.5,-this.klineLayerMain.width,0);
-	// 	//var actionFadeOut=new cc.FadeTo(0.5,0);
-	// 	//this.klineLayerPrev.runAction(actionMoveOut);
-	// 	//this.klineLayerPrev.klineArea.runAction(actionFadeOut);
-    //
-	// 	//var self=this;
-	// 	//setTimeout(function(){self.advanceToMainKLine_PhaseMatch();},500);
-	//
-	// 	this.advanceToMainKLine_PhaseMatch();
-	// },
+
 	
 	///得到当前的K线图的层
 	getCurrentKLineLayer:function()
@@ -1265,8 +1241,6 @@ var KLineScene = SceneBase.extend(
 			gSocketConn.SendEndMessage();
 		}
 	},
-	
-	
 	
 	buyClick:function()
 	{

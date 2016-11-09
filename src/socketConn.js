@@ -16,7 +16,7 @@ SocketConn.prototype.Connect=function(url)
 	this.urlToConnect=url;
 	var wsImpl = window.WebSocket || window.MozWebSocket;
 	var self=this;
-	
+	console.log("WS="+url);
 	window.ws = new wsImpl(url);
 	 // when data is comming from the server, this metod is called
 	ws.onmessage = function (evt) {
