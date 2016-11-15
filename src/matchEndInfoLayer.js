@@ -490,6 +490,7 @@ var PlayerInfoCell = cc.TableViewCell.extend({
 
 				};
 				// userInfo.matchMode=userInfo.recordMode;
+				userInfo.matchId = matchId;
 				gSocketConn.SendRecordMessage(userId,matchId);
 				cc.director.runScene(klineSceneNext);
 

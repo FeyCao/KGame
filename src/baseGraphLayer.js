@@ -395,7 +395,28 @@ var BaseGraphLayer= cc.Layer.extend({
 			this.drawSingleDayGraphInfos(i);
 		}
 	},
-	
+
+	///立刻显示startIndex-endIndex所有的蜡烛，
+	drawAllCandlesTillBetweenIndex:function(startIndex,endIndex)
+	{
+		if(this.klineData==null)
+		{
+			return;
+		}
+		if(endIndex==undefined)
+		{
+			endIndex=this.klineData.length-1;
+		}
+		this.calculateMaxMinBetweenIndex(startIndex,endIndex);
+		this.calculateMaxMinBetweenIndexForAllTais(startIndex,endIndex);
+		for(var i=startIndex;i<=endIndex;i++)
+		{
+			this.drawSingleDayGraphInfos(i);
+		}
+	},
+
+
+
 	drawCandleForAllTais:function(candleIndex)
 	{
 		for(var i=0;i<this.taisArray.length;i++)

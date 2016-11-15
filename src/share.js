@@ -36,8 +36,9 @@ window.onload = function()
 	  cc.LoaderScene.preload(["res/title.png","res/battle_bg.png","res/selected.png","res/messagebox.png","res/rotate.png","res/rotate_shadow.png","res/cd_1.png","res/cd_2.png","res/cd_3.png","res/cd_4.png","res/cd_5.png","res/avatar1.png","res/avatar2.png","res/avatar3.png","res/avatar4.png","res/avatar5.png","res/btnBuyDisable.png","res/btnBuyEnable.png","res/btnCloseBuy.png","res/btnCloseDisable.png","res/btnCloseSell.png","res/btnSellDisable.png","res/btnSellEnable.png","res/buyOpenTag.png","res/buyCloseTag.png","res/sellOpenTag.png","res/sellCloseTag.png","res/cursor.png","res/selectedBar.png","res/meBtnStart.png"], function () {
 		 cc.director.runScene(new ShareLoadScene());
 	  }, this);
+	  cc.view.enableRetina(true);
   };
-  
+
   cc.game.run("gameCanvas");
   
   

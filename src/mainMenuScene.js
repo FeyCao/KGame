@@ -102,16 +102,18 @@ var MainMenuScene =SceneBase.extend(
         this.backgroundLayer.addChild(this.touxiangSprite,2);
 
         this.selfNameLabel = cc.LabelTTF.create(userInfo.nickName, "Arial", 15);
-        // this.selfNameLabel.setScale(fXScale,fYScale);
+        // this.selfNameLabel.setScale(0.8);
         this.selfNameLabel.setAnchorPoint(0,0.5);
         this.selfNameLabel.setPosition(cc.p(240*fXScale,520*fYScale));
         this.backgroundLayer.addChild(this.selfNameLabel,2);
 
 
         self.infoLabel=cc.LabelTTF.create("练习场:", "Arial",15);
+        // self.infoLabel.setScale(0.8);
         //this.zhanjiLabel=cc.LabelTTF.create(gPlayerName, "Arial", 20);
         self.infoLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
         self.infoLabel.setAnchorPoint(0,0.5);
+        // self.infoLabel.setColor(cc.color(0,0,0,255));
         self.infoLabel.setPosition(cc.p(450*fXScale,pButtonY*fYScale));
         self.backgroundLayer.addChild(self.infoLabel,5);
 
@@ -127,6 +129,7 @@ var MainMenuScene =SceneBase.extend(
         this.backgroundLayer.addChild(self.sumOneLabel,5);
 
         self.infoLabelAI=cc.LabelTTF.create("人机战:", "Arial",15);
+        // self.infoLabelAI.setScale(0.8);
         //this.zhanjiLabel=cc.LabelTTF.create(gPlayerName, "Arial", 20);
         self.infoLabelAI.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
         self.infoLabelAI.setAnchorPoint(0,0.5);
@@ -440,7 +443,7 @@ var MainMenuScene =SceneBase.extend(
             console.log("zhanjiButton ClickEvent");
             self.zhanji();
         });
-        this.zhanjiLabel=cc.LabelTTF.create("战绩", "Arial",15);
+        this.zhanjiLabel=cc.LabelTTF.create("战绩", "fonts/Self.ttf",15);
         //this.zhanjiLabel=cc.LabelTTF.create(gPlayerName, "Arial", 20);
         this.zhanjiLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
         this.zhanjiLabel.setAnchorPoint(0,0.5);
@@ -454,7 +457,7 @@ var MainMenuScene =SceneBase.extend(
         this.paimingButton.setClickEvent(function(){
             //self.paiming();
         });
-        this.paimingLabel=cc.LabelTTF.create("排名", "Arial", 15);
+        this.paimingLabel=cc.LabelTTF.create("排名", "fonts/Arial.ttf", 15);
         //this.paimingLabel=cc.LabelTTF.create(gPlayerName, "Arial", 20);
         this.paimingLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
         this.paimingLabel.setAnchorPoint(0,0.5);
@@ -467,7 +470,7 @@ var MainMenuScene =SceneBase.extend(
         this.helpButton.setClickEvent(function(){
             //self.help();
         });
-        this.helpLabel=cc.LabelTTF.create("帮助", "Arial", 15);
+        this.helpLabel=cc.LabelTTF.create("帮助", "fonts/Georgia.ttf", 15);
         //this.helpLabel=cc.LabelTTF.create(gPlayerName, "Arial", 20);
         this.helpLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
         this.helpLabel.setAnchorPoint(0,0.5);
@@ -480,7 +483,7 @@ var MainMenuScene =SceneBase.extend(
         this.configButton.setClickEvent(function(){
             //self.config();
         });
-        this.configLabel=cc.LabelTTF.create("设置", "Arial", 15);
+        this.configLabel=cc.LabelTTF.create("设置", "fonts/Arial.ttf", 15);
         //this.configLabel=cc.LabelTTF.create(gPlayerName, "Arial", 20);
         this.configLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
         this.configLabel.setAnchorPoint(0,0.5);

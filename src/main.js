@@ -53,7 +53,19 @@ window.onload = function()
           cc.director.runScene(new TempLoadScene());
 		  //cc.director.runScene(new ZhanjiViewLayer());
 	  }, this);
-  };
+	  cc.view.enableRetina(true);
+	//   var sys = cc.sys;
+  //
+	//   if(sys.os === sys.OS_IOS || sys.os === sys.OS_OSX){
+  //
+	// 	  cc.view.enableRetina(false);
+  //
+	//   }else{
+  //
+	// 	  cc.view.enableRetina(true);
+  //
+	//   }
+   };
   
   cc.game.run("gameCanvas");
  
