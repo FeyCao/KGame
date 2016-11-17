@@ -37,7 +37,7 @@ var InputEx= ccui.TextField.extend({
 		this.setTextHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
 		this.setTextVerticalAlignment(cc.VERTICAL_TEXT_ALIGNMENT_CENTER);
 		
-		console.log("instanceid="+this.__instanceId);
+		cc.log("instanceid="+this.__instanceId);
 
 	},
 	
@@ -47,7 +47,7 @@ var InputEx= ccui.TextField.extend({
 	},
 	
 	_attachWithIMEEvent: function () {
-		console.log("_attachWithIMEEvent self="+this.__instanceId);
+		cc.log("_attachWithIMEEvent self="+this.__instanceId);
 		this.showCursor();
         if(this._textFieldEventSelector){
             if (this._textFieldEventListener)
@@ -63,7 +63,7 @@ var InputEx= ccui.TextField.extend({
     },
 	
 	 _detachWithIMEEvent: function () {
-		 console.log("_detachWithIMEEvent self="+this.__instanceId);
+		 cc.log("_detachWithIMEEvent self="+this.__instanceId);
         if(this._textFieldEventSelector){
             if (this._textFieldEventListener)
                 this._textFieldEventSelector.call(this._textFieldEventListener, this, ccui.TextField.EVENT_DETACH_WITH_IME);
@@ -83,19 +83,19 @@ var InputEx= ccui.TextField.extend({
 	
 	onTouchBegan: function (touchPoint, unusedEvent) {
         var self = this;
-		console.log("onTouchBegan self="+self.__instanceId);
+		cc.log("onTouchBegan self="+self.__instanceId);
         var pass = ccui.Widget.prototype.onTouchBegan.call(self, touchPoint, unusedEvent);
         if (self._hit) {
             setTimeout(function(){
                 self._textFieldRenderer.attachWithIME();
             }, 0);
-			console.log("self._hit=true");
+			cc.log("self._hit=true");
 			
         }else{
             setTimeout(function(){
                 self._textFieldRenderer.detachWithIME();
             }, 0);
-			console.log("self._hit=false");
+			cc.log("self._hit=false");
         }
         return pass;
     },
@@ -104,11 +104,11 @@ var InputEx= ccui.TextField.extend({
 	
 	showCursor:function()
 	{
-		console.log("showCursor");
+		cc.log("showCursor");
 		if(cc.sys.isMobile==true)return;
 		var width=this._textFieldRenderer.getContentSize().width;
 
-		console.log("content size width="+width);
+		cc.log("content size width="+width);
 		this.cursorSpriteForInput.setPosition(width+2,4);
 		
 		this.cursorSpriteForInput.setVisible(true);
@@ -118,7 +118,7 @@ var InputEx= ccui.TextField.extend({
 	
 	hideCursor:function()
 	{
-		console.log("hide cursor");
+		cc.log("hide cursor");
 		if(cc.sys.isMobile==true)return;
 		this.cursorSpriteForInput.stopAction(this.blinkAction);
 		this.cursorSpriteForInput.setVisible(false);
@@ -132,7 +132,7 @@ var InputEx= ccui.TextField.extend({
 	
 	 _onSizeChanged: function () {
 		 var width=this._textFieldRenderer.getContentSize().width;
-		console.log("_onSizeChanged width="+width);
+		cc.log("_onSizeChanged width="+width);
         ccui.Widget.prototype._onSizeChanged.call(this);
         this._textFieldRendererAdaptDirty = true;
 		if(this.cursorVisible==true && cc.sys.isMobile==false)

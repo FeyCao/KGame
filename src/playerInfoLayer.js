@@ -115,14 +115,14 @@ ctor:function(width,height)
 						{
 
 							this.playerInfo_btn[i].setClickEvent(function (){
-								console.log("playerInfo_btn0 ClickEvent ");
+								cc.log("playerInfo_btn0 ClickEvent ");
 
 								// gSocketConn.SendRecordMatchMessage(userId,matchId);
 								// var matchId = userInfo.endInfoOfAllPlayers[idx]["matchId"];
 								// var userId = userInfo.endInfoOfAllPlayers[idx]["nickName"];
 								var matchId = userInfo.matchId;
 								var userId = userInfo.playerListData[0]["userName"];
-								console.log("playerInfo_btn0 ClickEvent userId[0] ="+userId+"||matchId="+userInfo.matchId);
+								cc.log("playerInfo_btn0 ClickEvent userId[0] ="+userId+"||matchId="+userInfo.matchId);
 								gSocketConn.SendRecordMatchMessage(userId,matchId);
 							});
 
@@ -134,14 +134,14 @@ ctor:function(width,height)
 							// this.playerInfo_btn1.setPosition(InfoposX+30, 190);
 							this.playerInfo_btn[i].setTexture("res/touxiangAI.png");
 							this.playerInfo_btn[i].setClickEvent(function () {
-								console.log("playerInfo_btn1 ClickEvent ");
+								cc.log("playerInfo_btn1 ClickEvent ");
 
 								// gSocketConn.SendRecordMatchMessage(userId,matchId);
 								// var matchId = userInfo.endInfoOfAllPlayers[idx]["matchId"];
 								// var userId = userInfo.endInfoOfAllPlayers[idx]["nickName"];
 								var matchId = userInfo.matchId;
 								var userId = userInfo.playerListData[1]["userName"];
-								console.log("playerInfo_btn0 ClickEvent userId[1] =" + userId + "||matchId=" + userInfo.matchId);
+								cc.log("playerInfo_btn0 ClickEvent userId[1] =" + userId + "||matchId=" + userInfo.matchId);
 								gSocketConn.SendRecordMatchMessage(userId, matchId);
 							});
 							// this.playerInfo_bg[i].addChild(this.playerInfo_btn1);

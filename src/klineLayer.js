@@ -22,7 +22,7 @@ var KlineLayer= BaseGraphLayer.extend({
 	{
 		var prevClose=this.getFirstPrevClose();
 		if(KlineLayerLogFlag!=false)
-		console.log("calculateMaxMinAtIndex before index="+index+" this.maxValue="+this.maxValue+", this.minValue="+this.minValue);
+		cc.log("calculateMaxMinAtIndex before index="+index+" this.maxValue="+this.maxValue+", this.minValue="+this.minValue);
 		if(prevClose==0)
 		{
 			//如果不存在昨收，则取开盘价
@@ -44,7 +44,7 @@ var KlineLayer= BaseGraphLayer.extend({
 			this.minValue=thisI;
 		}
 		if(KlineLayerLogFlag!=false)
-		console.log("calculateMaxMinAtIndex index="+index+" this.maxValue="+this.maxValue+", this.minValue="+this.minValue);
+		cc.log("calculateMaxMinAtIndex index="+index+" this.maxValue="+this.maxValue+", this.minValue="+this.minValue);
 	},
 	
 	//计算最大最小值，直到位置index
@@ -56,7 +56,7 @@ var KlineLayer= BaseGraphLayer.extend({
 		{
 			start=this.klineDataPrev.length+start;
 			if(KlineLayerLogFlag!=false)
-			console.log("calculateMaxMinBetweenIndex 计算以前的 start="+start);
+			cc.log("calculateMaxMinBetweenIndex 计算以前的 start="+start);
 			
 			this.minValue=this.klineDataPrev[start].c;
 			this.maxValue=this.klineDataPrev[start].c;
@@ -70,12 +70,12 @@ var KlineLayer= BaseGraphLayer.extend({
 			{
 				if(this.klineDataPrev[i].x>this.maxValue)
 				{
-					//console.log("max this.klineDataPrev["+i+"].x="+this.klineDataPrev[i].x);
+					//cc.log("max this.klineDataPrev["+i+"].x="+this.klineDataPrev[i].x);
 					this.maxValue=this.klineDataPrev[i].x;
 				}
 				if(this.klineDataPrev[i].i<this.minValue)
 				{
-					//console.log("min this.klineDataPrev["+i+"].i="+this.klineDataPrev[i].i);
+					//cc.log("min this.klineDataPrev["+i+"].i="+this.klineDataPrev[i].i);
 					this.minValue=this.klineDataPrev[i].i;
 				}
 			}
@@ -93,22 +93,22 @@ var KlineLayer= BaseGraphLayer.extend({
 		{
 			if(this.klineData[i].x>this.maxValue)
 			{
-				console.log("max this.klineData["+i+"].x="+this.klineData[i].x);
+				cc.log("max this.klineData["+i+"].x="+this.klineData[i].x);
 				this.maxValue=this.klineData[i].x;
 			}
 			if(this.klineData[i].i<this.minValue)
 			{
-				console.log("min this.klineData["+i+"].i="+this.klineData[i].i);
+				cc.log("min this.klineData["+i+"].i="+this.klineData[i].i);
 				this.minValue=this.klineData[i].i;
 			}
 		}
-		//console.log("calculateMaxMinBetweenIndex start="+start+" end="+end+", this.maxValue="+this.maxValue+", this.minValue="+this.minValue);
+		//cc.log("calculateMaxMinBetweenIndex start="+start+" end="+end+", this.maxValue="+this.maxValue+", this.minValue="+this.minValue);
 	},
 	
 	//重载
 	drawCandle:function(candleIndex)
 	{
-		//console.log("drawCandle called index="+candleIndex);
+		//cc.log("drawCandle called index="+candleIndex);
 		
 		//开始画this.currentCandleIndex
 		var posX=this.getCandlePosX(candleIndex);
@@ -118,7 +118,7 @@ var KlineLayer= BaseGraphLayer.extend({
 		var posY_I=candleIndex<0?this.getCandlePosYByValue(this.klineDataPrev[this.klineDataPrev.length+candleIndex].i):this.getCandlePosYByValue(this.klineData[candleIndex].i);
 		var posX_Needle=posX+this.candleWidth/2;
 		
-		//console.log("posx="+posX+" posY_O="+posY_O+" posY_C="+posY_C+" posY_X="+posY_X+" posY_I="+posY_I);
+		//cc.log("posx="+posX+" posY_O="+posY_O+" posY_C="+posY_C+" posY_X="+posY_X+" posY_I="+posY_I);
 		
 		var origin=cc.p(posX,posY_O<posY_C?posY_O:posY_C);
 		var destination=cc.p(origin.x+this.candleWidth,origin.y+Math.abs(posY_O-posY_C));
@@ -128,7 +128,7 @@ var KlineLayer= BaseGraphLayer.extend({
 		
 		var needleColor=cc.color(145,145,145,255);		//上下影线的颜色
 		
-		//console.log("candleIndex="+candleIndex);
+		//cc.log("candleIndex="+candleIndex);
 		var klineDataThis=candleIndex<0?this.klineDataPrev[this.klineDataPrev.length+candleIndex]:this.klineData[candleIndex];
 		var klineDataPrev=null;
 		if(candleIndex!=0 || this.klineDataPrev!=null)
@@ -156,7 +156,7 @@ var KlineLayer= BaseGraphLayer.extend({
 		
 		needleColor=frameColor;
 		
-		//console.log("c="+this.klineData[candleIndex].c+" o="+this.klineData[candleIndex].o+" x="+this.klineData[candleIndex].x+" i="+this.klineData[candleIndex].i+" frameColor.r="+frameColor.r+" g="+frameColor.g+" b="+frameColor.b);
+		//cc.log("c="+this.klineData[candleIndex].c+" o="+this.klineData[candleIndex].o+" x="+this.klineData[candleIndex].x+" i="+this.klineData[candleIndex].i+" frameColor.r="+frameColor.r+" g="+frameColor.g+" b="+frameColor.b);
 		
 		
 		this.graphArea.drawSegment(cc.p(posX_Needle,posY_O>posY_C?posY_O:posY_C),cc.p(posX_Needle,posY_X),0.4,needleColor);//上影线

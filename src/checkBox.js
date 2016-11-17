@@ -30,7 +30,7 @@ CheckBox=cc.Sprite.extend({
 				//Check the click area
 				if (cc.rectContainsPoint(rect, locationInNode)) 
 				{		
-					console.log("onTouchBegan");
+					cc.log("onTouchBegan");
 				}
 				return true;
 			},
@@ -47,7 +47,7 @@ CheckBox=cc.Sprite.extend({
 				if (cc.rectContainsPoint(rect, locationInNode)) 
 				{		
 					self.clicked();
-					console.log("onTouchEnded");
+					cc.log("onTouchEnded");
 				}
 			},
 		});

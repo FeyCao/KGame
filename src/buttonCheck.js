@@ -23,7 +23,7 @@ ButtonCheck=cc.Sprite.extend({
             swallowTouches: false,
             //onTouchBegan event callback function
             onTouchBegan: function (touch, event) {
-                console.log("ButtonCheck onTouchBegan");
+                cc.log("ButtonCheck onTouchBegan");
                 if(self.isVisible()==true&& self.isDisabled==false)
                 {
                     //var nextSceneM=new NextScene();
@@ -44,7 +44,7 @@ ButtonCheck=cc.Sprite.extend({
                     else
                     {
                         cc.log("begin..x="+ locationInNode.x+",y="+locationInNode.y+",s.width="+s.width+",s.height="+ s.height);
-                        console.log("ButtonCheck onTouchBegan doesn't contain "+self.__instanceId);
+                        cc.log("ButtonCheck onTouchBegan doesn't contain "+self.__instanceId);
                     }
                 }
                 return true;
@@ -56,7 +56,7 @@ ButtonCheck=cc.Sprite.extend({
             onTouchEnded: function (touch, event) {
                 if(self.isVisible()==true&& self.isDisabled==false)
                 {
-                    console.log("ButtonCheck onTouchEnded");
+                    cc.log("ButtonCheck onTouchEnded");
                     //var nextSceneM=new NextScene();
                     var target = event.getCurrentTarget();
                     var touchLocation=touch.getLocation();
@@ -69,7 +69,7 @@ ButtonCheck=cc.Sprite.extend({
                     if (this.isPressedDown==true&&cc.rectContainsPoint(rect, locationInNode))
                     {
                         cc.log("begin..x="+ locationInNode.x+",y="+locationInNode.y+",s.width="+s.width+"s.height="+ s.height);
-                        //console.log("onTouchEnded");
+                        //cc.log("onTouchEnded");
                         self.unshrink();
                         if(self.clickevent!=null)
                         {
@@ -79,7 +79,7 @@ ButtonCheck=cc.Sprite.extend({
                     }
                     else
                     {
-                        console.log("ButtonCheck onTouchEnded doesn't contain "+self.__instanceId);
+                        cc.log("ButtonCheck onTouchEnded doesn't contain "+self.__instanceId);
                     }
                 }
 

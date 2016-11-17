@@ -15,8 +15,8 @@ ShareManager.prototype.instance=null;
 ShareManager.prototype.ShareLogin=function(userId,matchId,source,messageCallBackFunction,connectErrorCallBackFunction)
 {
 	
-	console.log("userId3:"+userId);
-	console.log("matchId3:"+matchId);
+	cc.log("userId3:"+userId);
+	cc.log("matchId3:"+matchId);
 	this.userId=userId;
 	this.matchId=matchId;
 	this.source=source;
@@ -42,7 +42,7 @@ ShareManager.prototype.ConnectServer=function()
 	}
 	else
 	{
-		console.log("链接服务器失败！！！！！ ConnectServer");
+		cc.log("链接服务器失败！！！！！ ConnectServer");
 		
 	}
 }
@@ -62,7 +62,7 @@ ShareManager.prototype.ErrorConnectCallBack=function()
 //连接成功
 ShareManager.prototype.ConnectedCallBack=function()
 {
-	console.log("connectedCallBack");
+	cc.log("connectedCallBack");
 	var self=ShareManager.instance;
 	gSocketConn.UnRegisterEvent("onopen",self.ConnectedCallBack);
 	gSocketConn.UnRegisterEvent("onerror",self.ErrorConnectCallBack);
@@ -74,8 +74,8 @@ ShareManager.prototype.ShareMessage=function()
 	
 	//gSocketConn.UnRegisterEvent("onmessage");
 	var self=ShareManager.instance;
-	console.log("userId4:"+self.userId);
-	console.log("matchId4:"+self.matchId);
+	cc.log("userId4:"+self.userId);
+	cc.log("matchId4:"+self.matchId);
 	var aUserId = self.userId;
 	var aMatchId = self.matchId;
 	gSocketConn.RegisterEvent("onmessage",this.ShareMessageCallback);

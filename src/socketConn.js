@@ -16,7 +16,7 @@ SocketConn.prototype.Connect=function(url)
 	this.urlToConnect=url;
 	var wsImpl = window.WebSocket || window.MozWebSocket;
 	var self=this;
-	console.log("WS="+url);
+	cc.log("WS="+url);
 	window.ws = new wsImpl(url);
 	 // when data is comming from the server, this metod is called
 	ws.onmessage = function (evt) {
@@ -24,18 +24,18 @@ SocketConn.prototype.Connect=function(url)
 		{
 			self.onmessageevent[i](evt.data);
 		}
-		console.log("onmessage");
+		cc.log("onmessage");
 	};
 
 	// when the connection is established, this method is called
 	ws.onopen =function(){
-		console.log("self.onopenevent.length="+self.onopenevent.length);
+		cc.log("self.onopenevent.length="+self.onopenevent.length);
 		self.isconnected=true;
 		for(var i=0;i<self.onopenevent.length;i++)
 		{
 			self.onopenevent[i]();
 		}
-		console.log("open");
+		cc.log("open");
 	};
 
 	// when the connection is closed, this method is called
@@ -45,7 +45,7 @@ SocketConn.prototype.Connect=function(url)
 		{
 			self.oncloseevent[i]();
 		}
-		console.log("close");
+		cc.log("close");
 	};
 	
 	ws.onerror = function(evt){
@@ -53,7 +53,7 @@ SocketConn.prototype.Connect=function(url)
 		{
 			self.onerrorevent[i]();
 		}
-		console.log("WebSocketError!");
+		cc.log("WebSocketError!");
 	}; 
 }
 
@@ -76,7 +76,7 @@ SocketConn.prototype.GetEventArrayByName=function(eventname)
 SocketConn.prototype.RegisterEvent=function(eventname,callbackfunction)
 {
 	if(SocketConnLogFlag!=false)
-	console.log("RegisterEvent eventname="+eventname+", callbackfunction="+callbackfunction);
+	cc.log("RegisterEvent eventname="+eventname+", callbackfunction="+callbackfunction);
 	var eventArray=this.GetEventArrayByName(eventname);
 	if(eventArray==null) return;
 	for(var i=0;i<eventArray.length;i++)
@@ -108,7 +108,7 @@ SocketConn.prototype.Login=function(username,password,source)
 {
 	var loginMsg="0|"+username+"#"+password+"#"+source+"|";
 	if(SocketConnLogFlag!=false)
-	console.log("send login msg="+loginMsg);
+	cc.log("send login msg="+loginMsg);
 	ws.send(loginMsg);
 }
 
@@ -116,14 +116,14 @@ SocketConn.prototype.QuickLogin=function()
 {
 	var quickLoginMsg="A||";
 	if(SocketConnLogFlag!=false)
-	console.log("send QuickLogin msg="+quickLoginMsg);
+	cc.log("send QuickLogin msg="+quickLoginMsg);
 	ws.send(quickLoginMsg);
 }
 
 SocketConn.prototype.SendBeginMessage=function()
 {
 	if(SocketConnLogFlag!=false)
-    console.log("send sBegin msg= BEGIN||");
+    cc.log("send sBegin msg= BEGIN||");
     ws.send("BEGIN||");
 }
 
@@ -131,17 +131,20 @@ SocketConn.prototype.SendRecordMessage=function(matchId,userId)//查看对战记
 {
     var recordMsg = "O|"+matchId+"#"+userId+"|";
 	if(SocketConnLogFlag!=false)
-    console.log("send Recordmsg=="+recordMsg);
+    cc.log("send Recordmsg=="+recordMsg);
     ws.send(recordMsg);
 }
+
 
 SocketConn.prototype.SendRecordMatchMessage=function(matchId,userId)//查看比赛的对战记录
 {
 	var recordMsg = "Y|"+matchId+"#"+userId+"|";
 	if(SocketConnLogFlag!=false)
-		console.log("send SendRecordMatchMessage=="+recordMsg);
+		cc.log("send SendRecordMatchMessage=="+recordMsg);
 	ws.send(recordMsg);
 }
+
+
 
 SocketConn.prototype.BeginMatch=function(mode)
 {
@@ -152,7 +155,7 @@ SocketConn.prototype.Buy=function(index)
 {
 	var buyMsg = "6|"+index+"|";
 	if(SocketConnLogFlag!=false)
-	console.log("send Buymsg=="+buyMsg);
+	cc.log("send Buymsg=="+buyMsg);
 	ws.send(buyMsg);
 }
 
@@ -160,7 +163,7 @@ SocketConn.prototype.Sell=function(index)
 {
 	var sellMsg = "7|"+index+"|";
 	if(SocketConnLogFlag!=false)
-	console.log("send Sellmsg=="+sellMsg);
+	cc.log("send Sellmsg=="+sellMsg);
 	ws.send(sellMsg);
 	//ws.send("7|"+index+"|");
 }
@@ -169,23 +172,31 @@ SocketConn.prototype.Step=function(index)
 {
 	var stepMsg = "8|"+index+"|";
 	if(SocketConnLogFlag!=false)
-	console.log("send Stepmsg=="+stepMsg);
+	cc.log("send Stepmsg=="+stepMsg);
 	ws.send(stepMsg);
 	//ws.send("8|"+index+"|");
 }
 
 SocketConn.prototype.SendEndMessage=function()
 {
-	console.log("send Endmsg==E||");
+	cc.log("send Endmsg==E||");
 	if(SocketConnLogFlag!=false)
-	console.log("send Endmsg==E||");
+	cc.log("send Endmsg==E||");
 	ws.send("E||");
+}
+
+SocketConn.prototype.SendEndErrorMessage=function(errorInfo)
+{
+	var EndErrorMsg="ENDERROR|"+errorInfo+"|";
+	if(SocketConnLogFlag!=false)
+		cc.log(EndErrorMsg);
+	ws.send(EndErrorMsg);
 }
 
 SocketConn.prototype.SendShareMessage=function()
 {
 	if(SocketConnLogFlag!=false)
-	console.log("send share msg= S||");
+	cc.log("send share msg= S||");
 	ws.send("S||");
 }
 
@@ -193,7 +204,7 @@ SocketConn.prototype.ShareMessage=function(userId,matchId)
 {
 	var shareMsg="G|"+userId+"#"+matchId+"|";
 	if(SocketConnLogFlag!=false)
-	console.log("send share msg="+shareMsg);
+	cc.log("send share msg="+shareMsg);
 	ws.send(shareMsg);
 }
 
@@ -201,7 +212,7 @@ SocketConn.prototype.SendEHMessage=function(userId,matchId)//进入大厅的请�
 {
     var ehMsg="P|"+userId+"#"+matchId+"|";
 	if(SocketConnLogFlag!=false)
-    console.log("send H msg="+ehMsg);
+    cc.log("send H msg="+ehMsg);
     ws.send(ehMsg);
 }
 
@@ -210,20 +221,28 @@ SocketConn.prototype.SendZhanjiMessage=function(userId,pageIdx,matchType)//战�
 {
     var ehMsg="Z|"+userId+"#"+pageIdx+"#"+matchType+"|";
 	if(SocketConnLogFlag!=false)
-    console.log("send Z msg="+ehMsg);
+    cc.log("send Z msg="+ehMsg);
     ws.send(ehMsg);
 }
 //
+SocketConn.prototype.SendRankMessage=function(matchType,userId)//查看比赛的对战记录
+{
+	var recordMsg = "RANK|"+matchType+"#"+userId+"|";
+	// if(SocketConnLogFlag!=false)
+		cc.log("send SendRANKMessage=="+recordMsg);
+	ws.send(recordMsg);
+}
+
 SocketConn.prototype.SendRecordMessage=function(userId,matchId)//观看对战记录的请求
 {
 	var ehMsg="O|"+userId+"#"+matchId+"|";
 	if(SocketConnLogFlag!=false)
-	console.log("send Z msg="+ehMsg);
+	cc.log("send Z msg="+ehMsg);
 	ws.send(ehMsg);
 }
 /*SocketConn.prototype.ShareMessage=function(shareMsg)
 {
 	var shareMsg="G|"+shareMsg+"|";
-	console.log("send share msg="+shareMsg);
+	cc.log("send share msg="+shareMsg);
 	ws.send(shareMsg);
 }*/

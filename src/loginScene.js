@@ -59,7 +59,7 @@ LoginScene = SceneBase.extend(
 		this.usernameInputEx.setTipMessage("请输入用户名");
 		this.usernameInputEx.lostFocusEvent=function(){self.autoloadPwd();};
 		this.addChild(this.usernameInputEx, 1);
-		console.log("usernameInputEx instanceid="+this.usernameInputEx.__instanceId);
+		cc.log("usernameInputEx instanceid="+this.usernameInputEx.__instanceId);
 		
 		
 		this.pwdInputEx=new InputEx("","Arial",22);
@@ -70,7 +70,7 @@ LoginScene = SceneBase.extend(
 		this.pwdInputEx.setTouchAreaEnabled(true);
 		this.pwdInputEx.setTipMessage("请输入密码");
 		this.addChild(this.pwdInputEx, 1);
-		console.log("pwdInputEx instanceid="+this.pwdInputEx.__instanceId);
+		cc.log("pwdInputEx instanceid="+this.pwdInputEx.__instanceId);
 		
 		
 		
@@ -181,9 +181,9 @@ LoginScene = SceneBase.extend(
 	{
 		if(this.usernameInputEx.isSelected()==true)
 		{
-			console.log("tab down call detachWithIME");
+			cc.log("tab down call detachWithIME");
 			this.usernameInputEx._textFieldRenderer.detachWithIME();
-			console.log("tab down call attachWithIME");
+			cc.log("tab down call attachWithIME");
 			this.pwdInputEx._textFieldRenderer.attachWithIME();
 		}
 	},
@@ -293,7 +293,7 @@ LoginScene = SceneBase.extend(
 	
 	messageCallback:function(packet)
 	{
-		console.log("login scene message callback packet.msgType="+packet.msgType+" content="+packet.content);
+		cc.log("login scene message callback packet.msgType="+packet.msgType+" content="+packet.content);
 		var self=this;
 		if(packet.msgType=="1")
 		{
@@ -337,11 +337,11 @@ LoginScene = SceneBase.extend(
 		this.saveCheckboxState();
 		var self=this;
 		var diff=this.getSceneElapsedMilliSeconds();
-		console.log("diff="+diff);
+		cc.log("diff="+diff);
 		//登录成功，这里需要考虑对于自动登录的情况，前一个切换到loginScene场景的效果还未结束，如果此时再切换的话会导致后面的场景无法显示
 		if(diff<1000)
 		{
-			console.log("diff="+diff);
+			cc.log("diff="+diff);
 			setTimeout(function(){
 				self.moveToNextScene();
 			},1000);
@@ -401,14 +401,14 @@ LoginScene = SceneBase.extend(
 	moveToNextScene:function()
 	{
 		this.stopProgress();
-		console.log("登录成功，准备切换到下一个场景");
+		cc.log("登录成功，准备切换到下一个场景");
 		if(gMainMenuScene==null)
 		{
 			gMainMenuScene=new MainMenuScene();
 		}
 		cc.director.runScene(cc.TransitionFade.create(0.5,gMainMenuScene,cc.color(255,255,255,255)));
 		//cc.director.runScene(new WaitingScene());
-		console.log("切换场景调用完毕");
+		cc.log("切换场景调用完毕");
 	},
 });
 

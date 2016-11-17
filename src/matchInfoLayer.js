@@ -386,8 +386,8 @@ var MatchInfoLayer= cc.Layer.extend({
 		var i=klineScene.selfOperations.length;
 		if(i>0&&Math.abs(klineScene.selfOperations[i-1])>=klineScene.currentCandleIndex)
 		{
-			console.log("selfOperations[" + i + "] = " + klineScene.selfOperations[i-1]);
-			console.log("drawCandlesAll this.currentCandleIndex = ",klineScene.currentCandleIndex);
+			cc.log("selfOperations[" + i + "] = " + klineScene.selfOperations[i-1]);
+			cc.log("drawCandlesAll this.currentCandleIndex = ",klineScene.currentCandleIndex);
 			return;
 		}	
 		else
@@ -419,8 +419,8 @@ var MatchInfoLayer= cc.Layer.extend({
 		var i=klineScene.selfOperations.length;
 		if(i>0&&Math.abs(klineScene.selfOperations[i-1])>=klineScene.currentCandleIndex)
 		{
-			console.log("selfOperations[" + i + "] = " + klineScene.selfOperations[i-1]);
-			console.log("drawCandlesAll this.currentCandleIndex = ",klineScene.currentCandleIndex);
+			cc.log("selfOperations[" + i + "] = " + klineScene.selfOperations[i-1]);
+			cc.log("drawCandlesAll this.currentCandleIndex = ",klineScene.currentCandleIndex);
 			return;
 		}	
 		else

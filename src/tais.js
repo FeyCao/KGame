@@ -46,33 +46,33 @@ GoodStudents.prototype.getSid=function()
 
 
 var person1=new Person("jyc",34);
-console.log("name="+person1.getName());
+cc.log("name="+person1.getName());
 
 var student1=new Students("zl",1,123);
-console.log("name2="+student1.getName());
-console.log("score2="+student1.getResults());
-console.log("age2="+student1.getAge());
+cc.log("name2="+student1.getName());
+cc.log("score2="+student1.getResults());
+cc.log("age2="+student1.getAge());
 
 var goodstudent=new GoodStudents("cxy",999,888,777);
-console.log("goodstudent sid="+goodstudent.getSid());
+cc.log("goodstudent sid="+goodstudent.getSid());
 
 
 
 
 
 
-console.log("person1.__proto__=");//Person
-console.log(person1.__proto__);
-console.log("person1.constructor="+person1.constructor);//自己试试看会是什么吧
-console.log("Person.prototype=");
-console.log(Person.prototype);//指向原型对象Person
+cc.log("person1.__proto__=");//Person
+cc.log(person1.__proto__);
+cc.log("person1.constructor="+person1.constructor);//自己试试看会是什么吧
+cc.log("Person.prototype=");
+cc.log(Person.prototype);//指向原型对象Person
 
 
-console.log("student1.__proto__=");//Person
-console.log(student1.__proto__);
-console.log("student1.constructor="+student1.constructor);//自己试试看会是什么吧
-console.log("Students.prototype=");
-console.log(Students.prototype);//指向原型对象Person
+cc.log("student1.__proto__=");//Person
+cc.log(student1.__proto__);
+cc.log("student1.constructor="+student1.constructor);//自己试试看会是什么吧
+cc.log("Students.prototype=");
+cc.log(Students.prototype);//指向原型对象Person
 
 
 function LQBZ()
@@ -80,11 +80,11 @@ function LQBZ()
 	this.a="1";
 }
 
-console.log("LQBZ.prototype:");
-console.log(LQBZ.prototype);
+cc.log("LQBZ.prototype:");
+cc.log(LQBZ.prototype);
 
-console.log("LQBZ.prototype.__proto__:");
-console.log(LQBZ.prototype.__proto__);
+cc.log("LQBZ.prototype.__proto__:");
+cc.log(LQBZ.prototype.__proto__);
 
 function Base(name)
 {
@@ -305,7 +305,7 @@ Tais.prototype.calculateMaxMinAtIndex=function(index)
 	{
 		this.setMinValue(minValue);
 	}
-	console.log("tais at index="+index+", maxValue="+maxValue+", minValue="+minValue);
+	cc.log("tais at index="+index+", maxValue="+maxValue+", minValue="+minValue);
 }
 
 //重载,计算最大最小值，在start和end两个index之间的最大最小值，此处的start和end可以小于0
@@ -384,7 +384,7 @@ Tais.prototype.calculateMaxMinBetweenIndex=function(start,end)
 	{
 		this.setMinValue(minValue);
 	}
-	console.log("tais till index="+end+", maxValue="+maxValue+", minValue="+minValue);
+	cc.log("tais till index="+end+", maxValue="+maxValue+", minValue="+minValue);
 }
 
 

@@ -7,7 +7,7 @@ var Singleton = (function () {
         /*这里定义单例代码*/
         return {
             publicMethod: function () {
-                console.log('hello world');
+                cc.log('hello world');
             },
             publicProperty: 'test'
         };
@@ -41,16 +41,6 @@ var Singleton = (function () {
 /*调用公有的方法来获取实例:*/
 Singleton.getInstance().publicMethod();
 
-// var wsURL = 'ws://222.66.97.203:5003/';//公网测试
-// var wsURL = 'ws://222.66.97.203:5003/Kgamefeng/websocket';//晓峰环境
-// var wsURL = 'ws://180.169.108.231:5003/Kgamefeng/websocket';//晓峰环境
-// var wsURL = 'ws://180.169.108.231:5003/';//生产环境
-// var wsURL = 'ws://192.168.16.250:8484/';//测试
-//  var wsURL = 'ws://192.168.16.250:8384/';//调试
- var wsURL = 'ws://192.168.16.250:5210/Kgamefeng/websocket';//晓峰环境
-// var wsURL = 'ws://192.168.16.145:9999/Kgamefeng/websocket';//晓峰环境
-//   var wsURL = 'ws://192.168.16.145:8080/Kgamefeng/websocket';//晓峰环境
-
 SOURCE_DHJK = "DHJK";     //东航金控APP
 SOURCE_ZSQQ = "ZSQQ";     //掌上全球APP
 SOURCE_ZZFW = "ZZFW";     //增值服务中心网站
@@ -62,7 +52,7 @@ var YellowColor=cc.color(255,217,0,255);//黄色
 var GreenColor=cc.color(6,224,0,255);//绿色
 var WhiteColor=cc.color(189,240,255,255);//白色
 var BlueColor=cc.color(7,64,111,255);//蓝色
-var lightBlueColor=cc.color(7,64,111,100);//浅蓝色
+var lightBlueColor=cc.color(22,95,146,100);//浅蓝色
 
 
 var userInfo ={
@@ -100,7 +90,11 @@ var userInfo ={
     recordMode:0,//战绩模式0：练习场，1：多人战，2：人机战
 
     matchId:null,
-    endInfoOfAllPlayers:null,
+    endInfoOfAllPlayers:null,//对战结束后玩家信息
+    myRanking:null,//我的排名信息
+    rankList:null,//排名列表信息
+
+
 }
 
 var AIOperation ={

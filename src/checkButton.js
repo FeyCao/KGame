@@ -55,7 +55,7 @@ CheckButton=cc.Sprite.extend({
 					//Check the click area
 					if (cc.rectContainsPoint(rect, locationInNode)) 
 					{		
-						console.log("CheckButton onTouchBegan");
+						cc.log("CheckButton onTouchBegan");
 						self.shrink();
 						this.isPressedDown=true;
 					}
@@ -79,7 +79,7 @@ CheckButton=cc.Sprite.extend({
 					var rect = cc.rect(0, 0, s.width, s.height);
 					if(this.isPressedDown==true)
 					{
-						console.log("CheckButton onTouchEnded");
+						cc.log("CheckButton onTouchEnded");
 						self.unshrink();
 						this.isPressedDown=false;
 						self.isSelected=!self.isSelected;
@@ -89,7 +89,7 @@ CheckButton=cc.Sprite.extend({
 					//Check the click area
 					//if (cc.rectContainsPoint(rect, locationInNode)) 
 					//{		
-					//	console.log("onTouchEnded");
+					//	cc.log("onTouchEnded");
 					//	self.unshrink();
 					//	if(self.clickevent!=null)
 					//	{
@@ -98,7 +98,7 @@ CheckButton=cc.Sprite.extend({
 					//}
 					//else
 					//{
-					//	console.log("doesn't contain "+self.__instanceId);
+					//	cc.log("doesn't contain "+self.__instanceId);
 					//}
 				}
 				

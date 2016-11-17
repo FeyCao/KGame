@@ -69,7 +69,7 @@ LoginManager.prototype.ErrorConnectCallBack=function()
 //连接成功
 LoginManager.prototype.ConnectedCallBack=function()
 {
-	console.log("connectedCallBack");
+	cc.log("connectedCallBack");
 	var self=LoginManager.instance;
 	gSocketConn.UnRegisterEvent("onopen",self.ConnectedCallBack);
 	gSocketConn.UnRegisterEvent("onerror",self.ErrorConnectCallBack);

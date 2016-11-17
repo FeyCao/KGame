@@ -80,7 +80,7 @@ TaisMa.prototype.calculateRawData=function(startSaveIndex)
 	{
 		var tai=this.taiArray[i];
 		var dayCount=this.dayCountArray[i];
-		console.log("开始计算MA数据,dayCount="+dayCount);
+		cc.log("开始计算MA数据,dayCount="+dayCount);
 		var total=0;
 		var furthestValue=0;
 		for(var j=0;j<this.rawDataArray.length;j++)
@@ -112,7 +112,7 @@ TaisMa.prototype.calculateRawData=function(startSaveIndex)
 				}
 			}
 		}
-		console.log("均线:"+tai.shownName+" 计算完毕");
+		cc.log("均线:"+tai.shownName+" 计算完毕");
 	}	
 }
 
@@ -120,7 +120,7 @@ TaisMa.prototype.calculateRawData=function(startSaveIndex)
 TaisMa.prototype.drawCandle=function(candleIndex)
 {
 	//重载
-	//console.log("drawCandle candleIndex="+candleIndex);
+	//cc.log("drawCandle candleIndex="+candleIndex);
 	var graphArea=this.getGraphArea();
 	for(var i=0;i<this.taiArray.length;i++)
 	{
@@ -160,7 +160,7 @@ TaisMa.prototype.drawCandle=function(candleIndex)
 				{
 					//画线
 					lastValueY=this.getCandlePosYByValue(lastValue);
-					//console.log("lastValueY="+lastValueY.toFixed(2)+" thisValueY="+thisValueY.toFixed(2));
+					//cc.log("lastValueY="+lastValueY.toFixed(2)+" thisValueY="+thisValueY.toFixed(2));
 					graphArea.drawSegment(cc.p(lastCandleIndexPosXNeedle,lastValueY),cc.p(candleIndexPosXNeedle,thisValueY),0.5,tai.defaultColor);
 				}
 			}

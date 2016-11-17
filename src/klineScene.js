@@ -1,3 +1,13 @@
+
+var pageTimer = {} ; //定义计算器全局变量
+// //赋值模拟
+// pageTimer["timer1"] = setInterval(function(){},2000);
+// pageTimer["timer2"] = setInterval(function(){},2000);
+// //全部清除方法
+// for(var each in pageTimer){
+// 	clearInterval(pageTimer[each]);
+// }
+
 var KLineScene = SceneBase.extend(
 {
 	backgroundLayer:null,		//背景层
@@ -66,6 +76,12 @@ var KLineScene = SceneBase.extend(
 	onExit:function()
 	{
 		this._super();
+
+		 //全部清除方法
+		for(var each in pageTimer){
+			clearTimeout(pageTimer[each]);
+		}
+
 		cc.eventManager.removeAllListeners();
 		if(gSocketConn!=null)
 			gSocketConn.UnRegisterEvent("onmessage",this.messageCallBack);
@@ -87,7 +103,7 @@ var KLineScene = SceneBase.extend(
 		document.bgColor="#152936";
 		gKlineScene=this;
 		this.currentCandleDrawInterval=this.CANDAL_DRAW_INTERVAL;
-		console.log("............klinescene on enter called");
+		cc.log("............klinescene on enter called");
 		this.backgroundLayer=new cc.LayerColor(cc.color(21,41,54, 255));
 		this.backgroundLayer.ignoreAnchorPointForPosition(false);  
 		this.backgroundLayer.setPosition(this.size.width / 2, this.size.height / 2);
@@ -173,7 +189,7 @@ var KLineScene = SceneBase.extend(
 		{
 			gSocketConn.RegisterEvent("onmessage",this.messageCallBack);
 		}
-		console.log("............klineLayerMain created");
+		cc.log("............klineLayerMain created");
 
 		if(this.matchInfoLayer!=null)
 		{
@@ -249,21 +265,21 @@ var KLineScene = SceneBase.extend(
 	//修改副图的显示内容
 	changeTechLayer:function()
 	{
-		console.log("klinescene changeTechLayer instanceid="+this.__instanceid);
+		cc.log("klinescene changeTechLayer instanceid="+this.__instanceid);
 		
 		if(this.phase2==false)
 		{
 			if(this.volumnTechLayerPrev.isTaisEnabled("MACD")==true)
 			{
 				//如果MACD是激活的，则切换到"MA"
-				console.log("changeTechLayer to ma");
+				cc.log("changeTechLayer to ma");
 				this.volumnTechLayerPrev.changeToOtherTais(["MA"]);
 				this.volumnTechLayerMain.changeToOtherTais(["MA"]);
 			}
 			else if(this.volumnTechLayerPrev.isTaisEnabled("MA")==true)
 			{
 				//如果"MA"是激活的，则切换到MACD
-				console.log("changeTechLayer to macd");
+				cc.log("changeTechLayer to macd");
 				this.volumnTechLayerPrev.changeToOtherTais(["MACD"]);
 				this.volumnTechLayerMain.changeToOtherTais(["MACD"]);
 			}
@@ -276,13 +292,13 @@ var KLineScene = SceneBase.extend(
 		{
 			if(this.volumnTechLayerMain.isTaisEnabled("MACD")==true)
 			{
-				console.log("====changeTechLayer to ma");
+				cc.log("====changeTechLayer to ma");
 				//如果MACD是激活的，则切换到"MA"
 				this.volumnTechLayerMain.changeToOtherTais(["MA"]);
 			}
 			else if(this.volumnTechLayerMain.isTaisEnabled("MA")==true)
 			{
-				console.log("====changeTechLayer to macd");
+				cc.log("====changeTechLayer to macd");
 				this.volumnTechLayerMain.changeToOtherTais(["MACD"]);
 			}
 			
@@ -343,7 +359,7 @@ var KLineScene = SceneBase.extend(
 	
 	messageCallBack:function(message)
 	{
-		console.log("KlineScene messageCallBack..." + message);
+		cc.log("KlineScene messageCallBack..." + message);
 		var packet=Packet.prototype.Parse(message);
 		var self=gKlineScene;
 		if(packet==null) return;
@@ -379,14 +395,14 @@ var KLineScene = SceneBase.extend(
 			case "5":
 			{
 				//接收到了K线数据的消息
-				console.log("call get K线数据 data");
+				cc.log("call get K线数据 data");
 				var data=JSON.parse(packet.content);
-				console.log("jsonText parseK线数据over");
+				cc.log("jsonText parseK线数据over");
 				self.toSetklinedata(data);
 				// toSetklinedata
 				// self.getklinedata(packet.content);
 				self.setDataForLlineLayer();
-				console.log("get kline K线数据 passed");
+				cc.log("get kline K线数据 passed");
 				break;
 			}
 			case "G":
@@ -400,29 +416,29 @@ var KLineScene = SceneBase.extend(
 			{
 				//接收到了K线数据的分享消息
 				self.share(packet.content);
-				console.log("get kline K线数据的分享消息passed"+packet.content);
+				cc.log("get kline K线数据的分享消息passed"+packet.content);
 				break;
 			}
 			case "H":
 			{
 				//成功接收到了K线数据的分享数据
-				console.log("call get kline data");
+				cc.log("call get kline data");
 				var data=JSON.parse(packet.content);
-				console.log("jsonText parseK线分享数据over");
+				cc.log("jsonText parseK线分享数据over");
 				self.toSetklinedata(data);
 				// toSetklinedata
 				// self.getklinedata(packet.content);
 				self.advanceToMainKLine_Share();
 				// self.getShareKlinedata(packet.content);
-				console.log("成功接收到了K线数据的分享数据");
+				cc.log("成功接收到了K线数据的分享数据");
 				break;
 			}
 			case "I":
 			{
 				//接收到了K线数据的分享错误消息
-				console.log("call get kline data");
+				cc.log("call get kline data");
 				//self.share(packet.content);
-				console.log("get kline passed"+packet.content);
+				cc.log("get kline passed"+packet.content);
 				break;
 			}
 			case "F":
@@ -453,26 +469,26 @@ var KLineScene = SceneBase.extend(
 			}
 			case "O"://观看记录
 			{
-				console.log("begin to parse 观看记录json text");
+				cc.log("begin to parse 观看记录json text");
 				// self.getRecordKlinedata(packet.content);
 				var data=JSON.parse(packet.content);
-				console.log("jsonText parse 观看记录over");
+				cc.log("jsonText parse 观看记录over");
 				self.toSetklinedata(data);
 				self.advanceToMainKLine_Record();
-				console.log("get 观看记录 passed");
+				cc.log("get 观看记录 passed");
 
 				break;
 			}
 			case "Y"://观看记录查看交易信息
 			{
 
-				console.log("begin to parse 观看记录json text");
+				cc.log("begin to parse 观看记录json text");
 				// self.getRecordKlinedata(packet.content);
 				var data=JSON.parse(packet.content);
-				console.log("jsonText parse 观看记录over");
+				cc.log("jsonText parse 观看记录over");
 				// self.toSetklinedata(data);
 				self.advanceToMainKLine_RecordMatch(data);
-				console.log("get 观看记录 passed");
+				cc.log("get 观看记录 passed");
 
 				break;
 			}
@@ -483,7 +499,7 @@ var KLineScene = SceneBase.extend(
 
 			default:
 			{
-				console.log("KlineScene messageCallBack..."+message);
+				cc.log("KlineScene messageCallBack..."+message);
 				break;
 			}
 		}
@@ -491,7 +507,7 @@ var KLineScene = SceneBase.extend(
 	
 	showMatchEndInfo:function(content)
 	{
-		console.log("showMatchEndInfo  visible = true");
+		cc.log("showMatchEndInfo  visible = true");
 		var self=this;
 		
 		this.matchEndInfoLayer.applyParamsFromContent(content);
@@ -504,9 +520,9 @@ var KLineScene = SceneBase.extend(
 	},
 	showPlayerInfo:function(content)
 	{
-		console.log("showPlayerInfo  begin to parse json text");
+		cc.log("showPlayerInfo  begin to parse json text");
 		var data=JSON.parse(content);
-		console.log("showPlayerInfo jsonText parse over");
+		cc.log("showPlayerInfo jsonText parse over");
 		var playerListData=data["playerList"];
 		userInfo.playerListData=[];
 		for(var i=0;playerListData!=null&&i<playerListData.length;i++)
@@ -558,7 +574,7 @@ var KLineScene = SceneBase.extend(
     matchInfoLayer_Start:function()
     {
         var url = "index.html?"+"tittle=mePlay";
-        console.log(url);
+        cc.log(url);
 
         window.open(url);
         //window.location.href=url;
@@ -586,7 +602,7 @@ var KLineScene = SceneBase.extend(
 		var url = "share.html?"+"tittle=share&userId="+userId+"&matchId="+matchId+"&head="+"趋势突击&subtitle="+content+"subtitleEnd";
 		//share.html?userId=167&matchId=150
 //		var url = "WebSocketClient.html?"+"userId="+userId+"&matchId="+matchId;取得收益
-		console.log(url);
+		cc.log(url);
 //		gSocketConn.ShareMessage(userID,matchID);
 //		
 // 		window.open(url);
@@ -597,7 +613,7 @@ var KLineScene = SceneBase.extend(
 	
 	beginReplayKLineScene:function()
 	{
-		console.log("beginReplayKLineScene  visible = true");
+		cc.log("beginReplayKLineScene  visible = true");
 		var self=this;
 		if(self.matchInfoLayer!=null)
 		{
@@ -667,18 +683,18 @@ var KLineScene = SceneBase.extend(
 	///获取K线数据
 	getklinedata:function(jsonText)
 	{
-		console.log("begin to parse json text");
+		cc.log("begin to parse json text");
 		var data=JSON.parse(jsonText);
-		console.log("jsonText parse over");
+		cc.log("jsonText parse over");
 		this.toSetklinedata(data);
 		// this.ongotklinedata(data);
 	},
 	// ///获取K线数据
 	// getklinedata:function(jsonText)
 	// {
-	// 	console.log("begin to parse json text");
+	// 	cc.log("begin to parse json text");
 	// 	var data=JSON.parse(jsonText);
-	// 	console.log("jsonText parse over");
+	// 	cc.log("jsonText parse over");
 	// 	this.ongotklinedata(data);
 	// },
 
@@ -688,7 +704,7 @@ var KLineScene = SceneBase.extend(
 		//{"dataBusiness":[108,-113],"score":4.22374,"nickName":"誓约者艾琳诺","matchId":7571,"playerList":
 		this.clearDataForLineLayer();
 		var businessData=data["dataBusiness"];
-		console.log("dataBusiness="+businessData);
+		cc.log("dataBusiness="+businessData);
 		this.buyInfo=[];
 		for(var i=0;businessData!=undefined&&i<businessData.length;i++)
 		{
@@ -710,7 +726,7 @@ var KLineScene = SceneBase.extend(
 		var mainDataDayCount=data["count"][0];
 		var prevDataDayCount=data["count"][1];
 		//"count":[120,240]},playerList:[{"userName":"","score":"0.000"},{"userName":"唐齐安通道","score":"0.000"}]
-		console.log("ongotklinedata mainDataDayCount="+mainDataDayCount+" prevDataDayCount="+prevDataDayCount);
+		cc.log("ongotklinedata mainDataDayCount="+mainDataDayCount+" prevDataDayCount="+prevDataDayCount);
 		var playerListData=data["playerList"];
 		userInfo.playerListData=[];
 		for(var i=0;playerListData!=undefined&&i<playerListData.length;i++)
@@ -745,7 +761,7 @@ var KLineScene = SceneBase.extend(
 		var mainDataDayCount=data["count"][0];
 		var prevDataDayCount=data["count"][1];
 		//"count":[120,240]},playerList:[{"userName":"","score":"0.000"},{"userName":"唐齐安通道","score":"0.000"}]
-		console.log("ongotklinedata mainDataDayCount="+mainDataDayCount+" prevDataDayCount="+prevDataDayCount);
+		cc.log("ongotklinedata mainDataDayCount="+mainDataDayCount+" prevDataDayCount="+prevDataDayCount);
 		var playerListData=data["playerList"];
 		userInfo.playerListData=[];
 		for(var i=0;playerListData!=null&&i<playerListData.length;i++)
@@ -774,14 +790,14 @@ var KLineScene = SceneBase.extend(
 		}
 		else
 		{
-			console.log("this.klineLayerMain==null || this.klineLayerPrev==null");
+			cc.log("this.klineLayerMain==null || this.klineLayerPrev==null");
 		}
 	},
 
 	// onShareklinedata:function(data)
 	// {
 	// 	var businessData=data["dataBusiness"];
-	// 	console.log("dataBusiness="+businessData);
+	// 	cc.log("dataBusiness="+businessData);
 	// 	this.buyInfo=[];
 	// 	for(var i=0;i<businessData.length;i++)
 	// 	{
@@ -791,7 +807,7 @@ var KLineScene = SceneBase.extend(
 	// 	var dailyData=data["data"];
 	// 	var mainDataDayCount=data["count"][0];
 	// 	var prevDataDayCount=data["count"][1];
-	// 	console.log("ongotklinedata mainDataDayCount="+mainDataDayCount+" prevDataDayCount="+prevDataDayCount);
+	// 	cc.log("ongotklinedata mainDataDayCount="+mainDataDayCount+" prevDataDayCount="+prevDataDayCount);
 	//
 	// 	this.klinedataMain=[];
 	// 	for(var i=prevDataDayCount;i<prevDataDayCount+mainDataDayCount;i++)
@@ -812,7 +828,7 @@ var KLineScene = SceneBase.extend(
 	// 	else
 	// 	{
     //
-	// 		console.log("this.klineLayerMain==null || this.klineLayerPrev==null");
+	// 		cc.log("this.klineLayerMain==null || this.klineLayerPrev==null");
 	// 		// this.setDataForLlineLayerShare();
 	// 	}
 	// },
@@ -840,10 +856,10 @@ var KLineScene = SceneBase.extend(
 		{
 			this.btnStart.setVisible(false);
 		}
-		if(this.btnHome!=null)
-		{
-			this.btnHome.setVisible(false);
-		}
+		// if(this.btnHome!=null)
+		// {
+		// 	this.btnHome.setVisible(false);
+		// }
 		this.hidematchEndInfoLayer();
 	},
 
@@ -897,11 +913,11 @@ var KLineScene = SceneBase.extend(
 		this.volumnTechLayerPrev.setKLineData(this.prevKlineData);
 		this.addChild(this.volumnTechLayerPrev,this.volumnTechLayerNumber,this.volumnTechLayerPrev.getTag());
 		
-		console.log("drawAllCandlesTillIndexOrEnd");
+		cc.log("drawAllCandlesTillIndexOrEnd");
 		this.klineLayerPrev.drawAllCandlesTillIndexOrEnd();
         // this.klineLayerPrev.drawAllCandlesTillBetweenIndex(119,239);
 		this.volumnTechLayerPrev.drawAllCandlesTillIndexOrEnd();
-		console.log("drawAllCandlesTillIndexOrEnd Over....");
+		cc.log("drawAllCandlesTillIndexOrEnd Over....");
 
 		if(this.playerInfoLayer!=null)
 		{
@@ -918,7 +934,7 @@ var KLineScene = SceneBase.extend(
 		this.phase2=false;
 		// this.klineLayerPrev.drawAllCandlesTillIndexOrEnd();
 		// this.volumnTechLayerPrev.drawAllCandlesTillIndexOrEnd();
-		console.log("drawAllCandlesTillIndexOrEnd Over....");
+		cc.log("drawAllCandlesTillIndexOrEnd Over....");
 
 		this.advanceToMainKLine_Share();
 	},
@@ -928,10 +944,10 @@ var KLineScene = SceneBase.extend(
 	//设置游戏倒计时
 	setCountDownSprite:function()
 	{
-        if(this.btnHome!=null)
-        {
-            this.btnHome.setVisible(false);
-        }
+        // if(this.btnHome!=null)
+        // {
+        //     this.btnHome.setVisible(false);
+        // }
 		if(this.btnStart!=null)
 		{
 			this.btnStart.setVisible(false);
@@ -966,8 +982,8 @@ var KLineScene = SceneBase.extend(
 	//	this.countDownSprite.runAction(this.createAnimation_Fade());
 		
 		this.countDownNumber-=1;
-		var self=this; 
-		setTimeout(function(){self.setCountDownSprite();},1000);
+		var self=this;
+		pageTimer["beginTimer"] = setTimeout(function(){self.setCountDownSprite();},1000);
 	},
 	
 	phase1Time:0.25,
@@ -1051,7 +1067,7 @@ var KLineScene = SceneBase.extend(
 		cc.log("advanceToMainKLine_RecordMactch:function()//观看交易记录 begin");
 
 		var businessData=data["dataBusiness"];
-		console.log("dataBusiness="+businessData);
+		cc.log("dataBusiness="+businessData);
 		this.buyInfo=[];
 		for(var i=0;businessData!=undefined&&i<businessData.length;i++)
 		{
@@ -1179,7 +1195,7 @@ var KLineScene = SceneBase.extend(
 			
 			if(ended)
 			{
-				console.log("绘制结束");
+				cc.log("绘制结束");
 				this.sendEndMessage();
 				this.matchEnd();
 				return;
@@ -1191,8 +1207,8 @@ var KLineScene = SceneBase.extend(
 
 			this.currentCandleIndex+=1;
 		}
-		var self=this; 
-		setTimeout(function(){self.drawCandlesOneByOne();},this.currentCandleDrawInterval);
+		var self=this;
+		pageTimer["drawTimer"] = setTimeout(function(){self.drawCandlesOneByOne();},this.currentCandleDrawInterval);
 	},
 	
 	//SHARE_TEST 一次性画出用户数据图
@@ -1211,19 +1227,19 @@ var KLineScene = SceneBase.extend(
 		
 
 		this.stopProgress();
-		//console.log("drawCandlesAll this.currentCandleIndex = ",this.currentCandleIndex);
+		//cc.log("drawCandlesAll this.currentCandleIndex = ",this.currentCandleIndex);
 	},
 	//
 	businessInfo:function()
 	{
-		console.log("businessInfo:function() begin= ");
+		cc.log("businessInfo:function() begin= ");
 		if(this.phase2==false)return;
 		this.clearBuySellOperation();
 		var businessInfo = this.buyInfo;
 		this.selfOperations=[];
 		for (i=0;i<businessInfo.length;i++)
 		{
-			console.log("businessInfo[" + i + "] = " + businessInfo[i]);
+			cc.log("businessInfo[" + i + "] = " + businessInfo[i]);
 			this.selfOperations.push(businessInfo[i]);
 			if(businessInfo[i]>0)
 			{
@@ -1303,6 +1319,7 @@ var KLineScene = SceneBase.extend(
 
     toHome:function()
     {
+
         if(typeof(gMainMenuScene)=="undefined")
         {
 			window.location.href="http://analyse.kiiik.com/";
@@ -1313,7 +1330,8 @@ var KLineScene = SceneBase.extend(
 
 			if(gMainMenuScene==false)
 				gMainMenuScene=new MainMenuScene();
-
+			var errorInfo = "";
+			gSocketConn.SendEndErrorMessage(errorInfo);
 			gSocketConn.RegisterEvent("onmessage",gMainMenuScene.messageCallBack);
 			gSocketConn.SendEHMessage(userInfo.userId,userInfo.deviceId);
 			//cc.director.runScene(cc.TransitionFade.create(0.5,klineSceneNext,cc.color(255,255,255,255)));

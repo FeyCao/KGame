@@ -164,7 +164,7 @@ TaisMacd.prototype.drawCandle=function(candleIndex)
 					{
 						//画线
 						lastValueY=this.getCandlePosYByValue(lastTaiPoint.value);
-						//console.log("lastValueY="+lastValueY.toFixed(2)+" thisValueY="+thisValueY.toFixed(2));
+						//cc.log("lastValueY="+lastValueY.toFixed(2)+" thisValueY="+thisValueY.toFixed(2));
 						graphArea.drawSegment(cc.p(lastCandleIndexPosXNeedle,lastValueY),cc.p(candleIndexPosXNeedle,thisValueY),0.5,tai.defaultColor);
 					}
 				}

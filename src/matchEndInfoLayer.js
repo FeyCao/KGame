@@ -272,7 +272,7 @@ var MatchEndInfoLayer= cc.Layer.extend({
 			case 2:
 			{
 
-				console.log("MatchEndInfoLayer to parse json text");
+				cc.log("MatchEndInfoLayer to parse json text");
 				// {"codeInfo":"600970(上证)#2006-07-27#2007-01-23","endInfoOfAllPlayers":[{"nickName":"开心的钱多多","ranking":2,"matchId":6231,"score":-34.99,"level":0,"exp":0},{"nickName":"唐齐安通道","ranking":1,"matchId":6231,"score":-1.76,"level":0,"exp":0}]}
 				var ratio=parseFloat(0);
 				var data=JSON.parse(content);
@@ -349,7 +349,7 @@ var MatchEndInfoLayer= cc.Layer.extend({
 			}
 		}
 
-		// console.log(content);
+		// cc.log(content);
 	},
 
 	scrollViewDidScroll:function (view) {
@@ -480,10 +480,10 @@ var PlayerInfoCell = cc.TableViewCell.extend({
 			sprite.addChild(recordButton);
 			var matchId = userInfo.endInfoOfAllPlayers[idx]["matchId"];
 			var userId = userInfo.endInfoOfAllPlayers[idx]["nickName"];
-			console.log("PlayerInfoCell recordButton ClickEvent userId["+idx+"] ="+userId+"||matchId="+matchId);
+			cc.log("PlayerInfoCell recordButton ClickEvent userId["+idx+"] ="+userId+"||matchId="+matchId);
 			recordButton.setClickEvent(function(){
 				// gSocketConn.SendRecordMatchMessage(userId,matchId);
-				// console.log("PlayerInfoCell ClickEvent userId["+idx+"] ="+userId+"||matchId="+matchId+"||recordButton="+recordButton.__instanceId);
+				// cc.log("PlayerInfoCell ClickEvent userId["+idx+"] ="+userId+"||matchId="+matchId+"||recordButton="+recordButton.__instanceId);
 				// // cc.director.runScene(klineSceneNext);
 				var klineSceneNext=new KLineScene();
 				klineSceneNext.onEnteredFunction=function(){

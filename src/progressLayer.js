@@ -44,7 +44,7 @@ var ProgressLayer= cc.Layer.extend({
 	
 	rotate:function()
 	{
-		console.log("rotate..............");
+		cc.log("rotate..............");
 		
 		this.rotateSprite = cc.Sprite.create("res/rotate.png");
 		this.rotateSprite.setPosition(this.width / 2, this.height / 2);

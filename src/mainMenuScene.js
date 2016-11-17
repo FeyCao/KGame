@@ -31,6 +31,7 @@ var MainMenuScene =SceneBase.extend(
 	thirdMode:null,
 	fourthMode:null,
     zhanjiInfoLayer:null,
+    rankViewLayer:null,
     loadTime:null,
     onEnteredFunction:null,	//OnEnter调用结束后的Function
 
@@ -81,8 +82,8 @@ var MainMenuScene =SceneBase.extend(
 
 
 		var self=this;
-        console.log("fXScale="+fXScale);
-		console.log("fYScale="+fYScale);
+        cc.log("fXScale="+fXScale);
+		cc.log("fYScale="+fYScale);
 
 
 
@@ -307,8 +308,8 @@ var MainMenuScene =SceneBase.extend(
     //
     // firstModeChanged:function()
     // {
-    //     console.log("Waiting for .firstModeChanged"+this.secondMode.isSelected);
-    //     console.log("准备切换到KGameScene下一个场景");
+    //     cc.log("Waiting for .firstModeChanged"+this.secondMode.isSelected);
+    //     cc.log("准备切换到KGameScene下一个场景");
     //     this.stopProgress();
     //     var self =gMainMenuScene;
     //     if(self.klineScene==null)
@@ -323,14 +324,14 @@ var MainMenuScene =SceneBase.extend(
     //     gSocketConn.BeginMatch(0);
     //     //cc.director.runScene(cc.TransitionFade.create(0.5,klineSceneNext,cc.color(255,255,255,255)));
     //     cc.director.runScene(self.klineScene);
-    //     console.log("切换KGameScene场景调用完毕");
-    //     console.log("Waiting for .firstModeChanged end");
+    //     cc.log("切换KGameScene场景调用完毕");
+    //     cc.log("Waiting for .firstModeChanged end");
     // },
     firstModeChanged:function()
     {
         if(this.firstMode.isSelected==true)
         {
-            console.log("Waiting for firstModeChanged");
+            cc.log("Waiting for firstModeChanged");
             this.showProgress();
             var self =gMainMenuScene;
             // if(gKlineScene==null)
@@ -350,7 +351,7 @@ var MainMenuScene =SceneBase.extend(
             gSocketConn.BeginMatch(userInfo.matchMode);
             //cc.director.runScene(cc.TransitionFade.create(0.5,klineSceneNext,cc.color(255,255,255,255)));
             cc.director.runScene(klineSceneNext);
-            console.log("切换KGameScene场景调用完毕");
+            cc.log("切换KGameScene场景调用完毕");
         }
     },
 
@@ -358,7 +359,7 @@ var MainMenuScene =SceneBase.extend(
 	{
 		if(this.secondMode.isSelected==true)
 		{
-			console.log("Waiting for secondModeChanged");
+			cc.log("Waiting for secondModeChanged");
             this.showProgress();
             var self =gMainMenuScene;
             // if(gKlineScene==null)
@@ -382,7 +383,7 @@ var MainMenuScene =SceneBase.extend(
             gSocketConn.BeginMatch("2#DON");
             //cc.director.runScene(cc.TransitionFade.create(0.5,klineSceneNext,cc.color(255,255,255,255)));
             cc.director.runScene(klineSceneNext);
-            console.log("切换KGameScene场景调用完毕");
+            cc.log("切换KGameScene场景调用完毕");
 		}
 	},
 	
@@ -390,7 +391,7 @@ var MainMenuScene =SceneBase.extend(
 	{
 		if(this.thirdMode.isSelected==true)
 		{
-			console.log("Waiting for thirdModeChanged");
+			cc.log("Waiting for thirdModeChanged");
 		}
 	},
 	
@@ -398,24 +399,28 @@ var MainMenuScene =SceneBase.extend(
 	{
 		if(this.fourthMode.isSelected==true)
 		{
-			console.log("Waiting for fourthMode...");
+			cc.log("Waiting for fourthMode...");
 		}
 	},
 
 	zhanji:function()
 	{
-        console.log("Waiting for zhanji...");
+        cc.log("Waiting for zhanji...");
         //var userId=GetQueryString("userId");
         //userInfo.userId
         this.showProgress();
         if(userInfo.recordMode!=null)
 		gSocketConn.SendZhanjiMessage(userInfo.userId,0,userInfo.recordMode);
-        console.log("zhanji...end");
+        cc.log("zhanji...end");
 	},
 
-    paiming:function()
+    rank:function()
     {
 
+        this.showProgress();
+        if(userInfo.recordMode!=null)
+            gSocketConn.SendRankMessage(userInfo.recordMode,userInfo.userId);
+        cc.log("Rank...end");
     },
 
 	config:function()
@@ -440,7 +445,7 @@ var MainMenuScene =SceneBase.extend(
         this.zhanjiButton.setPosition(cc.p(780*fXScale,pButtonY*fYScale));
 
         this.zhanjiButton.setClickEvent(function(){
-            console.log("zhanjiButton ClickEvent");
+            cc.log("zhanjiButton ClickEvent");
             self.zhanji();
         });
         this.zhanjiLabel=cc.LabelTTF.create("战绩", "fonts/Self.ttf",15);
@@ -455,7 +460,7 @@ var MainMenuScene =SceneBase.extend(
         this.paimingButton.setScale(fXScale,fYScale);
         this.paimingButton.setPosition(cc.p(890*fXScale,pButtonY*fYScale));
         this.paimingButton.setClickEvent(function(){
-            //self.paiming();
+            self.rank();
         });
         this.paimingLabel=cc.LabelTTF.create("排名", "fonts/Arial.ttf", 15);
         //this.paimingLabel=cc.LabelTTF.create(gPlayerName, "Arial", 20);
@@ -490,9 +495,9 @@ var MainMenuScene =SceneBase.extend(
         this.configLabel.setPosition(cc.pSub(cc.p(1110*fXScale,pButtonY*fYScale),pButtonScale));
         this.backgroundLayer.addChild(this.configLabel,5);
 
-        this.paimingButton.setDisabled(true);
-        this.helpButton.setDisabled(true);
-        this.configButton.setDisabled(true);
+        // this.paimingButton.setDisabled(true);
+        // this.helpButton.setDisabled(true);
+        // this.configButton.setDisabled(true);
     },
     setDataforInfo:function()
     {
@@ -528,7 +533,7 @@ var MainMenuScene =SceneBase.extend(
     setMainMenuScenedata:function(jsonText)
     {
         var data=JSON.parse(jsonText);
-        console.log("setMainMenuScenedata jsonText parse over");
+        cc.log("setMainMenuScenedata jsonText parse over");
         // "winOfMatchForOne":0,"sumOfMatchForOne":3,"winOfMatchForMore":0,"sumOfMatchForMore":0,"winOfMatchForAI":8,"sumOfMatchForAI":11,"gainCumulation":"-6.223","sumOfAllMatch":3}
 
         userInfo.nickName=data["nickName"];
@@ -548,7 +553,7 @@ var MainMenuScene =SceneBase.extend(
 	{
 		var self=gMainMenuScene;
 		var packet=Packet.prototype.Parse(message);
-        console.log("messageCallBack mainScene message callback message=###"+message+"###");
+        cc.log("messageCallBack mainScene message callback message=###"+message+"###");
 		if(packet==null) return;
         switch(packet.msgType)
         {
@@ -559,9 +564,9 @@ var MainMenuScene =SceneBase.extend(
             }
             case "P"://接收到了大厅数据的消息
             {
-                console.log("call get MainMenuScene data");
+                cc.log("call get MainMenuScene data");
                 self.setMainMenuScenedata(packet.content);
-                console.log("get MainMenuScene passed");
+                cc.log("get MainMenuScene passed");
                 self.stopProgress();
                 break;
             }
@@ -573,17 +578,17 @@ var MainMenuScene =SceneBase.extend(
                 break;
             }
 
-            case "M"://人机对战结束信息
-            {
-                //收到对方买入的信息
-                if(gKlineScene==null)
-                    gKlineScene=new KLineScene();
-                if(gKlineScene!=null) {
-                    gKlineScene.showMatchEndInfo(packet.content);
-                }
-                self.stopProgress();
-                break;
-            }
+            // case "M"://人机对战结束信息
+            // {
+            //     //收到对方买入的信息
+            //     // if(gKlineScene==null)
+            //     //     gKlineScene=new KLineScene();
+            //     // if(gKlineScene!=null) {
+            //     //     gKlineScene.showMatchEndInfo(packet.content);
+            //     // }
+            //     // self.stopProgress();
+            //     break;
+            // }
             // case "":
             // {
             //     cc.log("gMainMenuScene packet.msgType =''");
@@ -640,10 +645,10 @@ var MainMenuScene =SceneBase.extend(
                 // gSocketConn.UnRegisterEvent("onmessage",gKlineScene.messageCallBack);
                 if(gKlineScene!=null)
                 {
-                    console.log("call get kline data");
+                    cc.log("call get kline data");
                     gKlineScene.getklinedata(packet.content);
                     cc.director.runScene(gKlineScene);
-                    console.log("get kline passed");
+                    cc.log("get kline passed");
                 }
                 self.stopProgress();
                 break;
@@ -654,7 +659,7 @@ var MainMenuScene =SceneBase.extend(
                     gKlineScene=new KLineScene();
                 //接收到了K线数据的分享消息
                 gKlineScene.share(packet.content);
-                console.log("get kline K线数据的分享消息passed"+packet.content);
+                cc.log("get kline K线数据的分享消息passed"+packet.content);
                 break;
             }
             case "H":
@@ -666,12 +671,12 @@ var MainMenuScene =SceneBase.extend(
                 // gSocketConn.UnRegisterEvent("onmessage",self.messageCallBack);
                 if(gKlineScene!=null)
                 {
-                    console.log("call get kline data");
+                    cc.log("call get kline data");
                     gKlineScene.getShareKlinedata(packet.content);
-                    console.log("get kline passed");
+                    cc.log("get kline passed");
                 }
                 self.stopProgress();
-                console.log("成功接收到了K线数据的分享数据");
+                cc.log("成功接收到了K线数据的分享数据");
                 break;
             }
             case "O"://观看记录
@@ -683,9 +688,9 @@ var MainMenuScene =SceneBase.extend(
                 // gSocketConn.UnRegisterEvent("onmessage",self.messageCallBack);
                 if(gKlineScene!=null)
                 {
-                    console.log("begin to parse 观看记录json text");
+                    cc.log("begin to parse 观看记录json text");
                     var data=JSON.parse(packet.content);
-                    console.log("jsonText parse 观看记录over");
+                    cc.log("jsonText parse 观看记录over");
                     gKlineScene.toSetklinedata(data);
 
                     if(gKlineScene.klineLayerMain!=null && gKlineScene.klineLayerPrev!=null)
@@ -696,33 +701,18 @@ var MainMenuScene =SceneBase.extend(
 
                 }
                 self.stopProgress();
-                // var klineSceneNext=new KLineScene();
-                // klineSceneNext.onEnteredFunction=function(){
-                //
-                //     // klineSceneNext.showProgress();
-                // };
-                // //接收到了K线观看记录数据的消息
-                // // gSocketConn.UnRegisterEvent("onmessage",gKlineScene.messageCallBack);
-                // if(klineSceneNext!=null)
-                // {
-                //     console.log("call 观看记录 kline data");
-                //     //self.getShareKlinedata
-                //     klineSceneNext.getShareKlinedata(packet.content);
-                //     console.log("get 观看记录 passed");
-                // }
-                // cc.director.runScene(klineSceneNext);
                 break;
             }
-            case "F":
-            {
-                //接收到对局结束
-                //接收到对局结束
-                //alert("接收到对局结束");
-                if(gKlineScene==null)
-                    gKlineScene=new KLineScene();
-                gKlineScene.showMatchEndInfo(packet.content);
-                break;
-            }
+            // case "F":
+            // {
+            //     //接收到对局结束
+            //     //接收到对局结束
+            //     //alert("接收到对局结束");
+            //     if(gKlineScene==null)
+            //         gKlineScene=new KLineScene();
+            //     gKlineScene.showMatchEndInfo(packet.content);
+            //     break;
+            // }
             case "G":
             {
                 if(gKlineScene==null)
@@ -730,10 +720,17 @@ var MainMenuScene =SceneBase.extend(
                 gKlineScene.showPlayerInfo(packet.content);
                 break;
             }
+            case "RANK"://排名信息
+            {
+                // cc.log("messageCallBack.mainScene..packet.msgType="+packet.msgType);
+                self.showRankViewInfo(packet.content);
+                self.stopProgress();
+                break;
+            }
 
             default:
             {
-                console.log("KlineScene messageCallBack..."+message);
+                cc.log("messageCallBack.mainScene..packet.msgType="+packet.msgType+"packet="+message);
                 break;
             }
         }
@@ -743,28 +740,24 @@ var MainMenuScene =SceneBase.extend(
 
     showZhanjiInfo:function(content)
     {
-        console.log("showZhanjiInfo  visible = true");
-        cc.log(content);
+        cc.log("showZhanjiInfo  visible = true");
+        // cc.log(content);
         var self=this;
-
-        //"uid":"3434343770","totalCount":45,"winRate":0.0,"AvgGain":0.14939284434998082,"historyMatchList":[
+        // ###Z|{"uid":"3434343770","totalCount":189,"winRate":"52.91","AvgGain":"0.70","historyMatchList":[{"matchId":7661,"uid":3434343770,"nickName":"誓约者艾琳诺","score":"0.00","matchTime":"11-16 16:36","playerNum":1,"matchType":2,"playerList":[{"userName":"誓约者艾琳诺","score":"0.00","ranking":1},{"userName":"唐奇安通道","score":"-1.22","ranking":2}]},{"matchId":7643,"uid":3434343770,"nickName":"誓约者艾琳诺","score":"21.14","matchTime":"11-16 12:59","playerNum":1,"matchType":2,"playerList":[{"userName":"誓约者艾琳诺","score":"21.14","ranking":1},{"userName":"红三兵","score":"10.34","ranking":2}]},{"matchId":7641,"uid":3434343770,"nickName":"誓约者艾琳诺","score":"0.00","matchTime":"11-16 10:43","playerNum":1,"matchType":2,"playerList":[{"userName":"誓约者艾琳诺","score":"0.00","ranking":2},{"userName":"红三兵","score":"146.26","ranking":1}]},{"matchId":7640,"uid":3434343770,"nickName":"誓约者艾琳诺","score":"0.00","matchTime":"11-16 10:43","playerNum":1,"matchType":2,"playerList":[{"userName":"誓约者艾琳诺","score":"0.00","ranking":2},{"userName":"唐奇安通道","score":"37.63","ranking":1}]},{"matchId":7639,"uid":3434343770,"nickName":"誓约者艾琳诺","score":"0.00","matchTime":"11-16 10:42","playerNum":1,"matchType":2,"playerList":[
         var data=JSON.parse(content);
         userInfo.userId = data["uid"];
         userInfo.totalCount=data["totalCount"];
         userInfo.winRate=data["winRate"];
         userInfo.AvgGain=data["AvgGain"];
         var historyMatchListData=data["historyMatchList"];
-        console.log("historyMatchListData="+historyMatchListData);
+        cc.log("historyMatchListData="+historyMatchListData);
         userInfo.MatchListData=[];
         for(var i=0;i<historyMatchListData.length;i++)
         {
             var matchData=historyMatchListData[i];
             cc.log("MatchListData.matchId="+matchData["matchId"]);
             userInfo.MatchListData.push(matchData);
-            //this.klinedataMain.push({o:dailyData[5*i],x:dailyData[5*i+1],i:dailyData[5*i+2],c:dailyData[5*i+3],v:dailyData[5*i+4]});
-            //this.MatchListData.push({matchId:matchData["matchId"],matchTime:matchData["matchId"],playerNum:matchData["matchId"],score:matchData["matchId"],uid:matchData["matchId"]});
         }
-
 
 
         if(this.zhanjiInfoLayer==null){
@@ -772,16 +765,10 @@ var MainMenuScene =SceneBase.extend(
             this.zhanjiInfoLayer.setVisible(false);
             this.zhanjiInfoLayer.setPosition(0,0);
             this.otherMessageTipLayer.addChild(this.zhanjiInfoLayer, 1,this.zhanjiInfoLayer.getTag());
-            //this.zhanjiInfoLayer.applyParamsFromContent(content);
-            //content的内容为:   总用户个数(假设为2)#用户名A#收益率A#得分A#用户名B#收益率B#得分B#品种名字#起始日期#终止日期
             this.zhanjiInfoLayer.closeCallBackFunction=function(){self.zhanjiInfoLayer_Close()};
-            this.zhanjiInfoLayer.replayCallBackFunction=function(){self.MatchMoreEndInfoLayer_Replay()};
+            // this.zhanjiInfoLayer.replayCallBackFunction=function(){self.MatchEndInfoLayer_Replay()};
         }
-        else
-        {
-            this.zhanjiInfoLayer.refreshZhanjiViewLayer();
-        }
-
+        this.zhanjiInfoLayer.refreshZhanjiViewLayer();
 
         this.zhanjiInfoLayer.showLayer();
         this.pauseLowerLayer();
@@ -793,6 +780,47 @@ var MainMenuScene =SceneBase.extend(
         this.zhanjiInfoLayer.hideLayer();
         this.resumeLowerLayer();
     },
+
+    showRankViewInfo:function(content)
+    {
+        cc.log("showRankViewInfo  visible = true");
+        var self=this;
+
+        //RANK|{"myRanking":{"rank":1,"playerInfo":{"uid":3434343770,"nickName":"誓约者艾琳诺","winOfMatchForOne":4,"sumOfMatchForOne":33,"winOfMatchForMore":0,"sumOfMatchForMore":0,"winOfMatchForAI":98,"sumOfMatchForAI":187,"gainCumulation":"-197.391","sumOfAllMatch":33}},"rankList":[{"rank":1,"playerInfo":{"uid":10000,"nickName":"誓约者艾琳诺","winOfMatchForOne":4,"sumOfMatchForOne":33,"winOfMatchForM
+        //"uid":"3434343770","totalCount":45,"winRate":0.0,"AvgGain":0.14939284434998082,"historyMatchList":[
+        var data=JSON.parse(content);
+        userInfo.myRanking = data["myRanking"];
+        var rankListData=data["rankList"];
+        // cc.log("rankListData="+rankListData);
+        userInfo.rankList=[];
+        for(var i=0;i<rankListData.length;i++)
+        {
+            var rankData=rankListData[i];
+            cc.log("rankListData.rank="+rankData["rank"]);
+            userInfo.rankList.push(rankData);
+        }
+
+
+        if(this.rankViewLayer==null){
+            this.rankViewLayer=new RankViewLayer();
+            this.rankViewLayer.setVisible(false);
+            this.rankViewLayer.setPosition(0,0);
+            this.otherMessageTipLayer.addChild(this.rankViewLayer, 1,this.rankViewLayer.getTag());
+            //this.zhanjiInfoLayer.applyParamsFromContent(content);
+            //content的内容为:   总用户个数(假设为2)#用户名A#收益率A#得分A#用户名B#收益率B#得分B#品种名字#起始日期#终止日期
+            this.rankViewLayer.closeCallBackFunction=function(){self.rankViewLayer_Close()};
+        }
+        this.rankViewLayer.refreshRankViewLayer();
+        this.rankViewLayer.showLayer();
+        this.pauseLowerLayer();
+
+    },
+    rankViewLayer_Close:function()
+    {
+        //关闭战绩界面
+        this.rankViewLayer.hideLayer();
+        this.resumeLowerLayer();
+    },
     toHome:function()
     {
         //window.close();
@@ -801,7 +829,7 @@ var MainMenuScene =SceneBase.extend(
 	//moveToNextScene:function()
 	//{
 	//	cc.director.runScene(this.klineScene);
-	//	console.log("run scene called");
+	//	cc.log("run scene called");
 	//}
 
 });

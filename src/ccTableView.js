@@ -33,14 +33,14 @@ tableCellSizeForIndex:function (table, idx) {
     //if (idx == 2) {
     //    return cc.size(100, 100);
     //}
-    console.log("tableCellSizeForIndex: "+idx);
+    cc.log("tableCellSizeForIndex: "+idx);
     return cc.size(50, 60);
 
 },
 // 由于tableview是动态获取数据的，该方法在初始化时会被调用一次，之后在每个隐藏的cell显示出来的时候都会调用
 tableCellAtIndex:function (table, idx) {
 
-    console.log("tableCellAtIndex|:  "+idx);
+    cc.log("tableCellAtIndex|:  "+idx);
 
     var strValue = idx.toFixed(0);
     var cell = table.dequeueCell();

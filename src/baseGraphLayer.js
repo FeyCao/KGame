@@ -78,7 +78,7 @@ var BaseGraphLayer= cc.Layer.extend({
 					//Check the click area
 					if (cc.rectContainsPoint(rect, locationInNode)) 
 					{		
-						console.log("onTouchBegan");
+						cc.log("onTouchBegan");
 					}
 					else
 					{
@@ -101,7 +101,7 @@ var BaseGraphLayer= cc.Layer.extend({
 					//Check the click area
 					if (cc.rectContainsPoint(rect, locationInNode)) 
 					{		
-						console.log("onTouchEnded");
+						cc.log("onTouchEnded");
 						if(self.clickevent!=null)
 						{
 							self.clickevent();
@@ -122,7 +122,7 @@ var BaseGraphLayer= cc.Layer.extend({
 	//给这个图设置K线数据
 	setKLineData:function(klineData,klineDataPrev)
 	{
-		// console.log("basegraphlayer setKLineData instanceid="+this.__instanceid+" klineData="+klineData+" klineDataPrev="+klineDataPrev);
+		// cc.log("basegraphlayer setKLineData instanceid="+this.__instanceid+" klineData="+klineData+" klineDataPrev="+klineDataPrev);
 		this.klineData=klineData;
 		if(klineDataPrev!=undefined)
 		{
@@ -206,7 +206,7 @@ var BaseGraphLayer= cc.Layer.extend({
 			{
 				this.candleGapWidth=(this.graphArea.width)/(1+this.maxCandleCountPerPage*(this.barvsgapratio+1));
 				this.candleWidth=this.candleGapWidth*this.barvsgapratio;
-				console.log("this.candleGapWidth="+this.candleGapWidth+" this.candleWidth="+this.candleWidth);
+				cc.log("this.candleGapWidth="+this.candleGapWidth+" this.candleWidth="+this.candleWidth);
 			}
 		}
 	},
@@ -226,7 +226,7 @@ var BaseGraphLayer= cc.Layer.extend({
 		{
 			pageCount=pageCount+1;
 		}
-		//console.log("pageCount="+pageCount+" remaining="+remaining);
+		//cc.log("pageCount="+pageCount+" remaining="+remaining);
 		if(this.pageIndex!=pageCount-1)
 		{
 			return this.historyCandleCount;
@@ -237,10 +237,10 @@ var BaseGraphLayer= cc.Layer.extend({
 	//得到当前页面中历史蜡烛的索引，可能返回值为负数，如果为负数则表示历史蜡烛的索引是在klineDataPrev中
 	getHistoryCandleIndexByPageIndex:function()
 	{
-		//console.log("getHistoryCandleIndexByPageIndex="+this.getHistoryCandleCountByPageIndex());
+		//cc.log("getHistoryCandleIndexByPageIndex="+this.getHistoryCandleCountByPageIndex());
 		var historyCandleCount=this.getHistoryCandleCountByPageIndex();
 		var ret=this.pageIndex*(this.maxCandleCountPerPage-this.historyCandleCount)-historyCandleCount;
-		//console.log("this.pageIndex="+this.pageIndex+" ret="+ret);
+		//cc.log("this.pageIndex="+this.pageIndex+" ret="+ret);
 		return ret;
 	},
 	
@@ -306,12 +306,12 @@ var BaseGraphLayer= cc.Layer.extend({
 		if( lastmax!=this.maxValue  ||  lastmin!=this.minValue )
 		{
 			//如果最大最小改变了，则需要重画之前所有的蜡烛图
-			console.log("need redraw prev");
+			cc.log("need redraw prev");
 			this.redrawCandlesToIndex(currentIndex);
 			this.redrawExceptCandles();
 		}
 		
-		//console.log("drawSingleCandleLineByCurrentIndex called currentIndex="+currentIndex);
+		//cc.log("drawSingleCandleLineByCurrentIndex called currentIndex="+currentIndex);
 		//绘制K线
 		this.drawSingleDayGraphInfos(currentIndex);
 		return false;
@@ -359,7 +359,7 @@ var BaseGraphLayer= cc.Layer.extend({
 	//立刻显示所有的蜡烛
 	drawAllCandlesAll:function()
 	{
-		console.log("drawAllCandlesAll一次性绘制");
+		cc.log("drawAllCandlesAll一次性绘制");
 		
 		if(this.klineData==null)
 		{
@@ -367,7 +367,7 @@ var BaseGraphLayer= cc.Layer.extend({
 			return;
 		}
 		var endIndex=this.klineData.length-1;
-		//console.log("||||drawAllCandlesAll var endIndex = " + endIndex);
+		//cc.log("||||drawAllCandlesAll var endIndex = " + endIndex);
 		this.calculateMaxMinBetweenIndex(0,endIndex);
 		this.calculateMaxMinBetweenIndexForAllTais(0,endIndex);
 		for(var i=0;i<=endIndex;i++)
@@ -431,7 +431,7 @@ var BaseGraphLayer= cc.Layer.extend({
 	//显示某个时刻的指标的数值
 	drawTaisValueInfo:function(candleIndex)
 	{
-		//console.log(".........drawTaisValueInfo candleIndex="+candleIndex);
+		//cc.log(".........drawTaisValueInfo candleIndex="+candleIndex);
 		var labelIndex=0;
 		var leftXStart=5;
 		for(var i=0;i<this.taisArray.length;i++)
@@ -515,7 +515,7 @@ var BaseGraphLayer= cc.Layer.extend({
 	//在某个时刻，画所有图像内容的函数，包括画蜡烛线，指标和其他内容
 	drawSingleDayGraphInfos:function(candleIndex)
 	{
-		//console.log("drawSingleDayGraphInfos candleIndex="+candleIndex);
+		//cc.log("drawSingleDayGraphInfos candleIndex="+candleIndex);
 		this.drawCandle(candleIndex);
 		this.drawCandleForAllTais(candleIndex);
 		this.drawTaisValueInfo(candleIndex);

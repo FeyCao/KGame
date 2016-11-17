@@ -48,7 +48,7 @@ var TempLoadScene = SceneBase.extend(
         userInfo.deviceId=getQueryStringByName("deviceId");
         userInfo.source=getQueryStringByName("source");
 
-        console.log("userId="+userInfo.userId+"deviceId="+userInfo.deviceId+"source="+userInfo.source);
+        cc.log("userId="+userInfo.userId+"deviceId="+userInfo.deviceId+"source="+userInfo.source);
 
         if(userInfo.userId!=null&&userInfo.deviceId!=null)
         {
@@ -73,7 +73,7 @@ var TempLoadScene = SceneBase.extend(
 		//
 		//	this.username=localStorage.lastusername;
 		//	this.password=pwd;
-		//	console.log("source="+this.source);
+		//	cc.log("source="+this.source);
 		//	gLoginManager.Login(this.username,this.password,"SWEB",function(packet){self.messageCallback(packet)},function(){self.connectErrorCallBack()});
 		//}
 		else
@@ -125,7 +125,7 @@ var TempLoadScene = SceneBase.extend(
 	
 	messageCallback:function(packet)
 	{
-		console.log("login scene message callback packet="+packet.msgType+" content="+packet.content);
+		cc.log("login scene message callback packet="+packet.msgType+" content="+packet.content);
 		var self=this;
 		if(packet.msgType=="1")
 		{
@@ -188,7 +188,7 @@ var TempLoadScene = SceneBase.extend(
         this.source=content.split("#")[1];
 
 		//this.saveCheckboxState();
-        console.log( "packet.content="+content+"|this.username="+this.username+"|this.source="+this.source);
+        cc.log( "packet.content="+content+"|this.username="+this.username+"|this.source="+this.source);
 
         this.moveToNextScene();
 
@@ -264,7 +264,7 @@ var TempLoadScene = SceneBase.extend(
 	
 	moveToNextSceneCallBack:function()
 	{
-		console.log("登录成功，准备切换到下一个场景");
+		cc.log("登录成功，准备切换到下一个场景");
 		this.stopProgress();
 
 
@@ -277,7 +277,7 @@ var TempLoadScene = SceneBase.extend(
             gSocketConn.BeginMatch(0);
             //cc.director.runScene(cc.TransitionFade.create(0.5,klineSceneNext,cc.color(255,255,255,255)));
             cc.director.runScene(klineSceneNext);
-            console.log("SWEB切换场景调用完毕");
+            cc.log("SWEB切换场景调用完毕");
         }else if(this.source=="DHJK"){
 			if(gMainMenuScene==null)
 				gMainMenuScene=new MainMenuScene();
@@ -289,7 +289,7 @@ var TempLoadScene = SceneBase.extend(
             gSocketConn.SendEHMessage(this.username,this.password);
             //cc.director.runScene(cc.TransitionFade.create(0.5,klineSceneNext,cc.color(255,255,255,255)));
             cc.director.runScene(gMainMenuScene);
-            console.log("DHJK切换场景调用完毕");
+            cc.log("DHJK切换场景调用完毕");
         }
 
 

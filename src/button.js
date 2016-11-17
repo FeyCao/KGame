@@ -31,7 +31,7 @@ Button=cc.Sprite.extend({
 			swallowTouches: false,
 			//onTouchBegan event callback function						
 			onTouchBegan: function (touch, event) {
-                console.log("Button onTouchBegan"+self.__instanceId);
+                cc.log("Button onTouchBegan"+self.__instanceId);
 				if(self.isVisible()==true&& self.isDisabled==false)
 				{
 					//var nextSceneM=new NextScene();
@@ -54,7 +54,7 @@ Button=cc.Sprite.extend({
                     {
 						if(buttonLogFlag!=false)
                         cc.log("begin..x="+ locationInNode.x+",y="+locationInNode.y+",s.width="+s.width+",s.height="+ s.height);
-                        console.log("Button onTouchBegan doesn't contain "+self.__instanceId);
+                        cc.log("Button onTouchBegan doesn't contain "+self.__instanceId);
 					}
 				}
 				return true;
@@ -67,7 +67,7 @@ Button=cc.Sprite.extend({
 				if(self.isVisible()==true&& self.isDisabled==false)
 				{
 					if(buttonLogFlag!=false)
-                     console.log("Button onTouchEnded");
+                     cc.log("Button onTouchEnded");
 					//var nextSceneM=new NextScene();
 					var target = event.getCurrentTarget();	
 					var touchLocation=touch.getLocation();
@@ -81,7 +81,7 @@ Button=cc.Sprite.extend({
 					{
 						if(buttonLogFlag!=false)
                         cc.log("Button onTouchEnded .x="+ locationInNode.x+",y="+locationInNode.y+",s.width="+s.width+"s.height="+ s.height);
-						//console.log("onTouchEnded");
+						//cc.log("onTouchEnded");
 						//self.unshrink();
 						if(self.clickevent!=null)
 						{
@@ -89,12 +89,12 @@ Button=cc.Sprite.extend({
 						}
                         this.isPressedDown=false;
 						if(buttonLogFlag!=false)
-						console.log("Button onTouchEnded "+self.__instanceId);
+						cc.log("Button onTouchEnded "+self.__instanceId);
 					}
 					else
 					{
 						if(buttonLogFlag!=false)
-						console.log("Button onTouchEnded doesn't contain "+self.__instanceId);
+						cc.log("Button onTouchEnded doesn't contain "+self.__instanceId);
 					}
 				}
 				
@@ -104,7 +104,7 @@ Button=cc.Sprite.extend({
                 {
                     //self.unshrink();
 					if(buttonLogFlag!=false)
-                    console.log("Button onTouchCancelled");
+                    cc.log("Button onTouchCancelled");
                     //var nextSceneM=new NextScene();
                     var target = event.getCurrentTarget();
                     var touchLocation=touch.getLocation();
@@ -118,7 +118,7 @@ Button=cc.Sprite.extend({
                     {
 						if(buttonLogFlag!=false)
                         cc.log("begin..x="+ locationInNode.x+",y="+locationInNode.y+",s.width="+s.width+"s.height="+ s.height);
-                        //console.log("onTouchEnded");
+                        //cc.log("onTouchEnded");
                        // self.unshrink();
                        //  if(self.clickevent!=null)
                        //  {
@@ -129,7 +129,7 @@ Button=cc.Sprite.extend({
                     else
                     {
 						if(buttonLogFlag!=false)
-                        console.log("Button onTouchCancelled doesn't contain "+self.__instanceId);
+                        cc.log("Button onTouchCancelled doesn't contain "+self.__instanceId);
                     }
                 }
 

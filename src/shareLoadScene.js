@@ -36,8 +36,8 @@ var ShareLoadScene = SceneBase.extend(
 		loadTime=new Date().getTime();
 		self.userId=getQueryStringByName("userId");
 		self.matchId=getQueryStringByName("matchId");
-        console.log("userId:"+self.userId);
-		console.log("matchId:"+self.matchId);
+        cc.log("userId:"+self.userId);
+		cc.log("matchId:"+self.matchId);
 
 
 		if(gShareManager==null)
@@ -49,8 +49,8 @@ var ShareLoadScene = SceneBase.extend(
 		//if(self.userId!= && self.matchId!="")
 		if(self.matchId!=null &&self.userId!=null)
 		{
-			console.log("userId2:"+self.userId);
-			console.log("matchId2:"+self.matchId);
+			cc.log("userId2:"+self.userId);
+			cc.log("matchId2:"+self.matchId);
 			var aUserId = self.userId;
 			var aMatchId = self.matchId;
 			gShareManager.ShareLogin(aUserId,aMatchId,null,function(packet){self.messageCallback(packet)},function(){self.connectErrorCallBack()});
@@ -81,31 +81,31 @@ var ShareLoadScene = SceneBase.extend(
 	},
 	messageCallback:function(packet)
 	{
-		console.log("login scene message callback packet.msgType="+packet.msgType);
+		cc.log("login scene message callback packet.msgType="+packet.msgType);
 		var self=this;
 		if(packet.msgType=="1")
 		{
 			gPlayerName=packet.content;
 			//登录成功
-			console.log(packet.content);
+			cc.log(packet.content);
 			this.OnLogined(packet.content);
 		}
 		else if(packet.msgType=="H")
 		{
 			//分享成功
-			console.log("获取分享数据成功"+packet.content);
+			cc.log("获取分享数据成功"+packet.content);
 			this.stopProgress();
 			this.moveToNextScene(packet.content);
-			//console.log(packet.content);
+			//cc.log(packet.content);
 			//gLoginManager.Login(this.username,this.password,null,function(packet){self.messageCallback(packet)},function(){self.connectErrorCallBack()});
 		}
 		else if(packet.msgType=="I")
 		{
 			//分享成功
-			console.log("获取分享数据失败"+packet.content);
+			cc.log("获取分享数据失败"+packet.content);
 			this.stopProgress();
 			//this.moveToNextScene();
-			//console.log(packet.content);
+			//cc.log(packet.content);
 			//gLoginManager.Login(this.username,this.password,null,function(packet){self.messageCallback(packet)},function(){self.connectErrorCallBack()});
 		}
 	},
@@ -113,7 +113,7 @@ var ShareLoadScene = SceneBase.extend(
 	
 	moveToNextScene:function(content)
 	{
-		console.log("成功，准备切换到下一个场景");
+		cc.log("成功，准备切换到下一个场景");
 		this.stopProgress();
 		
 		var self=this;
@@ -130,7 +130,7 @@ var ShareLoadScene = SceneBase.extend(
 		gSocketConn.ShareMessage(userId,matchId);
 		//cc.director.runScene(cc.TransitionFade.create(0.5,klineSceneNext,cc.color(255,255,255,255)));
 		cc.director.runScene(klineSceneNext);
-		console.log("切换场景调用完毕");
+		cc.log("切换场景调用完毕");
 		/*var self=this;
 		var endTime=new Date().getTime();
 		if(endTime-loadTime>5000)
