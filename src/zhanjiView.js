@@ -40,7 +40,7 @@ var ZhanjiTableViewCell = cc.TableViewCell.extend({
                     touxiangSprite.setPosition(cc.p(80,40));
                     this.addChild(touxiangSprite,2);
                     strNameText= userInfo.MatchListData[idx]["nickName"];
-                    textNameLabel = new cc.LabelTTF(strNameText, "Arial", 35.0);
+                    textNameLabel = new cc.LabelTTF(strNameText, "Arial", 25.0);
                     textNameLabel.setPosition(cc.p(150,40));
                     textNameLabel.setAnchorPoint(0,0.5);
                     this.addChild(textNameLabel);
@@ -48,7 +48,7 @@ var ZhanjiTableViewCell = cc.TableViewCell.extend({
                     //设置收益
                     strScoreText= userInfo.MatchListData[idx]["score"]+"%";
                     textScoreLabel = new cc.LabelTTF(strScoreText, "Arial", 35.0);
-                    textScoreLabel.setPosition(cc.p(450,40));
+                    textScoreLabel.setPosition(cc.p(400,40));
                     textScoreLabel.setAnchorPoint(0,0.5);
                     if(userInfo.MatchListData[idx]["score"]>0)
                     {
@@ -66,7 +66,7 @@ var ZhanjiTableViewCell = cc.TableViewCell.extend({
 
                     //设置时间
                     strTimeText= userInfo.MatchListData[idx]["matchTime"];
-                    textTimeLabel = new cc.LabelTTF(strTimeText, "Arial", 35.0);
+                    textTimeLabel = new cc.LabelTTF(strTimeText, "Arial", 25.0);
                     textTimeLabel.setPosition(cc.p(600,40));
                     textTimeLabel.setAnchorPoint(0,0.5);
                     textTimeLabel.setColor(WhiteColor);
