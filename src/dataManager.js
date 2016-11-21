@@ -63,6 +63,7 @@ var userInfo ={
 
     //
     nickName:"塞外小王子",
+    headSprite:null,	//头像
     userName:null,
     userPassword:null,
 // "winOfMatchForOne":0,"sumOfMatchForOne":3,"winOfMatchForMore":0,"sumOfMatchForMore":0,"winOfMatchForAI":8,"sumOfMatchForAI":11,"gainCumulation":"-6.223","sumOfAllMatch":3}

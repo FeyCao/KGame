@@ -97,10 +97,11 @@ var MainMenuScene =SceneBase.extend(
 		this.backgroundSprite.setScale(fXScale,fYScale);
 		this.backgroundSprite.setPosition(size.width/2,size.height/2);
 
+        // "res/touxiang.png"
+
         this.touxiangSprite = cc.Sprite.create("res/touxiang.png");
-        this.touxiangSprite.setScale(fXScale,fYScale);
-        this.touxiangSprite.setPosition(cc.p(180*fXScale,500*fYScale));
-        this.backgroundLayer.addChild(this.touxiangSprite,2);
+        this.touxiangSprite.setPosition(cc.p(180,500));
+        this.backgroundSprite.addChild(this.touxiangSprite,2);
 
         this.selfNameLabel = cc.LabelTTF.create(userInfo.nickName, "Arial", 15);
         // this.selfNameLabel.setScale(0.8);
@@ -503,6 +504,49 @@ var MainMenuScene =SceneBase.extend(
     {
 
         var self =this;
+        if(userInfo.headSprite!=null)
+        {
+
+            cc.log(userInfo.headSprite);
+            //
+            // var webView = new ccui.WebView();
+            // webView.setPosition(cc.p(this.getContentSize().width/2, this.getContentSize().height/2 -20));
+            // webView.setContentSize(cc.size(this.getContentSize().width -150, this.getContentSize().height- 150));
+            // cc.log("this.getContentSize().width/2" + this.getContentSize().width/2);
+            // cc.log("this.getContentSize().height/2" + this.getContentSize().height/2);
+            // webView.loadURL(userInfo.headSprite);
+            // webView.setScalesPageToFit(false);
+            // this.addChild(webView);
+            // var self = this;
+            // var url = userInfo.headSprite;
+            var url = userInfo.headSprite;
+            cc.loader.loadImg(url, {isCrossOrigin : false }, function(err,img){
+                if(err){
+                    cc.log(err);
+                }
+                if(img){
+                    cc.log("img!=null"+img);
+                    var headSprite = new cc.Sprite();
+                    //     this.touxiangSprite = cc.Sprite.create("res/touxiang.png");
+                    // cc.textureCache.addImage(imgUrl);
+                    var texture2d = new cc.Texture2D();
+                    texture2d.initWithElement(img);
+                    texture2d.handleLoadedTexture();
+                    headSprite.initWithTexture(texture2d);
+
+                    // this.touxiangSprite.setScale(fXScale,fYScale);
+
+                    var size = headSprite.getContentSize();
+                    headSprite.setScale(110/size.width);
+                    headSprite.setPosition(cc.p(180,500));
+                    self.backgroundSprite.addChild(headSprite,2);
+                    // self.touxiangSprite.setValue(false);
+                }
+                cc.log("loadImg"+userInfo.headSprite); // self.addChild(logo);
+            });
+}
+
+
 
         if(userInfo.nickName!=null&&self.selfNameLabel!=null)
         {
@@ -537,6 +581,7 @@ var MainMenuScene =SceneBase.extend(
         // "winOfMatchForOne":0,"sumOfMatchForOne":3,"winOfMatchForMore":0,"sumOfMatchForMore":0,"winOfMatchForAI":8,"sumOfMatchForAI":11,"gainCumulation":"-6.223","sumOfAllMatch":3}
 
         userInfo.nickName=data["nickName"];
+        userInfo.headSprite=data["headPicture"];
         userInfo.winOfMatchForOne=data["winOfMatchForOne"];
         userInfo.sumOfMatchForOne=data["sumOfMatchForOne"];
         userInfo.winOfMatchForMore=data["winOfMatchForMore"];

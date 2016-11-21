@@ -134,14 +134,14 @@ var BaseGraphLayer= cc.Layer.extend({
 			this.klineDataPrev=null;
 			this.barvsgapratio=1;
 		}
-		
+
+		if(this.graphArea!=null)
+		{
+			this.graphArea.clear();
+		}
 		if(this.klineData==null)
 		{
 			//清除所有数据
-			if(this.graphArea!=null)
-			{
-				this.graphArea.clear();
-			}
 			for(var i=0;i<this.taisInfoLabelArray.length;i++)
 			{
 				this.taisInfoLabelArray[i].setVisible(false);

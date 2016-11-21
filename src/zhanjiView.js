@@ -20,6 +20,7 @@ var ZhanjiTableViewCell = cc.TableViewCell.extend({
 
     setCellData:function(idx){
         cc.log("ZhanjiTableViewCell setCellData=="+idx);
+        var self = this;
         var sprite = new cc.Sprite("res/line_bg.png");
         sprite.setPosition(cc.p(0,0));
         sprite.setAnchorPoint(0,0);
@@ -36,9 +37,39 @@ var ZhanjiTableViewCell = cc.TableViewCell.extend({
                 case 0:
                 {
                     touxiangSprite = cc.Sprite.create("res/touxiang.png");
-                    touxiangSprite.setScale(0.5);
+                    touxiangSprite.setScale(0.6);
                     touxiangSprite.setPosition(cc.p(80,40));
                     this.addChild(touxiangSprite,2);
+
+                    var url = userInfo.MatchListData[idx]["headPicture"];
+                    cc.loader.loadImg(url, {isCrossOrigin : false }, function(err,img){
+                        if(err){
+                            cc.log(err);
+                        }
+                        if(img){
+                            cc.log("img!=null"+img);
+                            var headSprite = new cc.Sprite();
+                            //     this.touxiangSprite = cc.Sprite.create("res/touxiang.png");
+                            // cc.textureCache.addImage(imgUrl);
+                            var texture2d = new cc.Texture2D();
+                            texture2d.initWithElement(img);
+                            texture2d.handleLoadedTexture();
+                            headSprite.initWithTexture(texture2d);
+
+                            // this.touxiangSprite.setScale(fXScale,fYScale);
+
+                            var size = headSprite.getContentSize();
+                            headSprite.setScale(66/size.width);
+                            headSprite.setPosition(cc.p(80,40));
+                            self.addChild(headSprite,2);
+                            // self.touxiangSprite.setValue(false);
+                        }
+                        cc.log("loadImg"+userInfo.headSprite); // self.addChild(logo);
+                    });
+
+
+
+
                     strNameText= userInfo.MatchListData[idx]["nickName"];
                     textNameLabel = new cc.LabelTTF(strNameText, "Arial", 25.0);
                     textNameLabel.setPosition(cc.p(150,40));
@@ -103,9 +134,36 @@ var ZhanjiTableViewCell = cc.TableViewCell.extend({
                 case 2:
                 {
                     touxiangSprite = cc.Sprite.create("res/touxiang.png");
-                    touxiangSprite.setScale(0.5);
+                    touxiangSprite.setScale(0.6);
                     touxiangSprite.setPosition(cc.p(80,40));
                     this.addChild(touxiangSprite,2);
+
+                    var url = userInfo.MatchListData[idx]["headPicture"];
+                    cc.loader.loadImg(url, {isCrossOrigin : false }, function(err,img){
+                        if(err){
+                            cc.log(err);
+                        }
+                        if(img){
+                            cc.log("img!=null"+img);
+                            var headSprite = new cc.Sprite();
+                            //     this.touxiangSprite = cc.Sprite.create("res/touxiang.png");
+                            // cc.textureCache.addImage(imgUrl);
+                            var texture2d = new cc.Texture2D();
+                            texture2d.initWithElement(img);
+                            texture2d.handleLoadedTexture();
+                            headSprite.initWithTexture(texture2d);
+
+                            // this.touxiangSprite.setScale(fXScale,fYScale);
+
+                            var size = headSprite.getContentSize();
+                            headSprite.setScale(66/size.width);
+                            headSprite.setPosition(cc.p(80,40));
+                            self.addChild(headSprite,2);
+                            // self.touxiangSprite.setValue(false);
+                        }
+                        cc.log("loadImg"+userInfo.headSprite); // self.addChild(logo);
+                    });
+
                     strNameText= userInfo.MatchListData[idx]["nickName"];
                     textNameLabel = new cc.LabelTTF(strNameText, "Arial", 25.0);
                     textNameLabel.setPosition(cc.p(150,20));
@@ -169,24 +227,62 @@ var ZhanjiTableViewCell = cc.TableViewCell.extend({
                     if(typeof(playerdata)!="undefined")
                     {
 
-                        matchFlag = new cc.LabelTTF("", "Arial", 35.0);
+                        // matchFlag = new cc.LabelTTF("", "Arial", 35.0);
+                        // matchFlag.setPosition(cc.p(420,40));
+                        // this.addChild(matchFlag);
+                        // if(playerdata[0]["ranking"]==1)
+                        // {
+                        //     matchFlag.setColor(RedColor);
+                        //     matchFlag.setString("K.O");
+                        // }
+                        // else// if(playerdata[0]["ranking"]==2)
+                        // {
+                        //     matchFlag.setColor(GreenColor);
+                        //     matchFlag.setString("VS");
+                        // }
+                        matchFlag =cc.Sprite.create("res/vs.png");
                         matchFlag.setPosition(cc.p(420,40));
                         this.addChild(matchFlag);
                         if(playerdata[0]["ranking"]==1)
                         {
-                            matchFlag.setColor(RedColor);
-                            matchFlag.setString("K.O");
+                            matchFlag.setTexture("res/ko.png");
                         }
-                        else// if(playerdata[0]["ranking"]==2)
+                        else
                         {
-                            matchFlag.setColor(GreenColor);
-                            matchFlag.setString("VS");
+                            matchFlag.setTexture("res/vs.png");
                         }
 
                         playerSprite = cc.Sprite.create("res/touxiangAI.png");
-                        playerSprite.setScale(0.5);
-                        playerSprite.setPosition(cc.p(500,40));
+                        playerSprite.setScale(0.6);
+                        playerSprite.setPosition(cc.p(530,40));
                         this.addChild(playerSprite,2);
+
+                        var url = playerdata[1]["headPicture"];
+                        cc.loader.loadImg(url, {isCrossOrigin : false }, function(err,img){
+                            if(err){
+                                cc.log(err);
+                            }
+                            if(img){
+                                cc.log("img!=null"+img);
+                                var headSpriteAI = new cc.Sprite();
+                                //     this.touxiangSprite = cc.Sprite.create("res/touxiang.png");
+                                // cc.textureCache.addImage(imgUrl);
+                                var texture2d = new cc.Texture2D();
+                                texture2d.initWithElement(img);
+                                texture2d.handleLoadedTexture();
+                                headSpriteAI.initWithTexture(texture2d);
+
+                                // this.touxiangSprite.setScale(fXScale,fYScale);
+
+                                var size = headSpriteAI.getContentSize();
+                                headSpriteAI.setScale(66/size.width);
+                                headSpriteAI.setPosition(cc.p(500,40));
+                                // self.addChild(headSpriteAI,2);
+                                // self.touxiangSprite.setValue(false);
+                            }
+                            cc.log("loadImg"+userInfo.headSprite); // self.addChild(logo);
+                        });
+
 
                         playerNameText= playerdata[1]["userName"];
                         playerNameLabel = new cc.LabelTTF(playerNameText, "Arial", 25.0);

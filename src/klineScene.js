@@ -13,13 +13,15 @@ var KLineScene = SceneBase.extend(
 	backgroundLayer:null,		//背景层
 	
 	matchEndInfoLayer:null,		//对局结束后弹出的对话框
-	
+
+	// klineLayer:null,		//跳动的K线图
 	klineLayerMain:null,		//主要的持续跳动的K线图
 	klineLayerPrev:null,		//前期的K线，游戏一开始显示一下作为游戏时判断使用
 
 	volumnTechLayerMain:null,		//主要的持续跳动的成交量图，也可以作为技术指标的图
 	volumnTechLayerPrev:null,		//前期的一副图，游戏一开始显示一下作为游戏时判断使用
-	
+
+	klineData:null,			//游戏界面K线图的数据，按照时间从小到大排序。
 	klinedataMain:null,			//游戏界面K线图的数据，按照时间从小到大排序。
 	prevKlineData:null,			//游戏界面前的K线图的数据，按照时间从小到大排序。
 
@@ -395,13 +397,10 @@ var KLineScene = SceneBase.extend(
 			case "5":
 			{
 				//接收到了K线数据的消息
-				cc.log("call get K线数据 data");
-				var data=JSON.parse(packet.content);
 				cc.log("jsonText parseK线数据over");
-				self.toSetklinedata(data);
-				// toSetklinedata
-				// self.getklinedata(packet.content);
+				self.getklinedata(packet.content);
 				self.setDataForLlineLayer();
+				// self.setDataForLlineLayerTest();
 				cc.log("get kline K线数据 passed");
 				break;
 			}
@@ -422,14 +421,9 @@ var KLineScene = SceneBase.extend(
 			case "H":
 			{
 				//成功接收到了K线数据的分享数据
-				cc.log("call get kline data");
-				var data=JSON.parse(packet.content);
 				cc.log("jsonText parseK线分享数据over");
-				self.toSetklinedata(data);
-				// toSetklinedata
-				// self.getklinedata(packet.content);
+				self.getklinedata(packet.content);
 				self.advanceToMainKLine_Share();
-				// self.getShareKlinedata(packet.content);
 				cc.log("成功接收到了K线数据的分享数据");
 				break;
 			}
@@ -470,10 +464,11 @@ var KLineScene = SceneBase.extend(
 			case "O"://观看记录
 			{
 				cc.log("begin to parse 观看记录json text");
-				// self.getRecordKlinedata(packet.content);
-				var data=JSON.parse(packet.content);
-				cc.log("jsonText parse 观看记录over");
-				self.toSetklinedata(data);
+				// // self.getRecordKlinedata(packet.content);
+				// var data=JSON.parse(packet.content);
+				// cc.log("jsonText parse 观看记录over");
+				// self.toSetklinedata(data);
+				self.getklinedata(packet.content);
 				self.advanceToMainKLine_Record();
 				cc.log("get 观看记录 passed");
 
@@ -718,6 +713,10 @@ var KLineScene = SceneBase.extend(
 		{
 			userInfo.nickName=data["nickName"];
 		}
+        if(data["headPicture"]!=undefined)
+        {
+            userInfo.headSprite=data["headPicture"];
+        }
 		if(data["matchId"]!=undefined)
 		{
 			userInfo.matchId=data["matchId"];
@@ -726,7 +725,7 @@ var KLineScene = SceneBase.extend(
 		var mainDataDayCount=data["count"][0];
 		var prevDataDayCount=data["count"][1];
 		//"count":[120,240]},playerList:[{"userName":"","score":"0.000"},{"userName":"唐齐安通道","score":"0.000"}]
-		cc.log("ongotklinedata mainDataDayCount="+mainDataDayCount+" prevDataDayCount="+prevDataDayCount);
+		cc.log("toSetklinedata mainDataDayCount="+mainDataDayCount+" prevDataDayCount="+prevDataDayCount);
 		var playerListData=data["playerList"];
 		userInfo.playerListData=[];
 		for(var i=0;playerListData!=undefined&&i<playerListData.length;i++)
@@ -737,39 +736,10 @@ var KLineScene = SceneBase.extend(
 			//this.MatchListData.push({matchId:matchData["matchId"],matchTime:matchData["matchId"],playerNum:matchData["matchId"],score:matchData["matchId"],uid:matchData["matchId"]});
 		}
 
-		this.klinedataMain=[];
-		for(var i=prevDataDayCount;i<prevDataDayCount+mainDataDayCount;i++)
+		this.klineData=[];
+		for(var i=0;i<prevDataDayCount+mainDataDayCount;i++)
 		{
-			this.klinedataMain.push({o:dailyData[5*i],x:dailyData[5*i+1],i:dailyData[5*i+2],c:dailyData[5*i+3],v:dailyData[5*i+4]});
-		}
-
-		this.prevKlineData=[];
-		for(var i=0;i<prevDataDayCount;i++)
-		{
-			this.prevKlineData.push({o:dailyData[5*i],x:dailyData[5*i+1],i:dailyData[5*i+2],c:dailyData[5*i+3],v:dailyData[5*i+4]});
-		}
-	},
-
-	ongotklinedata:function(data)
-	{
-		this.clearDataForLineLayer();
-		if(this.btnStart!=null)
-		{
-			this.btnStart.setVisible(true);
-		}
-		var dailyData=data["data"];
-		var mainDataDayCount=data["count"][0];
-		var prevDataDayCount=data["count"][1];
-		//"count":[120,240]},playerList:[{"userName":"","score":"0.000"},{"userName":"唐齐安通道","score":"0.000"}]
-		cc.log("ongotklinedata mainDataDayCount="+mainDataDayCount+" prevDataDayCount="+prevDataDayCount);
-		var playerListData=data["playerList"];
-		userInfo.playerListData=[];
-		for(var i=0;playerListData!=null&&i<playerListData.length;i++)
-		{
-			var playerData=playerListData[i];
-			cc.log("playerData.userName="+playerData["userName"]);
-			userInfo.playerListData.push(playerData);
-			//this.MatchListData.push({matchId:matchData["matchId"],matchTime:matchData["matchId"],playerNum:matchData["matchId"],score:matchData["matchId"],uid:matchData["matchId"]});
+			this.klineData.push({o:dailyData[5*i],x:dailyData[5*i+1],i:dailyData[5*i+2],c:dailyData[5*i+3],v:dailyData[5*i+4]});
 		}
 
 		this.klinedataMain=[];
@@ -783,17 +753,52 @@ var KLineScene = SceneBase.extend(
 		{
 			this.prevKlineData.push({o:dailyData[5*i],x:dailyData[5*i+1],i:dailyData[5*i+2],c:dailyData[5*i+3],v:dailyData[5*i+4]});
 		}
-		
-		if(this.klineLayerMain!=null && this.klineLayerPrev!=null)
-		{
-			this.setDataForLlineLayer();
-		}
-		else
-		{
-			cc.log("this.klineLayerMain==null || this.klineLayerPrev==null");
-		}
 	},
 
+	// ongotklinedata:function(data)
+	// {
+	// 	this.clearDataForLineLayer();
+	// 	if(this.btnStart!=null)
+	// 	{
+	// 		this.btnStart.setVisible(true);
+	// 	}
+	// 	var dailyData=data["data"];
+	// 	var mainDataDayCount=data["count"][0];
+	// 	var prevDataDayCount=data["count"][1];
+	// 	//"count":[120,240]},playerList:[{"userName":"","score":"0.000"},{"userName":"唐齐安通道","score":"0.000"}]
+	// 	cc.log("ongotklinedata mainDataDayCount="+mainDataDayCount+" prevDataDayCount="+prevDataDayCount);
+	// 	var playerListData=data["playerList"];
+	// 	userInfo.playerListData=[];
+	// 	for(var i=0;playerListData!=null&&i<playerListData.length;i++)
+	// 	{
+	// 		var playerData=playerListData[i];
+	// 		cc.log("playerData.userName="+playerData["userName"]);
+	// 		userInfo.playerListData.push(playerData);
+	// 		//this.MatchListData.push({matchId:matchData["matchId"],matchTime:matchData["matchId"],playerNum:matchData["matchId"],score:matchData["matchId"],uid:matchData["matchId"]});
+	// 	}
+    //
+	// 	this.klinedataMain=[];
+	// 	for(var i=prevDataDayCount;i<prevDataDayCount+mainDataDayCount;i++)
+	// 	{
+	// 		this.klinedataMain.push({o:dailyData[5*i],x:dailyData[5*i+1],i:dailyData[5*i+2],c:dailyData[5*i+3],v:dailyData[5*i+4]});
+	// 	}
+    //
+	// 	this.prevKlineData=[];
+	// 	for(var i=0;i<prevDataDayCount;i++)
+	// 	{
+	// 		this.prevKlineData.push({o:dailyData[5*i],x:dailyData[5*i+1],i:dailyData[5*i+2],c:dailyData[5*i+3],v:dailyData[5*i+4]});
+	// 	}
+	//
+	// 	if(this.klineLayerMain!=null && this.klineLayerPrev!=null)
+	// 	{
+	// 		this.setDataForLlineLayer();
+	// 	}
+	// 	else
+	// 	{
+	// 		cc.log("this.klineLayerMain==null || this.klineLayerPrev==null");
+	// 	}
+	// },
+    //
 	// onShareklinedata:function(data)
 	// {
 	// 	var businessData=data["dataBusiness"];
@@ -889,7 +894,62 @@ var KLineScene = SceneBase.extend(
 		}
 		this.setDisableAllButtons();
 	},
-	
+
+	setDataForLlineLayerTest:function()//比赛测试图
+	{
+		if(this.klinedataMain==null || this.prevKlineData==null) return;
+		this.stopProgress();
+		this.phase2=false;
+		//设置前面的一副蜡烛图
+
+		this.klineLayerPrev.setKLineData(this.prevKlineData);
+		this.addChild(this.klineLayerPrev,this.mainLayerNumber,this.klineLayerPrev.getTag());
+		this.volumnTechLayerPrev.setKLineData(this.prevKlineData);
+		this.addChild(this.volumnTechLayerPrev,this.volumnTechLayerNumber,this.volumnTechLayerPrev.getTag());
+
+		this.drawAllCandlesOneByOne();
+		// this.klineLayerPrev.drawAllCandlesTillIndexOrEnd();
+		// this.volumnTechLayerPrev.drawAllCandlesTillIndexOrEnd();
+
+
+
+	},
+	drawAllCandlesOneByOne:function()
+	{
+		if(this.currentCandleIndex<120)
+		{
+			cc.log(".......this.currentCandleIndex："+this.currentCandleIndex);
+			this.prevKlineData=[];
+			// this.klinedataMain=[];
+			for(var i=this.currentCandleIndex;i<this.currentCandleIndex+120;i++)
+			{
+				this.prevKlineData.push(this.klineData[i]);
+			}
+
+			this.klineLayerPrev.setKLineData(this.prevKlineData);
+
+			// this.volumnTechLayerPrev.setKLineData(this.prevKlineData);
+			this.klineLayerPrev.drawAllCandlesTillIndexOrEnd();
+			this.volumnTechLayerPrev.drawAllCandlesTillIndexOrEnd();
+			// this.volumnTechLayerPrev.drawAllCandlesTillIndexOrEnd();
+			// gSocketConn.Step(this.currentCandleIndex);
+
+		}
+		else
+		{
+			cc.log("绘制结束");
+			// this.sendEndMessage();
+			// this.matchEnd();
+			return;
+		}
+
+		this.currentCandleIndex+=1;
+		var self=this;
+		pageTimer["drawAllTimer"] = setTimeout(function(){self.drawAllCandlesOneByOne();},1000);
+	},
+
+
+
 	setDataForLlineLayer:function()//比赛图
 	{
 		if(this.klinedataMain==null || this.prevKlineData==null) return;
