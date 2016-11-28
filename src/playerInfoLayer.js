@@ -21,7 +21,7 @@ var PlayerInfoLayer= cc.Layer.extend({
 	// player1Label:null,				//自己的名字
 	// playerScore1Label:null,			//自己的分数
 
-ctor:function(width,height)
+     ctor:function(width,height)
 	{
 		this._super();
 		this.width=width;
@@ -70,38 +70,6 @@ ctor:function(width,height)
 		this.avatarSprite.setScale(0.3);
 		this.addChild(this.avatarSprite,5);
 
-
-
-		this.headSprite=cc.Sprite.create("res/touxiang.png");
-		this.headSprite.setPosition(120*this.fXScale,this.height-20);
-
-		this.addChild(this.headSprite,5);
-		var url = userInfo.headSprite;
-		cc.loader.loadImg(url, {isCrossOrigin : false }, function(err,img){
-			if(err){
-				cc.log(err);
-			}
-			if(img){
-				cc.log("img!=null"+img);
-				if(gPlayerAvatarSprite==null)
-				{
-					// gPlayerAvatarSprite=cc.Sprite.create("res/avatar"+(1+Math.round(Math.random()*10)%5)+".png");
-					gPlayerAvatarSprite=new cc.Texture2D();
-				}
-				// var texture2d = new cc.Texture2D();
-				gPlayerAvatarSprite.initWithElement(img);
-				gPlayerAvatarSprite.handleLoadedTexture();
-				self.headSprite.initWithTexture(gPlayerAvatarSprite);
-
-				var size = self.headSprite.getContentSize();
-				self.headSprite.setScale(33/size.width);
-			}
-			cc.log("loadImg="+userInfo.headSprite); // self.addChild(logo);
-		});
-
-
-
-
 		this.setPlayerInfo();
 		this.drawAreaBorder();
 	},
@@ -110,7 +78,7 @@ ctor:function(width,height)
         //.setScale(this.fXScale,this.fYScale);
 
 
-		var self = this;
+
 		if(userInfo.matchMode==null)return;
 		switch(userInfo.matchMode)
 		{
@@ -139,11 +107,12 @@ ctor:function(width,height)
                         this.playerInfo_bg[i].setScale(this.fXScale,this.fYScale);
                         this.playerNameLabel[i] = cc.LabelTTF.create(userInfo.nickName, "Arial", 20);
                         this.playerScoreLabel[i] = cc.LabelTTF.create("0.00%", "Arial", 24);
-						this.playerInfo_btn[i] = new Button("res/touxiangAI.png");
-						var size = this.playerInfo_btn[i].getContentSize();
-						this.playerInfo_btn[i].setScale(33/size.width);
+						this.playerInfo_btn[i] = new Button("res/less_bg.png");
+						// var size = this.playerInfo_btn[i].getContentSize();
+						var size = cc.size(80,80);
+						this.playerInfo_btn[i].setContentSize(size);
+						// this.playerInfo_btn[i].setScale(40/size.width,40/size.height);
 						this.playerInfo_btn[i].setPosition(InfoposX,190);
-
 						if (i==0)
 						{
 							this.playerInfo_btn[i].setClickEvent(function (){
@@ -157,8 +126,6 @@ ctor:function(width,height)
 						}
 						else
 						{
-
-
 							this.playerInfo_btn[i].setClickEvent(function () {
 								cc.log("playerInfo_btn1 ClickEvent ");
 
@@ -169,8 +136,6 @@ ctor:function(width,height)
 							});
 							// this.playerInfo_bg[i].addChild(this.playerInfo_btn1);
 						}
-
-
 						this.playerInfo_btn[i].setVisible(false);
 
 						this.playerHead_Sprite[i] = cc.Sprite.create("res/touxiangAI.png");
@@ -188,9 +153,6 @@ ctor:function(width,height)
                     }
                 }
 
-
-                this.refreshScoresByData();
-
 				break;
 			}
 			default:
@@ -198,7 +160,7 @@ ctor:function(width,height)
 				cc.log("PlayerInfoLayer setPlayerInfo userInfo.matchMode=",userInfo.matchMode);
 			}
 		}
-
+		this.refreshScoresByData();
 	},
 	drawAreaBorder:function()
 	{
@@ -251,83 +213,104 @@ ctor:function(width,height)
 		// 	this.selfNameLabel.setString(userInfo.nickName);
 		// 	// this.selfScoreLabel.setPosition(cc.pAdd(this.selfNameLabel.getPosition(),cc.p(this.selfNameLabel.getContentSize().width+10,0)));
 		// }
+
 		var self = this;
+
+		this.selfNameLabel.setString(userInfo.nickName);
+		if(this.headSprite==null){
+			this.headSprite=cc.Sprite.create("res/touxiang.png");
+			this.headSprite.setPosition(120*this.fXScale,this.height-20);
+			var size = self.headSprite.getContentSize();
+			self.headSprite.setScale(33/size.width,33/size.height);
+			this.addChild(this.headSprite,5);
+		}
+		var url = userInfo.headSprite;
+		cc.loader.loadImg(url, {isCrossOrigin : false }, function(err,img){
+			if(err){
+				cc.log(err);
+			}
+			if(img){
+				cc.log("img!=null"+img);
+				if(gPlayerAvatarSprite==null)
+				{
+					// gPlayerAvatarSprite=cc.Sprite.create("res/avatar"+(1+Math.round(Math.random()*10)%5)+".png");
+					gPlayerAvatarSprite=new cc.Texture2D();
+				}
+				// var texture2d = new cc.Texture2D();
+				gPlayerAvatarSprite.initWithElement(img);
+				gPlayerAvatarSprite.handleLoadedTexture();
+				self.headSprite.initWithTexture(gPlayerAvatarSprite);
+
+				var size = self.headSprite.getContentSize();
+				self.headSprite.setScale(33/size.width,33/size.height);
+			}
+			cc.log("loadImg="+userInfo.headSprite); // self.addChild(logo);
+		});
+
+
 		var score=0;
 		var upColor=cc.color(252,0,1,0);
 		var downColor=cc.color(6,226,0,0);
 		var scoreLabel=this.selfScoreLabel;
 		if(userInfo.playerListData!=null)
 		{
-			var btnData =[];
-            for(var i=0;i<userInfo.playerListData.length&&i<this.playerInfo_bg.length;i++)
+            for(var i=0;i<userInfo.playerListData.length&&i<self.playerInfo_bg.length;i++)
             {
 
 				var InfoposX =60;
-
-
-				if(this.playerHead_Sprite[i]!=null)
+				if(i==0)
 				{
+					var url = userInfo.playerListData[i]["headPicture"];
+					cc.loader.loadImg(url, {isCrossOrigin : false }, function(err,img){
+						if(err){
+							cc.log(err);
+						}
+						if(img){
+							cc.log("img!=null"+img);
+							var headSprite = new cc.Sprite();
+							//     this.touxiangSprite = cc.Sprite.create("res/touxiang.png");
+							// cc.textureCache.addImage(imgUrl);
+							var texture2d = new cc.Texture2D();
+							texture2d.initWithElement(img);
+							texture2d.handleLoadedTexture();
+							headSprite.initWithTexture(texture2d);
 
+							// this.touxiangSprite.setScale(fXScale,fYScale);
 
+							var size = headSprite.getContentSize();
+							headSprite.setScale(88/size.width,88/size.height);
+							headSprite.setPosition(cc.p(60,190));
+							self.playerInfo_bg[0].addChild(headSprite,2);
+						}
+						cc.log("loadImg"+userInfo.headSprite); // self.addChild(logo);
+					});
+				}
+				if(i==1)
+				{
+					var url = userInfo.playerListData[i]["headPicture"];
+					cc.loader.loadImg(url, {isCrossOrigin : false }, function(err,img){
+						if(err){
+							cc.log(err);
+						}
+						if(img){
+							cc.log("img!=null"+img);
+							var headSprite = new cc.Sprite();
+							//     this.touxiangSprite = cc.Sprite.create("res/touxiang.png");
+							// cc.textureCache.addImage(imgUrl);
+							var texture2d = new cc.Texture2D();
+							texture2d.initWithElement(img);
+							texture2d.handleLoadedTexture();
+							headSprite.initWithTexture(texture2d);
 
-					cc.log("userInfo.nickName=="+userInfo.nickName+"||userInfo.playerListData[i]=="+userInfo.playerListData[i]["userName"]);
-					if (i==0)
-					{
-						// var url = userInfo.playerListData[i]["headPicture"];
-						// cc.loader.loadImg(url, {isCrossOrigin : false }, function(err,img){
-						// 	if(err){
-						// 		cc.log(err);
-						// 	}
-						// 	if(img){
-						// 		cc.log("img!=null"+img);
-                        //
-						// 		// avatarSprite=new cc.Texture2D();
-						// 		//
-						// 		// // var texture2d = new cc.Texture2D();
-						// 		// avatarSprite.initWithElement(img);
-						// 		// avatarSprite.handleLoadedTexture();
-						// 		self.playerHead_Sprite[i].setTexture(img);
-                        //
-						// 		var size = self.playerHead_Sprite[i].getContentSize();
-						// 		self.playerHead_Sprite[i].setScale(33/size.width);
-						// 	}
-						// 	cc.log("loadImg="+userInfo.headSprite); // self.addChild(logo);
-						// });
-						this.playerHead_Sprite[i].setTexture("res/touxiang.png");
+							// this.touxiangSprite.setScale(fXScale,fYScale);
 
-					}else {
-						// var url = userInfo.playerListData[i]["headPicture"];
-						// cc.loader.loadImg(url, {isCrossOrigin : false }, function(err,img){
-						// 	if(err){
-						// 		cc.log(err);
-						// 	}
-						// 	if(img){
-						// 		cc.log("img!=null"+img);
-                        //
-						// 		// avatarSprite=new cc.Texture2D();
-						// 		//
-						// 		// // var texture2d = new cc.Texture2D();
-						// 		// avatarSprite.initWithElement(img);
-						// 		// avatarSprite.handleLoadedTexture();
-						// 		self.playerHead_Sprite[i].setTexture(img);
-                        //
-						// 		var size = self.playerHead_Sprite[i].getContentSize();
-						// 		self.playerHead_Sprite[i].setScale(33/size.width);
-						// 	}
-						// 	cc.log("loadImg="+userInfo.headSprite); // self.addChild(logo);
-						// });
-						this.playerHead_Sprite[i].setTexture("res/touxiangAI.png");
-					}
-					if(userInfo.nickName==userInfo.playerListData[i]["userName"])
-					{
-						// this.playerHead_Sprite[i].getTexture();
-						this.avatarSprite.setTexture(this.playerHead_Sprite[i].getTexture());
-						// this.playerHead_Sprite[i].setTexture("res/touxiang.png");
-					}
-					// else
-					// {
-					// 	this.playerHead_Sprite[i].setTexture("res/touxiangAI.png");
-					// }
+							var size = headSprite.getContentSize();
+							headSprite.setScale(88/size.width,88/size.height);
+							headSprite.setPosition(cc.p(60,190));
+							self.playerInfo_bg[1].addChild(headSprite,2);
+						}
+						cc.log("loadImg"+userInfo.headSprite); // self.addChild(logo);
+					});
 				}
 
 				// this.playerInfo_btn[i].setTexture

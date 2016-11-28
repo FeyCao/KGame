@@ -45,6 +45,7 @@ var ZhanjiTableViewCell = cc.TableViewCell.extend({
                     cc.loader.loadImg(url, {isCrossOrigin : false }, function(err,img){
                         if(err){
                             cc.log(err);
+                            cc.log("战绩：fail loadImg="+userInfo.headSprite); // self.addChild(logo);
                         }
                         if(img){
                             cc.log("img!=null"+img);
@@ -59,12 +60,11 @@ var ZhanjiTableViewCell = cc.TableViewCell.extend({
                             // this.touxiangSprite.setScale(fXScale,fYScale);
 
                             var size = headSprite.getContentSize();
-                            headSprite.setScale(66/size.width);
+                            headSprite.setScale(66/size.width,66/size.height);
                             headSprite.setPosition(cc.p(80,40));
                             self.addChild(headSprite,2);
-                            // self.touxiangSprite.setValue(false);
+                            cc.log("战绩：success loadImg="+userInfo.headSprite); // self.addChild(logo); // self.touxiangSprite.setValue(false);
                         }
-                        cc.log("loadImg"+userInfo.headSprite); // self.addChild(logo);
                     });
 
 
@@ -156,7 +156,7 @@ var ZhanjiTableViewCell = cc.TableViewCell.extend({
                             // this.touxiangSprite.setScale(fXScale,fYScale);
 
                             var size = headSprite.getContentSize();
-                            headSprite.setScale(66/size.width);
+                            headSprite.setScale(66/size.width,66/size.height);
                             headSprite.setPosition(cc.p(80,40));
                             self.addChild(headSprite,2);
                             // self.touxiangSprite.setValue(false);
@@ -275,9 +275,9 @@ var ZhanjiTableViewCell = cc.TableViewCell.extend({
                                 // this.touxiangSprite.setScale(fXScale,fYScale);
 
                                 var size = headSpriteAI.getContentSize();
-                                headSpriteAI.setScale(66/size.width);
-                                headSpriteAI.setPosition(cc.p(500,40));
-                                // self.addChild(headSpriteAI,2);
+                                headSpriteAI.setScale(66/size.width,66/size.height);
+                                headSpriteAI.setPosition(cc.p(530,40));
+                                self.addChild(headSpriteAI,2);
                                 // self.touxiangSprite.setValue(false);
                             }
                             cc.log("loadImg"+userInfo.headSprite); // self.addChild(logo);

@@ -1125,7 +1125,7 @@ var KLineScene = SceneBase.extend(
 	advanceToMainKLine_RecordMatch:function(data)//观看交易记录Match
 	{
 		cc.log("advanceToMainKLine_RecordMactch:function()//观看交易记录 begin");
-
+        //
 		var businessData=data["dataBusiness"];
 		cc.log("dataBusiness="+businessData);
 		this.buyInfo=[];
@@ -1139,6 +1139,10 @@ var KLineScene = SceneBase.extend(
 			userInfo.nickName=data["nickName"];
 		}
 
+		if(data["headPicture"]!=undefined)
+		{
+			userInfo.headSprite=data["headPicture"];
+		}
 		var self=this;
 		this.setDisableAllButtons();
 		if(this.btnHome!=null)
@@ -1182,10 +1186,7 @@ var KLineScene = SceneBase.extend(
 			this.btnHome.setVisible(true);
 		}
 
-		if(this.playerInfoLayer!=null)
-		{
-			this.playerInfoLayer.ableInfoButtons();
-		}
+
 		//一次性画出当前数据图
 		this.drawCandlesAll();
 		cc.log("advanceToMainKLine_Record:function()//观看记录 end");
@@ -1274,17 +1275,17 @@ var KLineScene = SceneBase.extend(
 	//SHARE_TEST 一次性画出用户数据图
 	drawCandlesAll:function()
 	{
+		this.setPlayerInfo();
 		if(this.klineLayerMain!=null)
 		{
 			this.klineLayerMain.drawAllCandlesAll();
 			//画出买卖操作的信息
 			this.businessInfo();
 		}
-
 		if(this.volumnTechLayerMain!=null)
 			this.volumnTechLayerMain.drawAllCandlesAll();
 		this.currentCandleIndex=this.klinedataMain.length;
-		
+
 
 		this.stopProgress();
 		//cc.log("drawCandlesAll this.currentCandleIndex = ",this.currentCandleIndex);
@@ -1312,6 +1313,10 @@ var KLineScene = SceneBase.extend(
 		var score = this.buyScore;
 		this.playerInfoLayer.refreshScoresByData();
 		this.playerInfoLayer.refreshScores(score);
+		if(this.playerInfoLayer!=null)
+		{
+			this.playerInfoLayer.ableInfoButtons();
+		}
 	},
 	
 	sendEndMessage:function()

@@ -69,6 +69,7 @@ Button=cc.Sprite.extend({
 					if(buttonLogFlag!=false)
                      cc.log("Button onTouchEnded");
 					//var nextSceneM=new NextScene();
+					;
 					var target = event.getCurrentTarget();	
 					var touchLocation=touch.getLocation();
 					//Get the position of the current point relative to the button
@@ -77,6 +78,7 @@ Button=cc.Sprite.extend({
 					var rect = cc.rect(0, 0, s.width, s.height);
 					//Check the click area
 
+					// target.setContentSize();
 					if (this.isPressedDown==true&&cc.rectContainsPoint(rect, locationInNode))
 					{
 						if(buttonLogFlag!=false)

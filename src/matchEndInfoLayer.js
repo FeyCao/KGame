@@ -63,7 +63,7 @@ var MatchEndInfoLayer= cc.Layer.extend({
 
 			this.bgSprtie = cc.Sprite.create("res/matchMoreEnd.png");
 			bgSize = this.bgSprtie.getContentSize();
-			this.decInfoLabel=cc.LabelTTF.create(" 排名            玩家              本局收益", "Arial", 30);
+			this.decInfoLabel=cc.LabelTTF.create(" 排名                 玩家                     本局收益", "Arial", 30);
 			//this.stockInfoLabel.setColor(cc.color(40,184,245,255));
 			this.decInfoLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
 			this.decInfoLabel.setColor(WhiteColor);
@@ -119,6 +119,34 @@ var MatchEndInfoLayer= cc.Layer.extend({
 			// this.avatarSprite.setScale(0.4);
 			this.bgSprtie.addChild(this.avatarSprite,5);
 			// this.addChild(this.avatarSprite,5);
+			var url = userInfo.headSprite;
+			cc.loader.loadImg(url, {isCrossOrigin : false }, function(err,img){
+				if(err){
+					cc.log(err);
+					cc.log("MatchEndInfoLayer fail loadImg="+userInfo.headSprite); // self.addChild(logo);
+				}
+				if(img){
+					cc.log("img!=null"+img);
+					var headSprite = new cc.Sprite();
+					//     this.touxiangSprite = cc.Sprite.create("res/touxiang.png");
+					// cc.textureCache.addImage(imgUrl);
+					var texture2d = new cc.Texture2D();
+					texture2d.initWithElement(img);
+					texture2d.handleLoadedTexture();
+					headSprite.initWithTexture(texture2d);
+
+					// this.touxiangSprite.setScale(fXScale,fYScale);
+
+					var size = headSprite.getContentSize();
+					headSprite.setScale(110/size.width,110/size.height);
+					headSprite.setPosition(bgSize.width /4, bgSize.height-160);
+					self.bgSprtie.addChild(headSprite,5);
+
+					cc.log("MatchEndInfoLayer success loadImg="+userInfo.headSprite); // self.addChild(logo);
+					// self.touxiangSprite.setValue(false);
+				}
+
+			});
 
 			posBtnY =70;
 
@@ -246,7 +274,7 @@ var MatchEndInfoLayer= cc.Layer.extend({
 			// 	}
 				var fields=content.split("#");
 				var len=fields.length;
-				this.stockInfoLabel.setString("期货合约:"+fields[len-3]+" ("+fields[len-2]+" - "+fields[len-1]+")");
+				this.stockInfoLabel.setString(fields[len-3]+" ("+fields[len-2]+" - "+fields[len-1]+")");
 				var ratio=parseFloat(fields[2]);
 				if(ratio>0)
 				{
@@ -446,7 +474,7 @@ var PlayerInfoCell = cc.TableViewCell.extend({
 			//设置用户名
 			strNameText= userInfo.endInfoOfAllPlayers[idx]["nickName"];
 			textNameLabel = new cc.LabelTTF(strNameText, "Arial", 25.0);
-			textNameLabel.setPosition(cc.p(100,40));
+			textNameLabel.setPosition(cc.p(200,40));
 			textNameLabel.setAnchorPoint(0,0.5);
 			sprite.addChild(textNameLabel);
 

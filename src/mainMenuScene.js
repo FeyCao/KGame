@@ -103,51 +103,55 @@ var MainMenuScene =SceneBase.extend(
         this.touxiangSprite.setPosition(cc.p(180,500));
         this.backgroundSprite.addChild(this.touxiangSprite,2);
 
-        this.selfNameLabel = cc.LabelTTF.create(userInfo.nickName, "Arial", 15);
+        var fontSize = 22;
+        this.selfNameLabel = cc.LabelTTF.create(userInfo.nickName, "Arial", fontSize);
         // this.selfNameLabel.setScale(0.8);
         this.selfNameLabel.setAnchorPoint(0,0.5);
-        this.selfNameLabel.setPosition(cc.p(240*fXScale,520*fYScale));
-        this.backgroundLayer.addChild(this.selfNameLabel,2);
+        // this.selfNameLabel.setPosition(cc.p(240*fXScale,520*fYScale));
+        this.selfNameLabel.setPosition(cc.p(240,520));
+        this.backgroundSprite.addChild(this.selfNameLabel,2);
 
 
-        self.infoLabel=cc.LabelTTF.create("练习场:", "Arial",15);
+        self.infoLabel=cc.LabelTTF.create("练习场:", "Arial",fontSize);
         // self.infoLabel.setScale(0.8);
         //this.zhanjiLabel=cc.LabelTTF.create(gPlayerName, "Arial", 20);
         self.infoLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
         self.infoLabel.setAnchorPoint(0,0.5);
         // self.infoLabel.setColor(cc.color(0,0,0,255));
-        self.infoLabel.setPosition(cc.p(450*fXScale,pButtonY*fYScale));
-        self.backgroundLayer.addChild(self.infoLabel,5);
+        // self.infoLabel.setPosition(cc.p(450*fXScale,pButtonY*fYScale));
+        self.infoLabel.setPosition(cc.p(450,pButtonY));
+        this.backgroundSprite.addChild(self.infoLabel,5);
 
-        self.winOneLabel= cc.LabelTTF.create("", "Arial",15);
+        self.winOneLabel= cc.LabelTTF.create("", "Arial",fontSize);
         self.winOneLabel.setAnchorPoint(0,0.5);
         self.winOneLabel.setColor(YellowColor);
         self.winOneLabel.setPosition(cc.pAdd(self.infoLabel.getPosition(),cc.p(self.infoLabel.getContentSize().width,0)));
-        this.backgroundLayer.addChild(self.winOneLabel,5);
-        self.sumOneLabel= cc.LabelTTF.create("", "Arial",15);
+        this.backgroundSprite.addChild(self.winOneLabel,5);
+        self.sumOneLabel= cc.LabelTTF.create("", "Arial",fontSize);
         self.sumOneLabel.setAnchorPoint(0,0.5);
         self.sumOneLabel.setColor(WhiteColor);
         self.sumOneLabel.setPosition(cc.pAdd(self.winOneLabel.getPosition(),cc.p(self.winOneLabel.getContentSize().width,0)));
-        this.backgroundLayer.addChild(self.sumOneLabel,5);
+        this.backgroundSprite.addChild(self.sumOneLabel,5);
 
-        self.infoLabelAI=cc.LabelTTF.create("人机战:", "Arial",15);
+        self.infoLabelAI=cc.LabelTTF.create("人机战:", "Arial",fontSize);
         // self.infoLabelAI.setScale(0.8);
         //this.zhanjiLabel=cc.LabelTTF.create(gPlayerName, "Arial", 20);
         self.infoLabelAI.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
         self.infoLabelAI.setAnchorPoint(0,0.5);
-        self.infoLabelAI.setPosition(cc.p(450*fXScale,(pButtonY-30)*fYScale));
-        self.backgroundLayer.addChild(self.infoLabelAI,5);
+        // self.infoLabelAI.setPosition(cc.p(450*fXScale,(pButtonY-30)*fYScale));
+        self.infoLabelAI.setPosition(cc.p(450,(pButtonY-30)));
+        this.backgroundSprite.addChild(self.infoLabelAI,5);
 
-        self.winAILabel= cc.LabelTTF.create("", "Arial",15);
+        self.winAILabel= cc.LabelTTF.create("", "Arial",fontSize);
         self.winAILabel.setAnchorPoint(0,0.5);
         self.winAILabel.setColor(YellowColor);
         self.winAILabel.setPosition(cc.pAdd(self.infoLabelAI.getPosition(),cc.p(self.infoLabelAI.getContentSize().width,0)));
-        this.backgroundLayer.addChild(self.winAILabel,5);
-        self.sumAILabel= cc.LabelTTF.create("", "Arial",15);
+        this.backgroundSprite.addChild(self.winAILabel,5);
+        self.sumAILabel= cc.LabelTTF.create("", "Arial",fontSize);
         self.sumAILabel.setAnchorPoint(0,0.5);
         self.sumAILabel.setColor(WhiteColor);
         self.sumAILabel.setPosition(cc.pAdd(self.winAILabel.getPosition(),cc.p(self.winAILabel.getContentSize().width,0)));
-        this.backgroundLayer.addChild(self.sumAILabel,5);
+        this.backgroundSprite.addChild(self.sumAILabel,5);
 
 
         //设置对战信息时数据可能还没取到
@@ -188,10 +192,10 @@ var MainMenuScene =SceneBase.extend(
 		
 		this.backgroundLayer.addChild(this.backgroundSprite, 1);
 
-		this.backgroundLayer.addChild(this.zhanjiButton, 2);
-        this.backgroundLayer.addChild(this.configButton, 2);
-        this.backgroundLayer.addChild(this.paimingButton, 2);
-        this.backgroundLayer.addChild(this.helpButton, 2);
+        this.backgroundSprite.addChild(this.zhanjiButton, 2);
+        this.backgroundSprite.addChild(this.configButton, 2);
+        this.backgroundSprite.addChild(this.paimingButton, 2);
+        this.backgroundSprite.addChild(this.helpButton, 2);
 		this.backgroundLayer.addChild(this.firstMode, 2);
 		this.backgroundLayer.addChild(this.secondMode, 2);
 		this.backgroundLayer.addChild(this.thirdMode, 2);
@@ -439,62 +443,63 @@ var MainMenuScene =SceneBase.extend(
         var fXScale = size.width/1280;
         var fYScale = size.height/720;
         var pButtonY = 520;
-        var pButtonScale = cc.p(28*fXScale,60*fYScale);
+        var pButtonScale = cc.p(28,60);
+        var fontSize = 25;
 
         this.zhanjiButton=new Button("res/btn_zhanji.png");
-        this.zhanjiButton.setScale(fXScale,fYScale);
-        this.zhanjiButton.setPosition(cc.p(780*fXScale,pButtonY*fYScale));
+        // this.zhanjiButton.setScale(fXScale,fYScale);
+        this.zhanjiButton.setPosition(cc.p(780,pButtonY));
 
         this.zhanjiButton.setClickEvent(function(){
             cc.log("zhanjiButton ClickEvent");
             self.zhanji();
         });
-        this.zhanjiLabel=cc.LabelTTF.create("战绩", "fonts/Self.ttf",15);
+        this.zhanjiLabel=cc.LabelTTF.create("战绩", "fonts/Self.ttf",fontSize);
         //this.zhanjiLabel=cc.LabelTTF.create(gPlayerName, "Arial", 20);
         this.zhanjiLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
         this.zhanjiLabel.setAnchorPoint(0,0.5);
-        this.zhanjiLabel.setPosition(cc.pSub(cc.p(780*fXScale,pButtonY*fYScale),pButtonScale));
-        this.backgroundLayer.addChild(this.zhanjiLabel,5);
+        this.zhanjiLabel.setPosition(cc.pSub(cc.p(780,pButtonY),pButtonScale));
+        this.backgroundSprite.addChild(this.zhanjiLabel,5);
 
 
         this.paimingButton=new Button("res/btn_paihang.png");
-        this.paimingButton.setScale(fXScale,fYScale);
-        this.paimingButton.setPosition(cc.p(890*fXScale,pButtonY*fYScale));
+        // this.paimingButton.setScale(fXScale,fYScale);
+        this.paimingButton.setPosition(cc.p(890,pButtonY));
         this.paimingButton.setClickEvent(function(){
             self.rank();
         });
-        this.paimingLabel=cc.LabelTTF.create("排名", "fonts/Arial.ttf", 15);
+        this.paimingLabel=cc.LabelTTF.create("排名", "fonts/Arial.ttf", fontSize);
         //this.paimingLabel=cc.LabelTTF.create(gPlayerName, "Arial", 20);
         this.paimingLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
         this.paimingLabel.setAnchorPoint(0,0.5);
-        this.paimingLabel.setPosition(cc.pSub(cc.p(890*fXScale,pButtonY*fYScale),pButtonScale));
-        this.addChild(this.paimingLabel,5);
+        this.paimingLabel.setPosition(cc.pSub(cc.p(890,pButtonY),pButtonScale));
+        this.backgroundSprite.addChild(this.paimingLabel,5);
 
         this.helpButton=new Button("res/btn_help.png");
-        this.helpButton.setScale(fXScale,fYScale);
-        this.helpButton.setPosition(cc.p(1000*fXScale,pButtonY*fYScale));
+        // this.helpButton.setScale(fXScale,fYScale);
+        this.helpButton.setPosition(cc.p(1000,pButtonY));
         this.helpButton.setClickEvent(function(){
             //self.help();
         });
-        this.helpLabel=cc.LabelTTF.create("帮助", "fonts/Georgia.ttf", 15);
+        this.helpLabel=cc.LabelTTF.create("帮助", "fonts/Georgia.ttf", fontSize);
         //this.helpLabel=cc.LabelTTF.create(gPlayerName, "Arial", 20);
         this.helpLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
         this.helpLabel.setAnchorPoint(0,0.5);
-        this.helpLabel.setPosition(cc.pSub(cc.p(1000*fXScale,pButtonY*fYScale),pButtonScale));
-        this.backgroundLayer.addChild(this.helpLabel,5);
+        this.helpLabel.setPosition(cc.pSub(cc.p(1000,pButtonY),pButtonScale));
+        this.backgroundSprite.addChild(this.helpLabel,5);
 
         this.configButton=new Button("res/btn_control.png");
-        this.configButton.setScale(fXScale,fYScale);
-        this.configButton.setPosition(cc.p(1110*fXScale,pButtonY*fYScale));
+        // this.configButton.setScale(fXScale,fYScale);
+        this.configButton.setPosition(cc.p(1110,pButtonY));
         this.configButton.setClickEvent(function(){
             //self.config();
         });
-        this.configLabel=cc.LabelTTF.create("设置", "fonts/Arial.ttf", 15);
+        this.configLabel=cc.LabelTTF.create("设置", "fonts/Arial.ttf", fontSize);
         //this.configLabel=cc.LabelTTF.create(gPlayerName, "Arial", 20);
         this.configLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
         this.configLabel.setAnchorPoint(0,0.5);
-        this.configLabel.setPosition(cc.pSub(cc.p(1110*fXScale,pButtonY*fYScale),pButtonScale));
-        this.backgroundLayer.addChild(this.configLabel,5);
+        this.configLabel.setPosition(cc.pSub(cc.p(1110,pButtonY),pButtonScale));
+        this.backgroundSprite.addChild(this.configLabel,5);
 
         // this.paimingButton.setDisabled(true);
         // this.helpButton.setDisabled(true);
@@ -523,6 +528,7 @@ var MainMenuScene =SceneBase.extend(
             cc.loader.loadImg(url, {isCrossOrigin : false }, function(err,img){
                 if(err){
                     cc.log(err);
+                    cc.log("fail loadImg="+userInfo.headSprite); // self.addChild(logo);
                 }
                 if(img){
                     cc.log("img!=null"+img);
@@ -537,12 +543,14 @@ var MainMenuScene =SceneBase.extend(
                     // this.touxiangSprite.setScale(fXScale,fYScale);
 
                     var size = headSprite.getContentSize();
-                    headSprite.setScale(110/size.width);
+                    headSprite.setScale(110/size.width,110/size.height);
                     headSprite.setPosition(cc.p(180,500));
                     self.backgroundSprite.addChild(headSprite,2);
+
+                    cc.log("success loadImg="+userInfo.headSprite); // self.addChild(logo);
                     // self.touxiangSprite.setValue(false);
                 }
-                cc.log("loadImg"+userInfo.headSprite); // self.addChild(logo);
+
             });
 }
 

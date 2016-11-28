@@ -85,6 +85,7 @@ var RankTableViewCell = cc.TableViewCell.extend({
             cc.loader.loadImg(url, {isCrossOrigin : false }, function(err,img){
                 if(err){
                     cc.log(err);
+                    cc.log("排行：fail loadImg="+userInfo.headSprite); // self.addChild(logo);
                 }
                 if(img){
                     cc.log("img!=null"+img);
@@ -99,15 +100,15 @@ var RankTableViewCell = cc.TableViewCell.extend({
                     // this.touxiangSprite.setScale(fXScale,fYScale);
 
                     var size = headSprite.getContentSize();
-                    headSprite.setScale(66/size.width);
+                    headSprite.setScale(66/size.width,66/size.height);
                     headSprite.setPosition(cc.p(100,40));
                     self.addChild(headSprite,2);
+                    cc.log("排行：success loadImg="+userInfo.headSprite); // self.addChild(logo);
                     // self.touxiangSprite.setValue(false);
                 }
-                cc.log("loadImg"+userInfo.headSprite); // self.addChild(logo);
             });
 
-            CellnameLabel = new cc.LabelTTF( playerInfo["nickName"], "Arial", 25.0);
+            CellnameLabel = new cc.LabelTTF( playerInfo["nickName"], "Arial", 24.0);
             CellnameLabel.setAnchorPoint(0,0.5);
             CellnameLabel.setColor(WhiteColor);
             CellnameLabel.setPosition(cc.pAdd(touxiangSprite.getPosition(),cc.p(touxiangSprite.getContentSize().width/2,0)));
@@ -115,34 +116,52 @@ var RankTableViewCell = cc.TableViewCell.extend({
 
 
 
-            sumInfoLabel=cc.LabelTTF.create("总场数:", "Arial",30);
+            sumInfoLabel=cc.LabelTTF.create("总场:", "Arial",28);
             sumInfoLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
             sumInfoLabel.setAnchorPoint(0,0.5);
             sumInfoLabel.setColor(WhiteColor);
-            sumInfoLabel.setPosition(cc.p(328,40));
+            sumInfoLabel.setPosition(cc.p(330,40));
             this.addChild(sumInfoLabel,5);
 
-            winInfoLabel=cc.LabelTTF.create("胜场数:", "Arial",30);
+            winInfoLabel=cc.LabelTTF.create("胜场:", "Arial",28);
             winInfoLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
             winInfoLabel.setAnchorPoint(0,0.5);
-            winInfoLabel.setPosition(cc.p(628,40));
+            winInfoLabel.setPosition(cc.p(480,40));
             winInfoLabel.setColor(WhiteColor);
             this.addChild(winInfoLabel,5);
 
 
-            sumLabel=cc.LabelTTF.create("", "Arial",30);
+            avgGainReteInfoLabel=cc.LabelTTF.create("平均收益:","Arial",28);
+            avgGainReteInfoLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
+            avgGainReteInfoLabel.setAnchorPoint(0,0.5);
+            avgGainReteInfoLabel.setColor(WhiteColor);
+            avgGainReteInfoLabel.setPosition(cc.p(670,40));
+            this.addChild(avgGainReteInfoLabel,5);
+
+
+            sumLabel=cc.LabelTTF.create("", "Arial",28);
             sumLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
             sumLabel.setAnchorPoint(0,0.5);
             sumLabel.setColor(YellowColor);
             sumLabel.setPosition(cc.pAdd(sumInfoLabel.getPosition(),cc.p(sumInfoLabel.getContentSize().width,0)));
             this.addChild(sumLabel,5);
 
-            winLabel=cc.LabelTTF.create("", "Arial",30);
+
+            winLabel=cc.LabelTTF.create("", "Arial",28);
             winLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
             winLabel.setAnchorPoint(0,0.5);
             winLabel.setPosition(cc.pAdd(winInfoLabel.getPosition(),cc.p(winInfoLabel.getContentSize().width,0)));
             winLabel.setColor(YellowColor);
             this.addChild(winLabel,5);
+
+
+            avgGainReteLabel=cc.LabelTTF.create("","Arial",28);
+            avgGainReteLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
+            avgGainReteLabel.setAnchorPoint(0,0.5);
+            avgGainReteLabel.setColor(WhiteColor);
+            avgGainReteLabel.setPosition(cc.pAdd(avgGainReteInfoLabel.getPosition(),cc.p(avgGainReteInfoLabel.getContentSize().width,0)));
+            this.addChild(avgGainReteLabel,5);
+
 
             switch (userInfo.recordMode)
             {
@@ -153,6 +172,9 @@ var RankTableViewCell = cc.TableViewCell.extend({
                     sumLabel.setString(" "+playerInfo["sumOfMatchForOne"]);
                     //胜场数
                     winLabel.setString(" "+playerInfo["winOfMatchForOne"]);
+                    //平均收益率
+                    avgGainReteLabel.setString(""+playerInfo["gainCumulation"]+"%");
+                    avgGainReteLabel.setColor(chooseColor(playerInfo["gainCumulation"]));
                     break;
                 }
                 case 1:
@@ -167,6 +189,9 @@ var RankTableViewCell = cc.TableViewCell.extend({
                     sumLabel.setString(" "+playerInfo["sumOfMatchForAI"]);
                     //胜场数
                     winLabel.setString(" "+playerInfo["winOfMatchForAI"]);
+                    //平均收益率
+                    avgGainReteLabel.setString(""+playerInfo["gainCumulation"]+"%");
+                    avgGainReteLabel.setColor(chooseColor(playerInfo["gainCumulation"]));
                     break;
                 }
                 case 3:
@@ -304,7 +329,7 @@ var RankViewLayer = cc.Layer.extend({
 
         var infoPosY = 295;
 
-        self.text0Label = new cc.LabelTTF( "我的排名:", "Arial",30);
+        self.text0Label = new cc.LabelTTF( "我的排名:", "Arial",28);
         self.text0Label.setPosition(cc.p(-100,infoPosY));
         self.text0Label.setAnchorPoint(0,0.5);
         self.text0Label.setColor(WhiteColor);
@@ -331,41 +356,54 @@ var RankViewLayer = cc.Layer.extend({
 
 
 
-        self.infoLabel=cc.LabelTTF.create("总场数:", "Arial",30);
+        self.infoLabel=cc.LabelTTF.create("总场:", "Arial",28);
         self.infoLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
         self.infoLabel.setAnchorPoint(0,0.5);
-        self.infoLabel.setPosition(cc.p(200,infoPosY));
+        self.infoLabel.setPosition(cc.p(180,infoPosY));
         self.addChild(self.infoLabel,5);
 
-        self.winOneLabel= cc.LabelTTF.create("", "Arial",30);
+        self.winOneLabel= cc.LabelTTF.create("", "Arial",28);
         self.winOneLabel.setAnchorPoint(0,0.5);
         self.winOneLabel.setColor(YellowColor);
         self.winOneLabel.setPosition(cc.pAdd(self.infoLabel.getPosition(),cc.p(self.infoLabel.getContentSize().width,0)));
         this.addChild(self.winOneLabel,5);
-        self.sumOneLabel= cc.LabelTTF.create("", "Arial",30);
+        self.sumOneLabel= cc.LabelTTF.create("", "Arial",28);
         self.sumOneLabel.setAnchorPoint(0,0.5);
         self.sumOneLabel.setColor(WhiteColor);
         self.sumOneLabel.setPosition(cc.pAdd(self.winOneLabel.getPosition(),cc.p(self.winOneLabel.getContentSize().width,0)));
         this.addChild(self.sumOneLabel,5);
 
-        self.infoLabelAI=cc.LabelTTF.create("胜场数:", "Arial",30);
+        self.infoLabelAI=cc.LabelTTF.create("胜场:", "Arial",28);
         // self.infoLabelAI.setScale(0.8);
         //this.zhanjiLabel=cc.LabelTTF.create(gPlayerName, "Arial", 20);
         self.infoLabelAI.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
         self.infoLabelAI.setAnchorPoint(0,0.5);
-        self.infoLabelAI.setPosition(cc.p(500,infoPosY));
+        self.infoLabelAI.setPosition(cc.p(350,infoPosY));
         self.addChild(self.infoLabelAI,5);
 
-        self.winAILabel= cc.LabelTTF.create("", "Arial",30);
+        self.winAILabel= cc.LabelTTF.create("", "Arial",28);
         self.winAILabel.setAnchorPoint(0,0.5);
         self.winAILabel.setColor(YellowColor);
         self.winAILabel.setPosition(cc.pAdd(self.infoLabelAI.getPosition(),cc.p(self.infoLabelAI.getContentSize().width,0)));
         this.addChild(self.winAILabel,5);
-        self.sumAILabel= cc.LabelTTF.create("", "Arial",30);
+        self.sumAILabel= cc.LabelTTF.create("", "Arial",28);
         self.sumAILabel.setAnchorPoint(0,0.5);
         self.sumAILabel.setColor(WhiteColor);
         self.sumAILabel.setPosition(cc.pAdd(self.winAILabel.getPosition(),cc.p(self.winAILabel.getContentSize().width,0)));
         this.addChild(self.sumAILabel,5);
+
+        self.infoLabelGain=cc.LabelTTF.create("平均收益:", "Arial",28);
+        self.infoLabelGain.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
+        self.infoLabelGain.setAnchorPoint(0,0.5);
+        self.infoLabelGain.setPosition(cc.p(520,infoPosY));
+        self.addChild(self.infoLabelGain,5);
+
+        self.avgGainAILabel= cc.LabelTTF.create("", "Arial",30);
+        self.avgGainAILabel.setAnchorPoint(0,0.5);
+        self.avgGainAILabel.setColor(WhiteColor);
+        self.avgGainAILabel.setPosition(cc.pAdd(self.infoLabelGain.getPosition(),cc.p(self.infoLabelGain.getContentSize().width,0)));
+        this.addChild(self.avgGainAILabel,5);
+
 
 
 
@@ -608,6 +646,9 @@ var RankViewLayer = cc.Layer.extend({
                     self.winOneLabel.setString(" "+playerInfo["sumOfMatchForOne"]);
                     //胜场数
                     self.winAILabel.setString(" "+playerInfo["winOfMatchForOne"]);
+                    //
+                    self.avgGainAILabel.setString(""+playerInfo["gainCumulation"]+"%");
+                    self.avgGainAILabel.setColor(chooseColor(playerInfo["gainCumulation"]));
                     break;
                 }
                 case 1:
@@ -624,6 +665,9 @@ var RankViewLayer = cc.Layer.extend({
                     self.winOneLabel.setString(" "+playerInfo["sumOfMatchForAI"]);
                     //胜场数
                     self.winAILabel.setString(" "+playerInfo["winOfMatchForAI"]);
+                    //
+                    self.avgGainAILabel.setString(""+playerInfo["gainCumulation"]+"%");
+                    self.avgGainAILabel.setColor(chooseColor(playerInfo["gainCumulation"]));
                     break;
                 }
                 case 3:
@@ -640,5 +684,15 @@ var RankViewLayer = cc.Layer.extend({
 
     }
 });
+var chooseColor = function(gain){
+    if(gain>0){
+        return RedColor;
+    }else if(gain == 0){
+        return WhiteColor;
+    }else {
+        return GreenColor;
+    }
+
+}
 
 
