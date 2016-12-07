@@ -112,10 +112,10 @@ SocketConn.prototype.Login=function(username,password,source)
 	ws.send(loginMsg);
 }
 
-SocketConn.prototype.QuickLogin=function()
+SocketConn.prototype.QuickLogin=function(source)
 {
-	var quickLoginMsg="A||";
-	if(SocketConnLogFlag!=false)
+	var quickLoginMsg="A|"+source+"|";
+	// if(SocketConnLogFlag!=false)
 	cc.log("send QuickLogin msg="+quickLoginMsg);
 	ws.send(quickLoginMsg);
 }
@@ -129,8 +129,7 @@ SocketConn.prototype.SendBeginMessage=function()
 
 SocketConn.prototype.SendRecordMessage=function(matchId,userId)//查看对战记录
 {
-    var recordMsg = "O|"+matchId+"#"+userId+"|";
-	if(SocketConnLogFlag!=false)
+    var recordMsg = "O|"+matchId+"#"+userId+"#"+userInfo.userId+"|";
     cc.log("send Recordmsg=="+recordMsg);
     ws.send(recordMsg);
 }
@@ -138,9 +137,8 @@ SocketConn.prototype.SendRecordMessage=function(matchId,userId)//查看对战记
 
 SocketConn.prototype.SendRecordMatchMessage=function(matchId,userId)//查看比赛的对战记录
 {
-	var recordMsg = "Y|"+matchId+"#"+userId+"|";
-	if(SocketConnLogFlag!=false)
-		cc.log("send SendRecordMatchMessage=="+recordMsg);
+	var recordMsg = "Y|"+matchId+"#"+userId+"#"+userInfo.userId+"|";
+	cc.log("send SendRecordMatchMessage=="+recordMsg);
 	ws.send(recordMsg);
 }
 
@@ -153,6 +151,10 @@ SocketConn.prototype.BeginMatch=function(mode)
 
 SocketConn.prototype.Buy=function(index)
 {
+	if(userInfo.buttonSoundFlag==true)
+	{
+		cc.audioEngine.playEffect("res/sound/button.mp3",false);
+	}
 	var buyMsg = "6|"+index+"|";
 	if(SocketConnLogFlag!=false)
 	cc.log("send Buymsg=="+buyMsg);
@@ -161,6 +163,10 @@ SocketConn.prototype.Buy=function(index)
 
 SocketConn.prototype.Sell=function(index)
 {
+	if(userInfo.buttonSoundFlag==true)
+	{
+		cc.audioEngine.playEffect("res/sound/button.mp3",false);
+	}
 	var sellMsg = "7|"+index+"|";
 	if(SocketConnLogFlag!=false)
 	cc.log("send Sellmsg=="+sellMsg);
@@ -211,7 +217,7 @@ SocketConn.prototype.ShareMessage=function(userId,matchId)
 SocketConn.prototype.SendEHMessage=function(userId,matchId)//进入大厅的请求
 {
     var ehMsg="P|"+userId+"#"+matchId+"|";
-	if(SocketConnLogFlag!=false)
+	// if(SocketConnLogFlag!=false)
     cc.log("send H msg="+ehMsg);
     ws.send(ehMsg);
 }
@@ -233,13 +239,7 @@ SocketConn.prototype.SendRankMessage=function(matchType,userId)//查看比赛的
 	ws.send(recordMsg);
 }
 
-SocketConn.prototype.SendRecordMessage=function(userId,matchId)//观看对战记录的请求
-{
-	var ehMsg="O|"+userId+"#"+matchId+"|";
-	if(SocketConnLogFlag!=false)
-	cc.log("send Z msg="+ehMsg);
-	ws.send(ehMsg);
-}
+
 /*SocketConn.prototype.ShareMessage=function(shareMsg)
 {
 	var shareMsg="G|"+shareMsg+"|";

@@ -49,7 +49,7 @@ var PlayerInfoLayer= cc.Layer.extend({
 		this.playerInfoArea.height=this.height;
 		this.addChild(this.playerInfoArea, 1);
 
-		this.selfNameLabel=cc.LabelTTF.create(userInfo.nickName, "Arial", 20);
+		this.selfNameLabel=cc.LabelTTF.create(cutstr(userInfo.nickName,12), "Arial", 20);
         this.selfNameLabel.setScale(this.fXScale,this.fYScale);
 		//this.selfNameLabel=cc.LabelTTF.create(gPlayerName, "Arial", 20);
 		this.selfNameLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
@@ -77,39 +77,37 @@ var PlayerInfoLayer= cc.Layer.extend({
 	{
         //.setScale(this.fXScale,this.fYScale);
 
+		var InfoposX = 60;
+		var InfoposY1 = 100;
+		var InfoposY2 = 20;
 
-
+		var fontSize = 25;
+		var size = cc.size(90,90);
 		if(userInfo.matchMode==null)return;
 		switch(userInfo.matchMode)
 		{
 			case 0:
 			{
+				cc.log("PlayerInfoLayer setPlayerInfo:function()=0" );
 				this.avatarSprite.setVisible(true);
 				break;
 			}
 			case 1:
 			{
-				break;
-			}
-			case 2:
-			{
-
-				var InfoposX = 60;
-				var InfoposY1 = 100;
-				var InfoposY2 = 20;
-				// this.avatarSprite.setVisible(false);
-                for(var i=0;i<2;i++)
-                {
-                    if(this.playerInfo_bg[i] ==null)
-                    {
-                        this.playerInfo_bg[i]=cc.Sprite.create("res/playerInfo_bg.png");
-                        this.playerInfo_bg[i].setPosition(60*this.fXScale,(500-252*i)*this.fYScale);
-                        this.playerInfo_bg[i].setScale(this.fXScale,this.fYScale);
-                        this.playerNameLabel[i] = cc.LabelTTF.create(userInfo.nickName, "Arial", 20);
-                        this.playerScoreLabel[i] = cc.LabelTTF.create("0.00%", "Arial", 24);
+				cc.log("PlayerInfoLayer setPlayerInfo:function()=1" );
+				for(var i=0;i<2;i++)
+				{
+					if(this.playerInfo_bg[i] ==null)
+					{
+						this.playerInfo_bg[i]=cc.Sprite.create("res/playerInfo_bg.png");
+						this.playerInfo_bg[i].setPosition(60*this.fXScale,(500-252*i)*this.fYScale);
+						this.playerInfo_bg[i].setScale(this.fXScale,this.fYScale);
+						this.playerNameLabel[i] = cc.LabelTTF.create(cutstr(userInfo.nickName,12), "Arial", fontSize);
+						// this.playerNameLabel[i] =cc.LabelTTF.create(userInfo.nickName, "Arial", fontSize,cc.size(80,80));
+						this.playerScoreLabel[i] = cc.LabelTTF.create("0.00%", "Arial", 24);
 						this.playerInfo_btn[i] = new Button("res/less_bg.png");
 						// var size = this.playerInfo_btn[i].getContentSize();
-						var size = cc.size(80,80);
+
 						this.playerInfo_btn[i].setContentSize(size);
 						// this.playerInfo_btn[i].setScale(40/size.width,40/size.height);
 						this.playerInfo_btn[i].setPosition(InfoposX,190);
@@ -138,14 +136,78 @@ var PlayerInfoLayer= cc.Layer.extend({
 						}
 						this.playerInfo_btn[i].setVisible(false);
 
-						this.playerHead_Sprite[i] = cc.Sprite.create("res/touxiangAI.png");
-						this.playerHead_Sprite[i].setScale(0.8);
+						this.playerHead_Sprite[i] = cc.Sprite.create("res/touxiang.png");
+						this.playerHead_Sprite[i].setContentSize(size);
+						this.playerHead_Sprite[i].setAnchorPoint(0,0);
 						this.playerHead_Sprite[i].setPosition(InfoposX,190);
 
-                        this.playerNameLabel[i].setPosition(InfoposX,InfoposY1);
-                        this.playerScoreLabel[i].setPosition(InfoposX,InfoposY2);
+						this.playerNameLabel[i].setPosition(0,InfoposY1);
+						this.playerScoreLabel[i].setPosition(InfoposX,InfoposY2);
 						this.playerInfo_bg[i].addChild(this.playerInfo_btn[i]);
 						this.playerInfo_bg[i].addChild(this.playerHead_Sprite[i]);
+						this.playerInfo_bg[i].addChild(this.playerNameLabel[i]);
+						this.playerInfo_bg[i].addChild(this.playerScoreLabel[i]);
+						this.addChild(this.playerInfo_bg[i],5);
+
+					}
+				}
+				break;
+			}
+			case 2:
+			{
+				cc.log("PlayerInfoLayer setPlayerInfo:function()=2" );// this.avatarSprite.setVisible(false);
+                for(var i=0;i<2;i++)
+                {
+                    if(this.playerInfo_bg[i] ==null)
+                    {
+                        this.playerInfo_bg[i]=cc.Sprite.create("res/playerInfo_bg.png");
+                        this.playerInfo_bg[i].setPosition(60*this.fXScale,(500-252*i)*this.fYScale);
+                        this.playerInfo_bg[i].setScale(this.fXScale,this.fYScale);
+                        this.playerNameLabel[i] = cc.LabelTTF.create(userInfo.nickName, "Arial", fontSize,cc.size(100,100));
+						this.playerNameLabel[i].setAnchorPoint(0,1);
+                        this.playerScoreLabel[i] = cc.LabelTTF.create("0.00%", "Arial", 24);
+						this.playerInfo_btn[i] = new Button("res/less_bg.png");
+						// var size = this.playerInfo_btn[i].getContentSize();
+						this.playerInfo_btn[i].setContentSize(size);
+						// this.playerInfo_btn[i].setScale(40/size.width,40/size.height);
+						this.playerInfo_btn[i].setPosition(InfoposX,190);
+						if (i==0)
+						{
+							this.playerInfo_btn[i].setClickEvent(function (){
+								cc.log("playerInfo_btn0 ClickEvent ");
+								var matchId = userInfo.matchId;
+								var userId = userInfo.playerListData[0]["userName"];
+								cc.log("playerInfo_btn0 ClickEvent userId[0] ="+userId+"||matchId="+userInfo.matchId);
+								gSocketConn.SendRecordMatchMessage(userId,matchId);
+							});
+
+						}
+						else
+						{
+							this.playerInfo_btn[i].setClickEvent(function () {
+								cc.log("playerInfo_btn1 ClickEvent ");
+
+								var matchId = userInfo.matchId;
+								var userId = userInfo.playerListData[1]["userName"];
+								cc.log("playerInfo_btn0 ClickEvent userId[1] =" + userId + "||matchId=" + userInfo.matchId);
+								gSocketConn.SendRecordMatchMessage(userId, matchId);
+							});
+							// this.playerInfo_bg[i].addChild(this.playerInfo_btn1);
+						}
+						this.playerInfo_btn[i].setVisible(false);
+
+						this.playerHead_Sprite[i] = cc.Sprite.create("res/touxiang.png");
+						this.playerHead_Sprite[i].setContentSize(size);
+						this.playerHead_Sprite[i].setAnchorPoint(0,0);
+						this.playerHead_Sprite[i].setPosition(10,140);
+						this.playerHead_Sprite[i].setVisible(false);
+
+						this.playerInfo_bg[i].addChild(this.playerHead_Sprite[i]);
+
+                        this.playerNameLabel[i].setPosition(10,InfoposY1);
+                        this.playerScoreLabel[i].setPosition(InfoposX,InfoposY2);
+						this.playerInfo_bg[i].addChild(this.playerInfo_btn[i]);
+
                         this.playerInfo_bg[i].addChild(this.playerNameLabel[i]);
                         this.playerInfo_bg[i].addChild(this.playerScoreLabel[i]);
                         this.addChild(this.playerInfo_bg[i],5);
@@ -208,15 +270,9 @@ var PlayerInfoLayer= cc.Layer.extend({
 	refreshScoresByData:function()//从服务器得到数据设置收益率
 	{
 
-		// if(this.selfNameLabel!=null&& userInfo.nickName!=null)
-		// {
-		// 	this.selfNameLabel.setString(userInfo.nickName);
-		// 	// this.selfScoreLabel.setPosition(cc.pAdd(this.selfNameLabel.getPosition(),cc.p(this.selfNameLabel.getContentSize().width+10,0)));
-		// }
-
 		var self = this;
 
-		this.selfNameLabel.setString(userInfo.nickName);
+		this.selfNameLabel.setString(cutstr(userInfo.nickName,12));
 		if(this.headSprite==null){
 			this.headSprite=cc.Sprite.create("res/touxiang.png");
 			this.headSprite.setPosition(120*this.fXScale,this.height-20);
@@ -278,7 +334,7 @@ var PlayerInfoLayer= cc.Layer.extend({
 							// this.touxiangSprite.setScale(fXScale,fYScale);
 
 							var size = headSprite.getContentSize();
-							headSprite.setScale(88/size.width,88/size.height);
+							headSprite.setScale(90/size.width,90/size.height);
 							headSprite.setPosition(cc.p(60,190));
 							self.playerInfo_bg[0].addChild(headSprite,2);
 						}
@@ -305,7 +361,7 @@ var PlayerInfoLayer= cc.Layer.extend({
 							// this.touxiangSprite.setScale(fXScale,fYScale);
 
 							var size = headSprite.getContentSize();
-							headSprite.setScale(88/size.width,88/size.height);
+							headSprite.setScale(90/size.width,90/size.height);
 							headSprite.setPosition(cc.p(60,190));
 							self.playerInfo_bg[1].addChild(headSprite,2);
 						}
@@ -318,20 +374,13 @@ var PlayerInfoLayer= cc.Layer.extend({
                 {
                     var score=parseFloat(userInfo.playerListData[i]["score"]);
 
-                    this.playerNameLabel[i].setString(userInfo.playerListData[i]["userName"]);
+                    this.playerNameLabel[i].setString(cutstr(userInfo.playerListData[i]["userName"],12));
                     this.playerScoreLabel[i].setString(score.toFixed(2)+"%");
-                    if(score>0)
-                    {
-                        this.playerScoreLabel[i].setColor(upColor);
-                    }
-                    else if(score<0)
-                    {
-                        this.playerScoreLabel[i].setColor(downColor);
-                    }
-                    else
-                    {
-                        this.playerScoreLabel[i].setColor(cc.color(255,255,255,0));
-                    }
+					this.playerScoreLabel[i].setColor(setLabelColor(score));
+
+					var selectflag =userInfo.playerListData[i]["userName"]==userInfo.nickName?true:false;
+					// this.playerHead_Sprite[i].setVisible();
+					this.playerHead_Sprite[i].setVisible(selectflag);
                 }
 
             }

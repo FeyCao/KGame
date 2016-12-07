@@ -63,7 +63,17 @@ var MatchEndInfoLayer= cc.Layer.extend({
 
 			this.bgSprtie = cc.Sprite.create("res/matchMoreEnd.png");
 			bgSize = this.bgSprtie.getContentSize();
-			this.decInfoLabel=cc.LabelTTF.create(" 排名                 玩家                     本局收益", "Arial", 30);
+
+			//设置用户名
+			text1Label = new cc.LabelTTF(" 玩家 ", "Arial", 32.0);
+			text1Label.setPosition(cc.p(210,bgSize.height-120));
+
+			//设置收益
+			text2Label = new cc.LabelTTF("本局收益", "Arial", 32.0);
+			text2Label.setPosition(cc.p(bgSize.width / 2+10,bgSize.height-120));
+			// text2Label.setAnchorPoint(0,0.5);
+
+			this.decInfoLabel=cc.LabelTTF.create("排名", "Arial", 30);
 			//this.stockInfoLabel.setColor(cc.color(40,184,245,255));
 			this.decInfoLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
 			this.decInfoLabel.setColor(WhiteColor);
@@ -71,9 +81,12 @@ var MatchEndInfoLayer= cc.Layer.extend({
 			this.decInfoLabel.setPosition(15, bgSize.height-120);
 			this.stockInfoLabel.setPosition(bgSize.width / 2, bgSize.height-55);
 
-			posBtnY = 70;
+			this.bgSprtie.addChild(text1Label,2);
+			this.bgSprtie.addChild(text2Label,2);
 			this.bgSprtie.addChild(this.stockInfoLabel,2);
 			this.bgSprtie.addChild(this.decInfoLabel,2);
+			posBtnY = 70;
+
 			if(this.tableView==null)
 			this.tableView = new cc.TableView(this, cc.size(1000, 360));
 
@@ -267,11 +280,6 @@ var MatchEndInfoLayer= cc.Layer.extend({
 		{
 			case 0:
 			{
-			// 	if(this.tableView!=null)
-			// 	{
-			// 		// this.tableView.reloadData();
-			// 		this.tableView.setVisible(false);
-			// 	}
 				var fields=content.split("#");
 				var len=fields.length;
 				this.stockInfoLabel.setString(fields[len-3]+" ("+fields[len-2]+" - "+fields[len-1]+")");
@@ -293,8 +301,46 @@ var MatchEndInfoLayer= cc.Layer.extend({
 			}
 			case 1:
 			{
-				this.KlineWidth = 700;
-				this.KlinePosX = 60;
+				cc.log("MatchEndInfoLayer to parse json text");
+				// {"codeInfo":"600970(上证)#2006-07-27#2007-01-23","endInfoOfAllPlayers":[{"nickName":"开心的钱多多","ranking":2,"matchId":6231,"score":-34.99,"level":0,"exp":0},{"nickName":"唐齐安通道","ranking":1,"matchId":6231,"score":-1.76,"level":0,"exp":0}]}
+				var ratio=parseFloat(0);
+				var data=JSON.parse(content);
+				this.stockInfoLabel.setString(data["codeInfo"]);
+				var endInfoData = data["endInfoOfAllPlayers"];
+				var endInfoList = new Array()
+				// userInfo.endInfoOfAllPlayers=;
+				for(var i=0;endInfoData!=null&&i<endInfoData.length;i++)
+				{
+					cc.log("showPlayerInfo playerData.userName="+endInfoData[i]["nickName"]);
+					if(userInfo.nickName==endInfoData[i]["nickName"])ratio=endInfoData[i]["score"];
+					endInfoList.push(endInfoData[i]);
+				}
+				//按排名排序
+
+				for(var i=0;i<endInfoList.length;i++)
+				{
+					for(var j=i;j<endInfoList.length-i-1;j++)
+					{
+						if(endInfoList[j]["ranking"]>endInfoList[j+1]["ranking"])
+						{
+							var temp = endInfoList[j];
+							endInfoList[j] =endInfoList[j+1];
+							endInfoList[j+1] =temp;
+						}
+					}
+
+				}
+				if(userInfo.endInfoOfAllPlayers!=null)
+				{
+					userInfo.endInfoOfAllPlayers=[];
+				}
+				userInfo.endInfoOfAllPlayers = endInfoList;
+
+				if(this.tableView!=null)
+				{
+					this.tableView.reloadData();
+					// this.tableView.setVisible(true);
+				}
 				break;
 			}
 			case 2:
@@ -473,9 +519,9 @@ var PlayerInfoCell = cc.TableViewCell.extend({
 			sprite.addChild(rankLabel);
 			//设置用户名
 			strNameText= userInfo.endInfoOfAllPlayers[idx]["nickName"];
-			textNameLabel = new cc.LabelTTF(strNameText, "Arial", 25.0);
+			textNameLabel = new cc.LabelTTF(cutstr(strNameText,12), "Arial", 25.0);
 			textNameLabel.setPosition(cc.p(200,40));
-			textNameLabel.setAnchorPoint(0,0.5);
+			// textNameLabel.setAnchorPoint(0,0.5);
 			sprite.addChild(textNameLabel);
 
 			//strText= "名字:"+userInfo.MatchListData[idx]["uid"]+"  收益:"+userInfo.MatchListData[idx]["score"]+"  "+userInfo.MatchListData[idx]["matchTime"];
@@ -513,14 +559,8 @@ var PlayerInfoCell = cc.TableViewCell.extend({
 				// gSocketConn.SendRecordMatchMessage(userId,matchId);
 				// cc.log("PlayerInfoCell ClickEvent userId["+idx+"] ="+userId+"||matchId="+matchId+"||recordButton="+recordButton.__instanceId);
 				// // cc.director.runScene(klineSceneNext);
-				var klineSceneNext=new KLineScene();
-				klineSceneNext.onEnteredFunction=function(){
-
-				};
-				// userInfo.matchMode=userInfo.recordMode;
 				userInfo.matchId = matchId;
-				gSocketConn.SendRecordMessage(userId,matchId);
-				cc.director.runScene(klineSceneNext);
+				gSocketConn.SendRecordMatchMessage(userId,matchId);
 
 			});
 		}

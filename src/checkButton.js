@@ -112,6 +112,7 @@ CheckButton=cc.Sprite.extend({
 	{
 		// this.isSelected=isChecked;
 		this.setTextureByStatus(isChecked);
+
 		if(this.clickevent!=null)
 		{
 			this.clickevent();
@@ -136,7 +137,7 @@ CheckButton=cc.Sprite.extend({
 			this.setTexture(this.textureNameUnselected);
 		}
 	},
-	
+
 	///当按钮按下去的时候，缩小
 	shrink:function()
 	{

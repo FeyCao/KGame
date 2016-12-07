@@ -3,6 +3,7 @@ SceneBase = cc.Scene.extend(
 {
 	lowerLayer:null,		//替代原来Scene的AddChild函数的Layer，所有调用该scene的addchild函数，都添加内容添加到该layer
 	messageBoxLayer:null,
+	errorLayer:null,
 	
 	otherMessageTipLayer:null,
 	
@@ -10,7 +11,10 @@ SceneBase = cc.Scene.extend(
 	messageBoxSprite:null,
 	messageLabel:null,
 	messageLabelShadow:null,
-	
+
+	errorLabel:null,
+	errorLabelShadow:null,
+
 	closeCallback:null,
 	
 	sceneEnterTime:null,	//进入这个Scene的时间
@@ -33,33 +37,84 @@ SceneBase = cc.Scene.extend(
 		
 		var self=this;
 		var size = cc.director.getWinSize();
+		var fXScale = size.width/1280;
+		var fYScale = size.height/720;
+
 		this.messageBoxLayer=new cc.LayerColor(cc.color(0,0,0,127),size.width,size.height);
 		
 		this.lowerLayer=new cc.Layer();
 		
 		this.otherMessageTipLayer=new cc.Layer();
 		
-		this.messageBoxSprite=cc.Sprite.create("res/messagebox.png");
+		this.messageBoxSprite=cc.Sprite.create("res/bg_message.png");
+		// this.messageBoxSprite=cc.Sprite.create("res/messagebox.png");
 		this.messageBoxSprite.setPosition(size.width / 2, size.height / 2);
-		this.messageBoxSprite.setScale(1.0);
+		this.messageBoxSprite.setScale(fXScale,fYScale);
 		this.messageBoxLayer.addChild(this.messageBoxSprite,2);
-		
-		this.confirmBtn=new Button("res/messageboxbutton.png");
-		this.confirmBtn.setPosition(size.width / 2,150);
-		this.confirmBtn.setClickEvent(function(){
-			self.closeMessageBox();
+
+		var bgSize = this.messageBoxSprite.getContentSize();
+
+
+		closeBtn=new Button("res/close.png");
+		closeBtn.setPosition(cc.p(bgSize.width-40,bgSize.height-40));
+		closeBtn.setClickEvent(function(){
+			if(null!=self.messageBoxLayer&&self.messageBoxLayer.isVisible()==true){
+				self.closeMessageBox();
+			}
 		});
-		this.messageBoxLayer.addChild(this.confirmBtn,3);
-		
+		this.messageBoxSprite.addChild(closeBtn,3);
+		loginBtn=new Button("res/btn_login.png");
+		loginBtn.setPosition(cc.p(bgSize.width/2,150));
+		loginBtn.setClickEvent(function(){
+
+			if(null!=self.messageBoxLayer&&self.messageBoxLayer.isVisible()==true){
+				self.closeMessageBox();
+				self.login();
+			}
+
+		});
+		this.messageBoxSprite.addChild(loginBtn,3);
+
 		this.messageLabelShadow=new cc.LabelTTF("登录失败", "黑体", 20);
 		this.messageLabelShadow.setColor(cc.color(0, 0, 0,100));
 		this.messageLabelShadow.setPosition(size.width / 2+2,220-2);
 		this.messageBoxLayer.addChild(this.messageLabelShadow,2);
-		
+
 		this.messageLabel=new cc.LabelTTF("登录失败", "黑体", 20);
 		this.messageLabel.setPosition(size.width / 2,220);
 		this.messageBoxLayer.addChild(this.messageLabel,3);
-		
+
+
+		this.errorLayer=new cc.LayerColor(cc.color(0,0,0,127),size.width,size.height);
+		errorSprite=cc.Sprite.create("res/bg_message.png");
+		// this.messageBoxSprite=cc.Sprite.create("res/messagebox.png");
+		errorSprite.setPosition(size.width / 2, size.height / 2);
+		errorSprite.setScale(fXScale,fYScale);
+		this.errorLayer.addChild(errorSprite,2);
+		// errorBtn=new Button("res/close.png");
+		// errorBtn.setPosition(cc.p(bgSize.width-40,bgSize.height-40));
+		// errorBtn.setClickEvent(function(){
+		// 	self.closeErrorBox();
+		// });
+		this.confirmBtn=new Button("res/messageboxbutton.png");
+		this.confirmBtn.setPosition(bgSize.width/2,150);
+		this.confirmBtn.setClickEvent(function(){
+			if(null!=self.errorLayer&&self.errorLayer.isVisible()==true){
+				self.closeErrorBox();
+			}
+		});
+		errorSprite.addChild(this.confirmBtn,3);
+		this.errorLabelShadow=new cc.LabelTTF("登录失败", "黑体", 30);
+		this.errorLabelShadow.setColor(cc.color(0, 0, 0,100));
+		this.errorLabelShadow.setPosition(bgSize.width/2+2,bgSize.height/2-2);
+		errorSprite.addChild(this.errorLabelShadow,2);
+
+		this.errorLabel=new cc.LabelTTF("登录失败", "黑体", 30);
+		this.errorLabel.setPosition(bgSize.width/2,bgSize.height/2);
+		errorSprite.addChild(this.errorLabel,3);
+
+
+
 		this.progressLayer=new ProgressLayer(70,70);
 		this.progressLayer.setPosition(size.width / 2-this.progressLayer.width/2, size.height / 2-this.progressLayer.height/2);
 		this.progressLayer.setVisible(false);
@@ -67,9 +122,11 @@ SceneBase = cc.Scene.extend(
 		this.addChildEx(this.lowerLayer, 1);
 		this.addChildEx(this.otherMessageTipLayer,5);
 		this.addChildEx(this.messageBoxLayer, 10);
+		this.addChildEx(this.errorLayer, 10);
 		this.addChildEx(this.progressLayer, 9);
 	
 		this.messageBoxLayer.setVisible(false);
+		this.errorLayer.setVisible(false);
 		cc.log("SceneBase onEnter begin");
 	},
 
@@ -97,10 +154,11 @@ SceneBase = cc.Scene.extend(
 	{
 		this.messageBoxLayer.setVisible(false);
 		this.resumeLowerLayer();
-		if(this.closeCallback!=null)
-		{
-			this.closeCallback();
-		}
+		// if(this.closeCallback!=null)
+		// {
+		// 	this.closeCallback();
+		// }
+		cc.log("closeMessageBox sceneBase");
 	},
 	
 	showMessageBox:function(msg,closeCallback)
@@ -113,7 +171,29 @@ SceneBase = cc.Scene.extend(
 		this.pauseLowerLayer();
 		//alert(msg);
 	},
-	
+
+	closeErrorBox:function()
+	{
+		this.errorLayer.setVisible(false);
+		this.resumeLowerLayer();
+		// if(this.closeCallback!=null)
+		// {
+		// 	this.closeCallback();
+		// }
+		cc.log("closeErrorBox sceneBase");
+	},
+
+	showErrorBox:function(msg,closeCallback)
+	{
+		this.closeCallback=closeCallback;
+		this.errorLabel.setString(msg);
+		this.errorLabelShadow.setString(msg);
+
+		this.errorLayer.setVisible(true);
+		this.pauseLowerLayer();
+		//alert(msg);
+	},
+
 	pauseLowerLayer:function()
 	{
 		if(this.isLowerLayerPaused==false)
@@ -166,4 +246,18 @@ SceneBase = cc.Scene.extend(
 	removeChild: function (child, cleanup) {
         this.lowerLayer.removeChild(child, cleanup);
     },
+	login:function() {
+
+		cc.log("login sceneBase");
+		var sys = cc.sys;
+
+		if(sys.os === sys.OS_IOS || sys.os === sys.OS_OSX){
+			var url = "https://itunes.apple.com/cn/app/zhang-kong-quan-qiu/id804429363?ls=1&mt=8";
+			// cc.log(url);
+		}else{
+			var url = "http://zhushou.360.cn/detail/index/soft_id/3004951?recrefer=SE_D_%E4%B8%9C%E8%88%AA%E9%87%91%E8%9E%8D";
+			// cc.view.enableRetina(true);
+		}
+		window.open(url);
+	}
 });

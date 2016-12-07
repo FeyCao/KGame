@@ -22,15 +22,18 @@ LoginManager.prototype.Login=function(username,password,source,messageCallBackFu
 	this.messageCallBackFunction=messageCallBackFunction;
 	this.connectErrorCallBackFunction=connectErrorCallBackFunction;
 	this.operationType=1;
+	userInfo.operationType=1;
 	this.ConnectServer();
 }
 
 //快速登录，新用户直接注册随机帐号，然后登录
-LoginManager.prototype.QuickLogin=function(messageCallBackFunction,connectErrorCallBackFunction)
+LoginManager.prototype.QuickLogin=function(source,messageCallBackFunction,connectErrorCallBackFunction)
 {
+	this.source=source;
 	this.messageCallBackFunction=messageCallBackFunction;
 	this.connectErrorCallBackFunction=connectErrorCallBackFunction;
 	this.operationType=2;
+	userInfo.operationType=2;
 	this.ConnectServer();
 }
 
@@ -90,7 +93,7 @@ LoginManager.prototype.LoginOrQuickLogin=function()
 		else if(this.operationType==2)
 		{
 			//注册并登录
-			gSocketConn.QuickLogin();
+			gSocketConn.QuickLogin(self.source);
 		}
 	}
 }

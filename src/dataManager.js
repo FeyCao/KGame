@@ -11,6 +11,13 @@ var Singleton = (function () {
             },
             publicProperty: 'test'
         };
+
+        return {
+            otherMethod: function () {
+                cc.log('other world');
+            },
+            otherProperty: 'other'
+        };
     }
 
     return {
@@ -60,6 +67,7 @@ var userInfo ={
     userId:null,//
     deviceId:null,//设备号
     source:null,
+    operationType:0,//1为登录，2为快速登录
 
     //
     nickName:"塞外小王子",
@@ -94,6 +102,10 @@ var userInfo ={
     endInfoOfAllPlayers:null,//对战结束后玩家信息
     myRanking:null,//我的排名信息
     rankList:null,//排名列表信息
+
+    bgSoundFlag:true,
+    buttonSoundFlag:true,
+    viewFlag:true,
 
 
 }

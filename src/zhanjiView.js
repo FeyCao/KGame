@@ -10,6 +10,7 @@ var ZhanjiTableViewCell = cc.TableViewCell.extend({
 
     onEnter:function () {
         this._super();
+        this.spriteBg=null;
         cc.log("ZhanjiTableViewCell onEnter end");
     },
     onExit:function () {
@@ -18,13 +19,167 @@ var ZhanjiTableViewCell = cc.TableViewCell.extend({
         cc.log("ZhanjiTableViewCell onExit end");
     },
 
+    setCellView:function(idx){
+        var self = this;
+        touxiangSprite = cc.Sprite.create("res/touxiang.png");
+        var size = touxiangSprite.getContentSize();
+        touxiangSprite.setScale(68/size.width,68/size.height);
+        touxiangSprite.setPosition(cc.p(80,40));
+        this.addChild(touxiangSprite,2);
+
+        var url = userInfo.MatchListData[idx]["headPicture"];
+        cc.loader.loadImg(url, {isCrossOrigin : false }, function(err,img){
+            if(err){
+                cc.log(err);
+            }
+            if(img){
+                cc.log("img!=null"+img);
+                var headSprite = new cc.Sprite();
+                //     this.touxiangSprite = cc.Sprite.create("res/touxiang.png");
+                // cc.textureCache.addImage(imgUrl);
+                var texture2d = new cc.Texture2D();
+                texture2d.initWithElement(img);
+                texture2d.handleLoadedTexture();
+                headSprite.initWithTexture(texture2d);
+
+                // this.touxiangSprite.setScale(fXScale,fYScale);
+
+                var size = headSprite.getContentSize();
+                headSprite.setScale(66/size.width,66/size.height);
+                headSprite.setPosition(cc.p(80,40));
+                self.addChild(headSprite,2);
+                // self.touxiangSprite.setValue(false);
+            }
+            cc.log("loadImg"+userInfo.headSprite); // self.addChild(logo);
+        });
+
+        strNameText= userInfo.MatchListData[idx]["nickName"];
+        textNameLabel = new cc.LabelTTF(cutstr(strNameText,12), "Arial", 25.0);
+        textNameLabel.setPosition(cc.p(150,20));
+        textNameLabel.setAnchorPoint(0,0.5);
+        this.addChild(textNameLabel);
+        //设置收益
+        strScoreText= userInfo.MatchListData[idx]["score"]+"%";
+        textScoreLabel = new cc.LabelTTF(strScoreText, "Arial", 25.0);
+        textScoreLabel.setPosition(cc.p(150,60));
+        textScoreLabel.setAnchorPoint(0,0.5);
+        if(userInfo.MatchListData[idx]["score"]>0)
+        {
+            textScoreLabel.setColor(RedColor);
+        }
+        else if(userInfo.MatchListData[idx]["score"]<0)
+        {
+            textScoreLabel.setColor(GreenColor);
+        }
+        else
+        {
+            textScoreLabel.setColor(WhiteColor);
+        }
+        this.addChild(textScoreLabel);
+
+
+        //设置时间
+        strTimeText= userInfo.MatchListData[idx]["matchTime"];
+        textTimeLabel = new cc.LabelTTF(strTimeText, "Arial", 20.0);
+        textTimeLabel.setPosition(cc.p(880,70));
+        textTimeLabel.setAnchorPoint(0.5,0.5);
+        textTimeLabel.setColor(lightBlueColor);
+        this.addChild(textTimeLabel);
+
+
+        //设置查看交易记录按钮
+        //设置查看交易记录按钮
+        recordButton=new Button("res/btnRecord.png");
+        recordButton.setAnchorPoint(0.5,0.5);
+        recordButton.setPosition(cc.p(880,30));
+        this.spriteBg.addChild(recordButton);
+        var matchId = userInfo.MatchListData[idx]["matchId"];
+        var userId = userInfo.MatchListData[idx]["nickName"];
+        cc.log("recordButton ClickEvent userId["+idx+"] ="+userId+"||matchId="+matchId);
+        recordButton.setClickEvent(function(){
+
+            var klineSceneNext=new KLineScene();
+            klineSceneNext.onEnteredFunction=function(){
+
+            };
+            userInfo.matchMode=userInfo.recordMode;
+            gSocketConn.SendRecordMessage(userId,matchId);
+            cc.director.runScene(klineSceneNext);
+
+        });
+
+        // if(data["matchId"]!=undefined)
+        // {
+        //     userInfo.matchId=data["matchId"];
+        // }
+        var playerdata = userInfo.MatchListData[idx]["playerList"];
+        if(typeof(playerdata)!="undefined")
+        {
+
+            matchFlag =cc.Sprite.create("res/vs.png");
+            matchFlag.setPosition(cc.p(420,40));
+            this.addChild(matchFlag);
+            if(playerdata[0]["ranking"]==1)
+            {
+                matchFlag.setTexture("res/ko.png");
+            }
+            else
+            {
+                matchFlag.setTexture("res/vs.png");
+            }
+
+            // playerSprite = cc.Sprite.create("res/touxiangAI.png");
+            // playerSprite.setScale(0.6);
+            // playerSprite.setPosition(cc.p(530,40));
+            // this.addChild(playerSprite,2);
+
+            var url = playerdata[1]["headPicture"];
+            cc.loader.loadImg(url, {isCrossOrigin : false }, function(err,img){
+                if(err){
+                    cc.log(err);
+                }
+                if(img){
+                    cc.log("img!=null"+img);
+                    var headSpriteAI = new cc.Sprite();
+                    //     this.touxiangSprite = cc.Sprite.create("res/touxiang.png");
+                    // cc.textureCache.addImage(imgUrl);
+                    var texture2d = new cc.Texture2D();
+                    texture2d.initWithElement(img);
+                    texture2d.handleLoadedTexture();
+                    headSpriteAI.initWithTexture(texture2d);
+
+                    var size = headSpriteAI.getContentSize();
+                    headSpriteAI.setScale(66/size.width,66/size.height);
+                    headSpriteAI.setPosition(cc.p(530,40));
+                    self.addChild(headSpriteAI,2);
+                    // self.touxiangSprite.setValue(false);
+                }
+                cc.log("loadImg"+userInfo.headSprite); // self.addChild(logo);
+            });
+
+
+            playerNameText= playerdata[1]["userName"];
+            playerNameLabel = new cc.LabelTTF(cutstr(playerNameText,12), "Arial", 25.0);
+            playerNameLabel.setPosition(cc.p(570,20));
+            playerNameLabel.setAnchorPoint(0,0.5);
+            this.addChild(playerNameLabel);
+            //设置收益
+            strScoreplayer= playerdata[1]["score"]+"%";
+            playerScoreLabel = new cc.LabelTTF(strScoreplayer, "Arial", 25.0);
+            playerScoreLabel.setPosition(cc.p(570,60));
+            playerScoreLabel.setAnchorPoint(0,0.5);
+            playerScoreLabel.setColor(setLabelColor(playerdata[1]["score"]));
+
+            this.addChild(playerScoreLabel);
+        }
+    },
     setCellData:function(idx){
         cc.log("ZhanjiTableViewCell setCellData=="+idx);
         var self = this;
-        var sprite = new cc.Sprite("res/line_bg.png");
-        sprite.setPosition(cc.p(0,0));
-        sprite.setAnchorPoint(0,0);
-        this.addChild(sprite);
+        this.spriteBg = new cc.Sprite("res/line_bg.png");
+        this.spriteBg.setPosition(cc.p(0,0));
+        this.spriteBg.setAnchorPoint(0,0);
+        this.addChild(this.spriteBg);
         if(userInfo.MatchListData!=null)
         {
 
@@ -67,11 +222,8 @@ var ZhanjiTableViewCell = cc.TableViewCell.extend({
                         }
                     });
 
-
-
-
                     strNameText= userInfo.MatchListData[idx]["nickName"];
-                    textNameLabel = new cc.LabelTTF(strNameText, "Arial", 25.0);
+                    textNameLabel = new cc.LabelTTF(cutstr(strNameText,12), "Arial", 25.0);
                     textNameLabel.setPosition(cc.p(150,40));
                     textNameLabel.setAnchorPoint(0,0.5);
                     this.addChild(textNameLabel);
@@ -109,7 +261,7 @@ var ZhanjiTableViewCell = cc.TableViewCell.extend({
                     recordButton=new Button("res/btnRecord.png");
                     recordButton.setAnchorPoint(0,0.5);
                     recordButton.setPosition(cc.p(800,40));
-                    sprite.addChild(recordButton);
+                    this.spriteBg.addChild(recordButton);
                     var matchId = userInfo.MatchListData[idx]["matchId"];
                     var userId = userInfo.MatchListData[idx]["nickName"];
                     cc.log("recordButton ClickEvent userId["+idx+"] ="+userId+"||matchId="+matchId);
@@ -128,186 +280,13 @@ var ZhanjiTableViewCell = cc.TableViewCell.extend({
                 }
                 case 1:
                 {
+                    this.setCellView(idx);
                     // this.mode3Button.setDisabled(true);
                     break;
                 }
                 case 2:
                 {
-                    touxiangSprite = cc.Sprite.create("res/touxiang.png");
-                    touxiangSprite.setScale(0.6);
-                    touxiangSprite.setPosition(cc.p(80,40));
-                    this.addChild(touxiangSprite,2);
-
-                    var url = userInfo.MatchListData[idx]["headPicture"];
-                    cc.loader.loadImg(url, {isCrossOrigin : false }, function(err,img){
-                        if(err){
-                            cc.log(err);
-                        }
-                        if(img){
-                            cc.log("img!=null"+img);
-                            var headSprite = new cc.Sprite();
-                            //     this.touxiangSprite = cc.Sprite.create("res/touxiang.png");
-                            // cc.textureCache.addImage(imgUrl);
-                            var texture2d = new cc.Texture2D();
-                            texture2d.initWithElement(img);
-                            texture2d.handleLoadedTexture();
-                            headSprite.initWithTexture(texture2d);
-
-                            // this.touxiangSprite.setScale(fXScale,fYScale);
-
-                            var size = headSprite.getContentSize();
-                            headSprite.setScale(66/size.width,66/size.height);
-                            headSprite.setPosition(cc.p(80,40));
-                            self.addChild(headSprite,2);
-                            // self.touxiangSprite.setValue(false);
-                        }
-                        cc.log("loadImg"+userInfo.headSprite); // self.addChild(logo);
-                    });
-
-                    strNameText= userInfo.MatchListData[idx]["nickName"];
-                    textNameLabel = new cc.LabelTTF(strNameText, "Arial", 25.0);
-                    textNameLabel.setPosition(cc.p(150,20));
-                    textNameLabel.setAnchorPoint(0,0.5);
-                    this.addChild(textNameLabel);
-                    //设置收益
-                    strScoreText= userInfo.MatchListData[idx]["score"]+"%";
-                    textScoreLabel = new cc.LabelTTF(strScoreText, "Arial", 25.0);
-                    textScoreLabel.setPosition(cc.p(150,60));
-                    textScoreLabel.setAnchorPoint(0,0.5);
-                    if(userInfo.MatchListData[idx]["score"]>0)
-                    {
-                        textScoreLabel.setColor(RedColor);
-                    }
-                    else if(userInfo.MatchListData[idx]["score"]<0)
-                    {
-                        textScoreLabel.setColor(GreenColor);
-                    }
-                    else
-                    {
-                        textScoreLabel.setColor(WhiteColor);
-                    }
-                    this.addChild(textScoreLabel);
-
-
-                    //设置时间
-                    strTimeText= userInfo.MatchListData[idx]["matchTime"];
-                    textTimeLabel = new cc.LabelTTF(strTimeText, "Arial", 20.0);
-                    textTimeLabel.setPosition(cc.p(880,70));
-                    textTimeLabel.setAnchorPoint(0.5,0.5);
-                    textTimeLabel.setColor(lightBlueColor);
-                    this.addChild(textTimeLabel);
-
-
-                    //设置查看交易记录按钮
-                    //设置查看交易记录按钮
-                    recordButton=new Button("res/btnRecord.png");
-                    recordButton.setAnchorPoint(0.5,0.5);
-                    recordButton.setPosition(cc.p(880,30));
-                    sprite.addChild(recordButton);
-                    var matchId = userInfo.MatchListData[idx]["matchId"];
-                    var userId = userInfo.MatchListData[idx]["nickName"];
-                    cc.log("recordButton ClickEvent userId["+idx+"] ="+userId+"||matchId="+matchId);
-                    recordButton.setClickEvent(function(){
-
-                        var klineSceneNext=new KLineScene();
-                        klineSceneNext.onEnteredFunction=function(){
-
-                        };
-                        userInfo.matchMode=userInfo.recordMode;
-                        gSocketConn.SendRecordMessage(userId,matchId);
-                        cc.director.runScene(klineSceneNext);
-
-                    });
-
-                    // if(data["matchId"]!=undefined)
-                    // {
-                    //     userInfo.matchId=data["matchId"];
-                    // }
-                    var playerdata = userInfo.MatchListData[idx]["playerList"];
-                    if(typeof(playerdata)!="undefined")
-                    {
-
-                        // matchFlag = new cc.LabelTTF("", "Arial", 35.0);
-                        // matchFlag.setPosition(cc.p(420,40));
-                        // this.addChild(matchFlag);
-                        // if(playerdata[0]["ranking"]==1)
-                        // {
-                        //     matchFlag.setColor(RedColor);
-                        //     matchFlag.setString("K.O");
-                        // }
-                        // else// if(playerdata[0]["ranking"]==2)
-                        // {
-                        //     matchFlag.setColor(GreenColor);
-                        //     matchFlag.setString("VS");
-                        // }
-                        matchFlag =cc.Sprite.create("res/vs.png");
-                        matchFlag.setPosition(cc.p(420,40));
-                        this.addChild(matchFlag);
-                        if(playerdata[0]["ranking"]==1)
-                        {
-                            matchFlag.setTexture("res/ko.png");
-                        }
-                        else
-                        {
-                            matchFlag.setTexture("res/vs.png");
-                        }
-
-                        playerSprite = cc.Sprite.create("res/touxiangAI.png");
-                        playerSprite.setScale(0.6);
-                        playerSprite.setPosition(cc.p(530,40));
-                        this.addChild(playerSprite,2);
-
-                        var url = playerdata[1]["headPicture"];
-                        cc.loader.loadImg(url, {isCrossOrigin : false }, function(err,img){
-                            if(err){
-                                cc.log(err);
-                            }
-                            if(img){
-                                cc.log("img!=null"+img);
-                                var headSpriteAI = new cc.Sprite();
-                                //     this.touxiangSprite = cc.Sprite.create("res/touxiang.png");
-                                // cc.textureCache.addImage(imgUrl);
-                                var texture2d = new cc.Texture2D();
-                                texture2d.initWithElement(img);
-                                texture2d.handleLoadedTexture();
-                                headSpriteAI.initWithTexture(texture2d);
-
-                                // this.touxiangSprite.setScale(fXScale,fYScale);
-
-                                var size = headSpriteAI.getContentSize();
-                                headSpriteAI.setScale(66/size.width,66/size.height);
-                                headSpriteAI.setPosition(cc.p(530,40));
-                                self.addChild(headSpriteAI,2);
-                                // self.touxiangSprite.setValue(false);
-                            }
-                            cc.log("loadImg"+userInfo.headSprite); // self.addChild(logo);
-                        });
-
-
-                        playerNameText= playerdata[1]["userName"];
-                        playerNameLabel = new cc.LabelTTF(playerNameText, "Arial", 25.0);
-                        playerNameLabel.setPosition(cc.p(570,20));
-                        playerNameLabel.setAnchorPoint(0,0.5);
-                        this.addChild(playerNameLabel);
-                        //设置收益
-                        strScoreplayer= playerdata[1]["score"]+"%";
-                        playerScoreLabel = new cc.LabelTTF(strScoreplayer, "Arial", 25.0);
-                        playerScoreLabel.setPosition(cc.p(570,60));
-                        playerScoreLabel.setAnchorPoint(0,0.5);
-                        if(playerdata[1]["score"]>0)
-                        {
-                            playerScoreLabel.setColor(RedColor);
-                        }
-                        else if(playerdata[1]["score"]<0)
-                        {
-                            playerScoreLabel.setColor(GreenColor);
-                        }
-                        else
-                        {
-                            playerScoreLabel.setColor(WhiteColor);
-                        }
-                        this.addChild(playerScoreLabel);
-                    }
+                    this.setCellView(idx);
 
                     break;
                 }
@@ -390,8 +369,8 @@ var ZhanjiViewLayer = cc.Layer.extend({
 
 
         this.addChild(this.backgroundSprite);
-        this.closeButton=new Button("res/zhanji_close.png");
-        this.closeButton.setScale(fXScale,fYScale);
+        this.closeButton=new Button("res/close.png");
+        // this.closeButton.setScale(fXScale,fYScale);
         //this.closeButton.setPosition(cc.p(size.width,size.height));
         this.closeButton.setPosition(cc.p(830,460));
         this.addChild(this.closeButton);
@@ -399,13 +378,13 @@ var ZhanjiViewLayer = cc.Layer.extend({
 
         this.setButtonList();
 
-        text1Label = new cc.LabelTTF( "平均收益率:", "Arial", 25.0);
+        text1Label = new cc.LabelTTF( "平均收益:", "Arial", 25.0);
         text1Label.setPosition(cc.p(10,280));
         text1Label.setAnchorPoint(0,0);
         text1Label.setColor(WhiteColor);
         this.addChild(text1Label);
 
-        text2Label = new cc.LabelTTF( "总局数:", "Arial", 25.0);
+        text2Label = new cc.LabelTTF( "总场:", "Arial", 25.0);
         text2Label.setPosition(cc.p(300,280));
         text2Label.setAnchorPoint(0,0);
         text2Label.setColor(WhiteColor);
@@ -424,7 +403,7 @@ var ZhanjiViewLayer = cc.Layer.extend({
             this.avgGainLabel = new cc.LabelTTF( userInfo.AvgGain+"%", "Arial", 25.0);
             this.avgGainLabel.setPosition(cc.p(150,280));
             this.avgGainLabel.setAnchorPoint(0,0);
-            this.avgGainLabel.setColor(RedColor);
+            this.avgGainLabel.setColor(setLabelColor(userInfo.AvgGain));
             this.addChild(this.avgGainLabel);
 
             this.totalCountLabel = new cc.LabelTTF( userInfo.totalCount, "Arial", 25.0);
@@ -440,17 +419,6 @@ var ZhanjiViewLayer = cc.Layer.extend({
             this.addChild(this.winRateLabel);
         }
 
-
-
-        //if(this.infoLabel==null)
-        //{
-        //    this.infoLabel=cc.LabelTTF.create(strValue, "Arial",25);
-        //    //this.zhanjiLabel=cc.LabelTTF.create(gPlayerName, "Arial", 20);
-        //    this.infoLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
-        //    this.infoLabel.setAnchorPoint(0,0);
-        //    this.infoLabel.setPosition(cc.p(50,280));
-        //    this.addChild(this.infoLabel,5);
-        //}
 
         this.closeButton.setClickEvent(function(){
             cc.log("closeButton ClickEvent");
@@ -471,14 +439,6 @@ var ZhanjiViewLayer = cc.Layer.extend({
         this.addChild(this.tableView);
         this.tableView.reloadData();
 
-        // Back Menu
-        //var itemBack = new cc.MenuItemFont("Close", this.toMainLayer, this);
-        //itemBack.x = winSize.width - 50;
-        //itemBack.y = 25;
-        //var menuBack = new cc.Menu(itemBack);
-        //menuBack.x = 0;
-        //menuBack.y = 0;
-        //this.addChild(menuBack);
 
         this.setScale(fXScale,fYScale);
         return true;
@@ -489,7 +449,7 @@ var ZhanjiViewLayer = cc.Layer.extend({
         if(this.mode1Button==null)
         {
             //this.mode1Button=new CheckButton("res/btn_mode1d.png","res/btn_mode1u.png");//new Button("res/btn_mode1d.png");
-            this.mode1Button=new Button("res/btn_mode1u.png");//new Button("res/btn_mode1d.png");
+            this.mode1Button=new CheckButton("res/btn_mode1d.png","res/btn_mode1u.png");;//new Button("res/btn_mode1d.png");
             this.mode1Button.setPosition(cc.p(300,520));
             this.mode1Button.setClickEvent(function(){
                 cc.log("mode1Button ClickEvent");
@@ -500,15 +460,10 @@ var ZhanjiViewLayer = cc.Layer.extend({
                 }
             });
             this.backgroundSprite.addChild(this.mode1Button,5);
-            this.mode1DisAbleSprite=cc.Sprite.create("res/btn_mode1d.png");
-            this.mode1DisAbleSprite.setPosition(cc.p(300,520));
-            this.backgroundSprite.addChild(this.mode1DisAbleSprite,5);
-
         }
         if(this.mode2Button==null)
         {
-            // this.mode2Button=new CheckButton("res/btn_mode2d.png","res/btn_mode2u.png");
-            this.mode2Button=new Button("res/btn_mode2u.png");
+            this.mode2Button=new CheckButton("res/btn_mode2d.png","res/btn_mode2u.png");
             this.mode2Button.setPosition(cc.p(525,520));
             this.mode2Button.setClickEvent(function(){
                 cc.log("mode2Button ClickEvent");
@@ -517,13 +472,9 @@ var ZhanjiViewLayer = cc.Layer.extend({
                 {
                     gMainMenuScene.zhanji();
                 }
-
-                //self.zhanji();
+                //self.Rank();
             });
             this.backgroundSprite.addChild(this.mode2Button,5);
-            this.mode2DisAbleSprite=cc.Sprite.create("res/btn_mode2d.png");
-            this.mode2DisAbleSprite.setPosition(cc.p(525,520));
-            this.backgroundSprite.addChild(this.mode2DisAbleSprite,5);
         }
         if(this.mode3Button==null)
         {
@@ -532,7 +483,10 @@ var ZhanjiViewLayer = cc.Layer.extend({
             this.mode3Button.setClickEvent(function(){
                 cc.log("mode3Button ClickEvent");
                 userInfo.recordMode=1;
-                // if(gMainMenuScene!=null)gMainMenuScene.zhanji();
+                if(gMainMenuScene!=null)
+                {
+                    gMainMenuScene.zhanji();
+                }
             });
             this.backgroundSprite.addChild(this.mode3Button,5);
         }
@@ -543,63 +497,26 @@ var ZhanjiViewLayer = cc.Layer.extend({
             this.mode4Button.setClickEvent(function(){
                 cc.log("mode4Button ClickEvent");
                 userInfo.recordMode=3;
-                // if(gMainMenuScene!=null)gMainMenuScene.zhanji();
+                if(gMainMenuScene!=null)
+                {
+                    gMainMenuScene.zhanji();
+                }
             });
 
             this.backgroundSprite.addChild(this.mode4Button,5);
         }
+
         this.refreshZhanjiViewLayer();
-        //
-        // this.setDisableAllmodeButton();
-        // this.setAbleAllmodeButton();
-        // switch (userInfo.recordMode)
-        // {
-        //
-        //     case 0:
-        //     {
-        //         this.mode1Button.setDisabled(true);
-        //         this.mode1DisAbleSprite.setVisible(true);
-        //         break;
-        //     }
-        //     case 1:
-        //     {
-        //         // this.mode3Button.setDisabled(true);
-        //         break;
-        //     }
-        //     case 2:
-        //     {
-        //         this.mode2Button.setDisabled(true);
-        //         this.mode2DisAbleSprite.setVisible(true);
-        //         break;
-        //     }
-        //     case 3:
-        //     {
-        //         break;
-        //     }
-        //     default:
-        //     {
-        //         cc.log("userInfo.recordMode=="+userInfo.recordMode);
-        //         break;
-        //     }
-        // }
-
-
     },
-    setDisableAllmodeButton:function()
-    {
-        this.mode1Button.setDisabled(true);
-        this.mode2Button.setDisabled(true);
-        this.mode3Button.setDisabled(true);
+    setALLButtonStatus:function(){
+        this.mode1Button.setDisabled(userInfo.recordMode==0);
+        this.mode2Button.setDisabled(userInfo.recordMode==2);
+        this.mode3Button.setDisabled(userInfo.recordMode==1);
         this.mode4Button.setDisabled(true);
-    },
-    setAbleAllmodeButton:function()
-    {
-        this.mode1Button.setDisabled(false);
-        this.mode1DisAbleSprite.setVisible(false);
-        this.mode2Button.setDisabled(false);
-        this.mode2DisAbleSprite.setVisible(false);
-        // this.mode3Button.setDisabled(false);
-        // this.mode4Button.setDisabled(false);
+        this.mode1Button.setTextureByStatus(userInfo.recordMode==0);
+        this.mode2Button.setTextureByStatus(userInfo.recordMode==2);
+        this.mode3Button.setTextureByStatus(userInfo.recordMode==1);
+        this.mode4Button.setTextureByStatus(userInfo.recordMode==3);
     },
 
     toMainScene:function () {
@@ -702,44 +619,20 @@ var ZhanjiViewLayer = cc.Layer.extend({
             //var strValue = "平均收益率:"+userInfo.AvgGain+"       总局数:"+userInfo.totalCount+"     胜率:"+userInfo.winRate;
             //cc.log(strValue);
             if(this.avgGainLabel!=null)
-                this.avgGainLabel.setString(userInfo.AvgGain+"%");
-
-            if(this.totalCountLabel!=null)
-                this.totalCountLabel.setString(userInfo.totalCount);
-            if(this.winRateLabel!=null)
-                this.winRateLabel.setString(userInfo.winRate+"%");
-            this.setDisableAllmodeButton();
-            this.setAbleAllmodeButton();
-            switch (userInfo.recordMode)
             {
-
-                case 0:
-                {
-                    this.mode1Button.setDisabled(true);
-                    this.mode1DisAbleSprite.setVisible(true);
-                    break;
-                }
-                case 1:
-                {
-                    // this.mode3Button.setDisabled(true);
-                    break;
-                }
-                case 2:
-                {
-                    this.mode2Button.setDisabled(true);
-                    this.mode2DisAbleSprite.setVisible(true);
-                    break;
-                }
-                case 3:
-                {
-                    break;
-                }
-                default:
-                {
-                    cc.log("userInfo.recordMode=="+userInfo.recordMode);
-                    break;
-                }
+                this.avgGainLabel.setString(userInfo.AvgGain+"%");
+                this.avgGainLabel.setColor(setLabelColor(userInfo.AvgGain));
             }
+
+            if(this.totalCountLabel!=null){
+                this.totalCountLabel.setString(userInfo.totalCount);
+            }
+            if(this.winRateLabel!=null)
+            {
+                this.winRateLabel.setString(userInfo.winRate+"%");
+                // this.winRateLabel.setColor(setLabelColor(userInfo.winRate));
+            }
+            this.setALLButtonStatus();
         }
 
     }

@@ -61,7 +61,7 @@ var TempLoadScene = SceneBase.extend(
 				gLoginManager.Login(this.username,this.password,this.source,function(packet){self.messageCallback(packet)},function(){self.connectErrorCallBack()});
 			}else
 			{
-				gLoginManager.QuickLogin(function(packet){self.messageCallback(packet)},function(){self.connectErrorCallBack()});
+				gLoginManager.QuickLogin(this.source,function(packet){self.messageCallback(packet)},function(){self.connectErrorCallBack()});
 			}
 
             //cc.director.runScene(new MainMenuScene());
@@ -78,7 +78,7 @@ var TempLoadScene = SceneBase.extend(
 		//}
 		else
 		{
-			gLoginManager.QuickLogin(function(packet){self.messageCallback(packet)},function(){self.connectErrorCallBack()});
+			gLoginManager.QuickLogin(this.source,function(packet){self.messageCallback(packet)},function(){self.connectErrorCallBack()});
 		}
 		
 		this.showProgress();
@@ -129,9 +129,33 @@ var TempLoadScene = SceneBase.extend(
 		var self=this;
 		if(packet.msgType=="1")
 		{
-			gPlayerName=packet.content;
 			//登录成功
-			this.OnLogined(packet.content);
+			gPlayerName=packet.content.split("#")[0];
+
+			// userId:null,//
+			// 	deviceId:null,//设备号
+			// userInfo.username=gPlayerName;
+			// userInfo.password=packet.content.split("#")[1];
+			userInfo.userId=gPlayerName;
+			userInfo.deviceId=packet.content.split("#")[1];
+			userInfo.source=packet.content.split("#")[2];
+			this.stopProgress();
+
+
+			if(gMainMenuScene==null)
+				gMainMenuScene=new MainMenuScene();
+			gMainMenuScene.onEnteredFunction=function(){
+				gMainMenuScene.showProgress();
+				cc.log("gMainMenuScene.onEnteredFunction=====");
+				gSocketConn.RegisterEvent("onmessage",gMainMenuScene.messageCallBack);
+				gSocketConn.SendEHMessage(userInfo.userId,userInfo.deviceId);
+			};
+
+
+			cc.director.runScene(gMainMenuScene);
+			// gPlayerName=packet.content;
+			// //登录成功
+			// this.OnLogined(packet.content);
 		}
         //else if(packet.msgType=="WEBL")
         //{
@@ -156,13 +180,31 @@ var TempLoadScene = SceneBase.extend(
 		{
 			//快速登录成功
 			gPlayerName=packet.content.split("#")[0];
-			
-			this.username=gPlayerName;
-			this.password=packet.content.split("#")[1];
-			this.source=packet.content.split("#")[2];
+
+			// userId:null,//
+			// 	deviceId:null,//设备号
+			// userInfo.username=gPlayerName;
+			// userInfo.password=packet.content.split("#")[1];
+			userInfo.userId=gPlayerName;
+			userInfo.deviceId=packet.content.split("#")[1];
+			userInfo.source=packet.content.split("#")[2];
 			this.stopProgress();
-			
-			gLoginManager.Login(this.username,this.password,this.source,function(packet){self.messageCallback(packet)},function(){self.connectErrorCallBack()});
+
+
+			if(gMainMenuScene==null)
+				gMainMenuScene=new MainMenuScene();
+			gMainMenuScene.onEnteredFunction=function(){
+				gMainMenuScene.showProgress();
+				cc.log("gMainMenuScene.onEnteredFunction=====");
+				gSocketConn.RegisterEvent("onmessage",gMainMenuScene.messageCallBack);
+				gSocketConn.SendEHMessage(userInfo.userId,userInfo.deviceId);
+			};
+
+
+			cc.director.runScene(gMainMenuScene);
+			// gSocketConn.SendEHMessage(this.username,this.password);
+
+			// gLoginManager.Login(this.username,this.password,this.source,function(packet){self.messageCallback(packet)},function(){self.connectErrorCallBack()});
 			
 		}
 		else if(packet.msgType=="C")
@@ -267,28 +309,27 @@ var TempLoadScene = SceneBase.extend(
 		cc.log("登录成功，准备切换到下一个场景");
 		this.stopProgress();
 
-
         if(this.source=="SWEB"){
             var klineSceneNext=new KLineScene();
             klineSceneNext.onEnteredFunction=function(){
                 klineSceneNext.showProgress();
+				gSocketConn.RegisterEvent("onmessage",klineSceneNext.messageCallBack);
+				gSocketConn.BeginMatch(0);
             };
-            gSocketConn.RegisterEvent("onmessage",klineSceneNext.messageCallBack);
-            gSocketConn.BeginMatch(0);
             //cc.director.runScene(cc.TransitionFade.create(0.5,klineSceneNext,cc.color(255,255,255,255)));
             cc.director.runScene(klineSceneNext);
             cc.log("SWEB切换场景调用完毕");
         }else if(this.source=="DHJK"){
 			if(gMainMenuScene==null)
 				gMainMenuScene=new MainMenuScene();
-            //mainMenuScene.onEnteredFunction=function(){
-            //    mainMenuScene.showProgress();
-            //};
-
-            gSocketConn.RegisterEvent("onmessage",gMainMenuScene.messageCallBack);
-            gSocketConn.SendEHMessage(this.username,this.password);
+			gMainMenuScene.onEnteredFunction=function(){
+				gMainMenuScene.showProgress();
+				gSocketConn.SendEHMessage(this.username,this.password);
+				gSocketConn.RegisterEvent("onmessage",gMainMenuScene.messageCallBack);
+            };
+			cc.director.runScene(gMainMenuScene);
             //cc.director.runScene(cc.TransitionFade.create(0.5,klineSceneNext,cc.color(255,255,255,255)));
-            cc.director.runScene(gMainMenuScene);
+
             cc.log("DHJK切换场景调用完毕");
         }
 

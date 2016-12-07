@@ -74,8 +74,6 @@ var RankTableViewCell = cc.TableViewCell.extend({
                 }
             }
 
-
-
             touxiangSprite = cc.Sprite.create("res/touxiang.png");
             touxiangSprite.setScale(0.6);
             touxiangSprite.setPosition(cc.p(100,40));
@@ -97,8 +95,6 @@ var RankTableViewCell = cc.TableViewCell.extend({
                     texture2d.handleLoadedTexture();
                     headSprite.initWithTexture(texture2d);
 
-                    // this.touxiangSprite.setScale(fXScale,fYScale);
-
                     var size = headSprite.getContentSize();
                     headSprite.setScale(66/size.width,66/size.height);
                     headSprite.setPosition(cc.p(100,40));
@@ -108,7 +104,7 @@ var RankTableViewCell = cc.TableViewCell.extend({
                 }
             });
 
-            CellnameLabel = new cc.LabelTTF( playerInfo["nickName"], "Arial", 24.0);
+            CellnameLabel = new cc.LabelTTF( cutstr(playerInfo["nickName"],12), "Arial", 24.0);
             CellnameLabel.setAnchorPoint(0,0.5);
             CellnameLabel.setColor(WhiteColor);
             CellnameLabel.setPosition(cc.pAdd(touxiangSprite.getPosition(),cc.p(touxiangSprite.getContentSize().width/2,0)));
@@ -174,12 +170,20 @@ var RankTableViewCell = cc.TableViewCell.extend({
                     winLabel.setString(" "+playerInfo["winOfMatchForOne"]);
                     //平均收益率
                     avgGainReteLabel.setString(""+playerInfo["gainCumulation"]+"%");
-                    avgGainReteLabel.setColor(chooseColor(playerInfo["gainCumulation"]));
+                    avgGainReteLabel.setColor(setLabelColor(playerInfo["gainCumulation"]));
                     break;
                 }
                 case 1:
                 {
-                    // this.mode3Button.setDisabled(true);
+                    //总场数
+                    sumLabel.setString(" "+playerInfo["sumOfMatchForMore"]);
+                    //胜场数
+                    winLabel.setString(" "+playerInfo["winOfMatchForMore"]);
+                    //平均收益率
+                    avgGainReteLabel.setString(""+playerInfo["gainCumulation"]+"%");
+                    avgGainReteLabel.setColor(setLabelColor(playerInfo["gainCumulation"]));
+                    break;
+                    // this.mode3Button.setDisabled(true);winOfMatchForMore"
                     break;
                 }
                 case 2:
@@ -191,7 +195,7 @@ var RankTableViewCell = cc.TableViewCell.extend({
                     winLabel.setString(" "+playerInfo["winOfMatchForAI"]);
                     //平均收益率
                     avgGainReteLabel.setString(""+playerInfo["gainCumulation"]+"%");
-                    avgGainReteLabel.setColor(chooseColor(playerInfo["gainCumulation"]));
+                    avgGainReteLabel.setColor(setLabelColor(playerInfo["gainCumulation"]));
                     break;
                 }
                 case 3:
@@ -204,49 +208,6 @@ var RankTableViewCell = cc.TableViewCell.extend({
                     break;
                 }
             }
-
-            // CellinfoLabel=cc.LabelTTF.create("练习场:", "Arial",30);
-            // CellinfoLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
-            // CellinfoLabel.setAnchorPoint(0,0.5);
-            // CellinfoLabel.setColor(WhiteColor);
-            // this.addChild(CellinfoLabel,5);
-            //
-            // CellwinOneLabel= cc.LabelTTF.create(" "+playerInfo["winOfMatchForOne"], "Arial",30);
-            // CellwinOneLabel.setAnchorPoint(0,0.5);
-            // CellwinOneLabel.setColor(YellowColor);
-            // //winOneLabel.setPosition(cc.pAdd(infoLabel.getPosition(),cc.p(infoLabel.getContentSize().width,0)));
-            // this.addChild(CellwinOneLabel,5);
-            // CellsumOneLabel= cc.LabelTTF.create("/"+playerInfo["sumOfMatchForOne"], "Arial",30);
-            // CellsumOneLabel.setAnchorPoint(0,0.5);
-            // CellsumOneLabel.setColor(WhiteColor);
-            // // sumOneLabel.setPosition(cc.pAdd(winOneLabel.getPosition(),cc.p(winOneLabel.getContentSize().width,0)));
-            // this.addChild(CellsumOneLabel,5);
-            //
-            // CellinfoLabelAI=cc.LabelTTF.create("人机战:", "Arial",30);
-            // CellinfoLabelAI.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
-            // CellinfoLabelAI.setAnchorPoint(0,0.5);
-            // // infoLabelAI.setPosition(cc.p(600,40));
-            // CellinfoLabelAI.setColor(WhiteColor);
-            // this.addChild(CellinfoLabelAI,5);
-            //
-            // CellwinAILabel= cc.LabelTTF.create(" "+playerInfo["winOfMatchForAI"], "Arial",30);
-            // CellwinAILabel.setAnchorPoint(0,0.5);
-            // CellwinAILabel.setColor(YellowColor);
-            // // winAILabel.setPosition(cc.pAdd(infoLabelAI.getPosition(),cc.p(infoLabelAI.getContentSize().width,0)));
-            // this.addChild(CellwinAILabel,5);
-            // CellsumAILabel= cc.LabelTTF.create("/"+playerInfo["sumOfMatchForAI"], "Arial",30);
-            // CellsumAILabel.setAnchorPoint(0,0.5);
-            // CellsumAILabel.setColor(WhiteColor);
-            // // sumAILabel.setPosition(cc.pAdd(winAILabel.getPosition(),cc.p(winAILabel.getContentSize().width,0)));
-            // this.addChild(CellsumAILabel,5);
-            // winOneLabel.setString(playerInfo["winOfMatchForOne"]);
-            // CellwinOneLabel.setPosition(cc.pAdd(CellinfoLabel.getPosition(),cc.p(CellinfoLabel.getContentSize().width,0)));
-            // sumOneLabel.setString("/"+playerInfo["sumOfMatchForOne"]);
-            // CellsumOneLabel.setPosition(cc.pAdd(CellwinOneLabel.getPosition(),cc.p(CellwinOneLabel.getContentSize().width,0)));
-            // winAILabel.setString(playerInfo["winOfMatchForAI"]);
-            // CellwinAILabel.setPosition(cc.pAdd(CellinfoLabelAI.getPosition(),cc.p(CellinfoLabelAI.getContentSize().width,0)));
-            // sumAILabel.setString("/"+playerInfo["sumOfMatchForAI"]);
-            // CellsumAILabel.setPosition(cc.pAdd(CellwinAILabel.getPosition(),cc.p(CellwinAILabel.getContentSize().width,0)));
 
         }
     },
@@ -299,9 +260,6 @@ var RankViewLayer = cc.Layer.extend({
 
     },
 
-
-
-
     init:function () {
         var winSize = cc.director.getWinSize();
         var self=this;
@@ -317,8 +275,8 @@ var RankViewLayer = cc.Layer.extend({
 
 
         this.addChild(this.backgroundSprite);
-        this.closeButton=new Button("res/zhanji_close.png");
-        this.closeButton.setScale(fXScale,fYScale);
+        this.closeButton=new Button("res/close.png");
+        // this.closeButton.setScale(fXScale,fYScale);
         //this.closeButton.setPosition(cc.p(size.width,size.height));
         this.closeButton.setPosition(cc.p(830,460));
         this.addChild(this.closeButton);
@@ -435,7 +393,7 @@ var RankViewLayer = cc.Layer.extend({
         if(this.mode1Button==null)
         {
             //this.mode1Button=new CheckButton("res/btn_mode1d.png","res/btn_mode1u.png");//new Button("res/btn_mode1d.png");
-            this.mode1Button=new Button("res/btn_mode1u.png");//new Button("res/btn_mode1d.png");
+            this.mode1Button=new CheckButton("res/btn_mode1d.png","res/btn_mode1u.png");;//new Button("res/btn_mode1d.png");
             this.mode1Button.setPosition(cc.p(300,520));
             this.mode1Button.setClickEvent(function(){
                 cc.log("mode1Button ClickEvent");
@@ -446,15 +404,10 @@ var RankViewLayer = cc.Layer.extend({
                 }
             });
             this.backgroundSprite.addChild(this.mode1Button,5);
-            this.mode1DisAbleSprite=cc.Sprite.create("res/btn_mode1d.png");
-            this.mode1DisAbleSprite.setPosition(cc.p(300,520));
-            this.backgroundSprite.addChild(this.mode1DisAbleSprite,5);
-
         }
         if(this.mode2Button==null)
         {
-            // this.mode2Button=new CheckButton("res/btn_mode2d.png","res/btn_mode2u.png");
-            this.mode2Button=new Button("res/btn_mode2u.png");
+            this.mode2Button=new CheckButton("res/btn_mode2d.png","res/btn_mode2u.png");
             this.mode2Button.setPosition(cc.p(525,520));
             this.mode2Button.setClickEvent(function(){
                 cc.log("mode2Button ClickEvent");
@@ -463,13 +416,9 @@ var RankViewLayer = cc.Layer.extend({
                 {
                     gMainMenuScene.rank();
                 }
-
                 //self.Rank();
             });
             this.backgroundSprite.addChild(this.mode2Button,5);
-            this.mode2DisAbleSprite=cc.Sprite.create("res/btn_mode2d.png");
-            this.mode2DisAbleSprite.setPosition(cc.p(525,520));
-            this.backgroundSprite.addChild(this.mode2DisAbleSprite,5);
         }
         if(this.mode3Button==null)
         {
@@ -478,7 +427,10 @@ var RankViewLayer = cc.Layer.extend({
             this.mode3Button.setClickEvent(function(){
                 cc.log("mode3Button ClickEvent");
                 userInfo.recordMode=1;
-                // if(gMainMenuScene!=null)gMainMenuScene.Rank();
+                if(gMainMenuScene!=null)
+                {
+                    gMainMenuScene.rank();
+                }
             });
             this.backgroundSprite.addChild(this.mode3Button,5);
         }
@@ -489,28 +441,25 @@ var RankViewLayer = cc.Layer.extend({
             this.mode4Button.setClickEvent(function(){
                 cc.log("mode4Button ClickEvent");
                 userInfo.recordMode=3;
-                // if(gMainMenuScene!=null)gMainMenuScene.Rank();
+                if(gMainMenuScene!=null)
+                {
+                    gMainMenuScene.rank();
+                }
             });
 
             this.backgroundSprite.addChild(this.mode4Button,5);
         }
 
     },
-    setDisableAllmodeButton:function()
-    {
-        this.mode1Button.setDisabled(true);
-        this.mode2Button.setDisabled(true);
-        this.mode3Button.setDisabled(true);
+    setALLButtonStatus:function(){
+        this.mode1Button.setDisabled(userInfo.recordMode==0);
+        this.mode2Button.setDisabled(userInfo.recordMode==2);
+        this.mode3Button.setDisabled(userInfo.recordMode==1);
         this.mode4Button.setDisabled(true);
-    },
-    setAbleAllmodeButton:function()
-    {
-        this.mode1Button.setDisabled(false);
-        this.mode1DisAbleSprite.setVisible(false);
-        this.mode2Button.setDisabled(false);
-        this.mode2DisAbleSprite.setVisible(false);
-        // this.mode3Button.setDisabled(false);
-        // this.mode4Button.setDisabled(false);
+        this.mode1Button.setTextureByStatus(userInfo.recordMode==0);
+        this.mode2Button.setTextureByStatus(userInfo.recordMode==2);
+        this.mode3Button.setTextureByStatus(userInfo.recordMode==1);
+        this.mode4Button.setTextureByStatus(userInfo.recordMode==3);
     },
 
     toMainScene:function () {
@@ -607,21 +556,6 @@ var RankViewLayer = cc.Layer.extend({
         {
             this.tableView.reloadData();
         }
-        // // this.tableView.reloadData();\
-        // if(userInfo!=null)
-        // {
-        //     self.winOneLabel.setString(" "+playerInfo["winOfMatchForOne"]);
-        //     self.winOneLabel.setPosition(cc.pAdd(self.infoLabel.getPosition(),cc.p(self.infoLabel.getContentSize().width,0)));
-        //
-        //     self.sumOneLabel.setString("/"+playerInfo["sumOfMatchForOne"]);
-        //     self.sumOneLabel.setPosition(cc.pAdd(self.winOneLabel.getPosition(),cc.p(self.winOneLabel.getContentSize().width,0)));
-        //
-        //
-        //
-        //     self.sumAILabel.setString("/"+playerInfo["sumOfMatchForAI"]);
-        //     self.sumAILabel.setPosition(cc.pAdd(self.winAILabel.getPosition(),cc.p(self.winAILabel.getContentSize().width,0)));
-        //
-        // }
 
         if(userInfo!=null&&userInfo.myRanking!=null)
         {
@@ -632,15 +566,16 @@ var RankViewLayer = cc.Layer.extend({
             self.rankLabel.setString(rankInfo["rank"]);
             self.rankLabel.setPosition(cc.pAdd(self.text0Label.getPosition(),cc.p(self.text0Label.getContentSize().width,0)));
 
-            this.setDisableAllmodeButton();
-            this.setAbleAllmodeButton();
+            // this.setDisableAllmodeButton();
+            // this.setAbleAllmodeButton();
+            this.setALLButtonStatus();
             switch (userInfo.recordMode)
             {
 
                 case 0:
                 {
-                    this.mode1Button.setDisabled(true);
-                    this.mode1DisAbleSprite.setVisible(true);
+                    // this.mode1Button.setDisabled(true);
+                    // this.mode1DisAbleSprite.setVisible(true);
 
                     //总场数
                     self.winOneLabel.setString(" "+playerInfo["sumOfMatchForOne"]);
@@ -648,26 +583,29 @@ var RankViewLayer = cc.Layer.extend({
                     self.winAILabel.setString(" "+playerInfo["winOfMatchForOne"]);
                     //
                     self.avgGainAILabel.setString(""+playerInfo["gainCumulation"]+"%");
-                    self.avgGainAILabel.setColor(chooseColor(playerInfo["gainCumulation"]));
+                    self.avgGainAILabel.setColor(setLabelColor(playerInfo["gainCumulation"]));
                     break;
                 }
                 case 1:
                 {
-                    // this.mode3Button.setDisabled(true);
+                    //总场数
+                    self.winOneLabel.setString(" "+playerInfo["sumOfMatchForMore"]);
+                    //胜场数
+                    self.winAILabel.setString(" "+playerInfo["winOfMatchForMore"]);
+                    //
+                    self.avgGainAILabel.setString(""+playerInfo["gainCumulation"]+"%");
+                    self.avgGainAILabel.setColor(setLabelColor(playerInfo["gainCumulation"]));
                     break;
                 }
                 case 2:
                 {
-                    this.mode2Button.setDisabled(true);
-                    this.mode2DisAbleSprite.setVisible(true);
-
                     //总场数
                     self.winOneLabel.setString(" "+playerInfo["sumOfMatchForAI"]);
                     //胜场数
                     self.winAILabel.setString(" "+playerInfo["winOfMatchForAI"]);
                     //
                     self.avgGainAILabel.setString(""+playerInfo["gainCumulation"]+"%");
-                    self.avgGainAILabel.setColor(chooseColor(playerInfo["gainCumulation"]));
+                    self.avgGainAILabel.setColor(setLabelColor(playerInfo["gainCumulation"]));
                     break;
                 }
                 case 3:
@@ -684,15 +622,6 @@ var RankViewLayer = cc.Layer.extend({
 
     }
 });
-var chooseColor = function(gain){
-    if(gain>0){
-        return RedColor;
-    }else if(gain == 0){
-        return WhiteColor;
-    }else {
-        return GreenColor;
-    }
 
-}
 
 
