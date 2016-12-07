@@ -139,7 +139,8 @@ var PlayerInfoLayer= cc.Layer.extend({
 						this.playerHead_Sprite[i] = cc.Sprite.create("res/touxiang.png");
 						this.playerHead_Sprite[i].setContentSize(size);
 						this.playerHead_Sprite[i].setAnchorPoint(0,0);
-						this.playerHead_Sprite[i].setPosition(InfoposX,190);
+						this.playerHead_Sprite[i].setPosition(10,140);
+						this.playerHead_Sprite[i].setVisible(false);
 
 						this.playerNameLabel[i].setPosition(0,InfoposY1);
 						this.playerScoreLabel[i].setPosition(InfoposX,InfoposY2);

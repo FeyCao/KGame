@@ -1375,6 +1375,7 @@ var KLineScene = SceneBase.extend(
 				gMainMenuScene=new MainMenuScene();
 			var errorInfo = "";
 			gSocketConn.SendEndErrorMessage(errorInfo);
+
 			gSocketConn.RegisterEvent("onmessage",gMainMenuScene.messageCallBack);
 			gSocketConn.SendEHMessage(userInfo.userId,userInfo.deviceId);
 			//cc.director.runScene(cc.TransitionFade.create(0.5,klineSceneNext,cc.color(255,255,255,255)));

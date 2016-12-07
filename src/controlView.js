@@ -66,16 +66,20 @@ var ControlViewLayer = cc.Layer.extend({
 
 
         var fontSize = 40;
-        var posY = bgSize.height/2-20;
+        // var posY = bgSize.height/2-20;
+        // var posX = 100;
         var posX = 100;
+        var posY = bgSize.height/2-50;
+        var posX1 =50;
+        // var posY1 =20;
         text1Label = new cc.LabelTTF( "音乐", "Arial", fontSize);
-        text1Label.setPosition(cc.p(posX,posY+100));
+        text1Label.setPosition(cc.p(posX+posX1,posY+120));
         text1Label.setAnchorPoint(0,0.5);
         text1Label.setColor(WhiteColor);
         this.backgroundSprite.addChild(text1Label);
 
         text2Label = new cc.LabelTTF( "音效", "Arial", fontSize);
-        text2Label.setPosition(cc.p(posX,posY));
+        text2Label.setPosition(cc.p(posX+posX1,posY));
         text2Label.setAnchorPoint(0,0.5);
         text2Label.setColor(WhiteColor);
         this.backgroundSprite.addChild(text2Label);
@@ -87,7 +91,7 @@ var ControlViewLayer = cc.Layer.extend({
 
 
         soundBgButton=new CheckButton("res/btn_open.png","res/btn_close.png");//new Button("res/btn_mode1d.png");
-        soundBgButton.setPosition(cc.p(bgSize.width/2,posY+100));
+        soundBgButton.setPosition(cc.p(bgSize.width/2+posX1,posY+120));
         // soundBgButton.setScale(0.8);
         soundBgButton.setClickEvent(function(){
             cc.log("soundBgButton ClickEvent");
@@ -111,7 +115,7 @@ var ControlViewLayer = cc.Layer.extend({
         this.backgroundSprite.addChild(soundBgButton,5);
 
         soundButton=new CheckButton("res/btn_open.png","res/btn_close.png");//new Button("res/btn_mode1d.png");
-        soundButton.setPosition(cc.p(bgSize.width/2,posY));
+        soundButton.setPosition(cc.p(bgSize.width/2+posX1,posY));
         // soundButton.setScale(0.8);
         soundButton.setClickEvent(function(){
             cc.log("soundBgButton ClickEvent");
