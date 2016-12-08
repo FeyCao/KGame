@@ -94,7 +94,6 @@ var RankTableViewCell = cc.TableViewCell.extend({
                     texture2d.initWithElement(img);
                     texture2d.handleLoadedTexture();
                     headSprite.initWithTexture(texture2d);
-
                     var size = headSprite.getContentSize();
                     headSprite.setScale(66/size.width,66/size.height);
                     headSprite.setPosition(cc.p(100,40));
@@ -109,7 +108,6 @@ var RankTableViewCell = cc.TableViewCell.extend({
             CellnameLabel.setColor(WhiteColor);
             CellnameLabel.setPosition(cc.pAdd(touxiangSprite.getPosition(),cc.p(touxiangSprite.getContentSize().width/2,0)));
             this.addChild(CellnameLabel);
-
 
 
             sumInfoLabel=cc.LabelTTF.create("总场:", "Arial",28);
@@ -131,7 +129,7 @@ var RankTableViewCell = cc.TableViewCell.extend({
             avgGainReteInfoLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
             avgGainReteInfoLabel.setAnchorPoint(0,0.5);
             avgGainReteInfoLabel.setColor(WhiteColor);
-            avgGainReteInfoLabel.setPosition(cc.p(670,40));
+            avgGainReteInfoLabel.setPosition(cc.p(650,40));
             this.addChild(avgGainReteInfoLabel,5);
 
 

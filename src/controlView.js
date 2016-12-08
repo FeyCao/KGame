@@ -98,15 +98,26 @@ var ControlViewLayer = cc.Layer.extend({
             if(soundBgButton.isSelected==false)
             {
                 cc.log("soundBgButton.isSelected()==true");
-                var musicFile = "res/sound/home_bg.mp3";
-                cc.audioEngine.playMusic(musicFile,true);
                 userInfo.bgSoundFlag=true;
             }
             else
             {
-                cc.log("soundBgButton.isSelected()==false");
-                cc.audioEngine.stopMusic();
                 userInfo.bgSoundFlag=false;
+            }
+
+            if(userInfo.bgSoundFlag==true){
+
+                if(cc.audioEngine.isMusicPlaying()==false)
+                {
+                    var musicFile = "res/sound/home_bg.mp3";
+                    cc.audioEngine.playMusic(musicFile,true);
+                }
+            }else
+            {
+                if(cc.audioEngine.isMusicPlaying()==true)
+                {
+                    cc.audioEngine.stopMusic();
+                }
             }
             // cc.audioEngine.stopMusic();
 

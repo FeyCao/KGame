@@ -20,6 +20,7 @@ var ZhanjiTableViewCell = cc.TableViewCell.extend({
     },
 
     setCellView:function(idx){
+        cc.log("ZhanjiTableViewCell setCellView begin");
         var self = this;
         touxiangSprite = cc.Sprite.create("res/touxiang.png");
         var size = touxiangSprite.getContentSize();
@@ -50,7 +51,7 @@ var ZhanjiTableViewCell = cc.TableViewCell.extend({
                 self.addChild(headSprite,2);
                 // self.touxiangSprite.setValue(false);
             }
-            cc.log("loadImg"+userInfo.headSprite); // self.addChild(logo);
+            cc.log("loadImg="+userInfo.headSprite); // self.addChild(logo);
         });
 
         strNameText= userInfo.MatchListData[idx]["nickName"];
@@ -76,7 +77,6 @@ var ZhanjiTableViewCell = cc.TableViewCell.extend({
             textScoreLabel.setColor(WhiteColor);
         }
         this.addChild(textScoreLabel);
-
 
         //设置时间
         strTimeText= userInfo.MatchListData[idx]["matchTime"];
@@ -112,10 +112,10 @@ var ZhanjiTableViewCell = cc.TableViewCell.extend({
         // {
         //     userInfo.matchId=data["matchId"];
         // }
+        cc.log("ZhanjiTableViewCell setCellView middle");
         var playerdata = userInfo.MatchListData[idx]["playerList"];
-        if(typeof(playerdata)!="undefined")
+        if(typeof(playerdata)!="undefined"&&playerdata.length>1)
         {
-
             matchFlag =cc.Sprite.create("res/vs.png");
             matchFlag.setPosition(cc.p(420,40));
             this.addChild(matchFlag);
@@ -154,10 +154,8 @@ var ZhanjiTableViewCell = cc.TableViewCell.extend({
                     self.addChild(headSpriteAI,2);
                     // self.touxiangSprite.setValue(false);
                 }
-                cc.log("loadImg"+userInfo.headSprite); // self.addChild(logo);
+                cc.log("loadImg="+userInfo.headSprite); // self.addChild(logo);
             });
-
-
             playerNameText= playerdata[1]["userName"];
             playerNameLabel = new cc.LabelTTF(cutstr(playerNameText,12), "Arial", 25.0);
             playerNameLabel.setPosition(cc.p(570,20));
@@ -172,6 +170,7 @@ var ZhanjiTableViewCell = cc.TableViewCell.extend({
 
             this.addChild(playerScoreLabel);
         }
+        cc.log("ZhanjiTableViewCell setCellView end");
     },
     setCellData:function(idx){
         cc.log("ZhanjiTableViewCell setCellData=="+idx);
@@ -549,6 +548,7 @@ var ZhanjiViewLayer = cc.Layer.extend({
 
     tableCellAtIndex:function (table, idx) {
         cc.log("cell tableCellAtIndex index: "+idx);
+
         var self = this;
         var strValue = idx.toFixed(0);
         var strText;
@@ -576,8 +576,13 @@ var ZhanjiViewLayer = cc.Layer.extend({
                 cell.setCellData(idx);
             }
         }
-
         return cell;
+        // setTimeout(function(){return cell;},100);
+        // for(var each in pageTimer){
+        //     clearTimeout(pageTimer[each]);
+        // }
+        // var self=this;
+        // pageTimer["tableCellAtIndex"] = setTimeout(function(){return cell;},100);
     },
 
     numberOfCellsInTableView:function (table) {

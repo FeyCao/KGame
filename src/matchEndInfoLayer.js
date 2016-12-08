@@ -219,11 +219,14 @@ var MatchEndInfoLayer= cc.Layer.extend({
 
 
 	},
-	onExit: function () {
-		// cc.eventManager.removeListener(this._listener);
+	onExit:function()
+	{
 		this._super();
 		cc.eventManager.removeAllListeners();
+		this.removeAllChildrenWithCleanup(true);
+		cc.log("MatchEndInfoLayer onExit end");
 	},
+
 	replay:function()
 	{
 		if(this.replayCallBackFunction!=null)
@@ -426,6 +429,7 @@ var MatchEndInfoLayer= cc.Layer.extend({
 		// cc.log(content);
 	},
 
+
 	scrollViewDidScroll:function (view) {
 	},
 	scrollViewDidZoom:function (view) {
@@ -554,12 +558,12 @@ var PlayerInfoCell = cc.TableViewCell.extend({
 			sprite.addChild(recordButton);
 			var matchId = userInfo.endInfoOfAllPlayers[idx]["matchId"];
 			var userId = userInfo.endInfoOfAllPlayers[idx]["nickName"];
+            userInfo.matchId = matchId;
 			cc.log("PlayerInfoCell recordButton ClickEvent userId["+idx+"] ="+userId+"||matchId="+matchId);
 			recordButton.setClickEvent(function(){
 				// gSocketConn.SendRecordMatchMessage(userId,matchId);
 				// cc.log("PlayerInfoCell ClickEvent userId["+idx+"] ="+userId+"||matchId="+matchId+"||recordButton="+recordButton.__instanceId);
 				// // cc.director.runScene(klineSceneNext);
-				userInfo.matchId = matchId;
 				gSocketConn.SendRecordMatchMessage(userId,matchId);
 
 			});

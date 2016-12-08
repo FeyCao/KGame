@@ -29,7 +29,8 @@ var KLineScene = SceneBase.extend(
 	playerInfoLayer:null,		//显示对手信息，比赛分数信息的层
 	phase2:false,				//主K线阶段
 	opponentsInfo:[],			//对手信息
-	
+
+	matchRunFlag:false,
 	//买入卖出信息格式如下，正数为买入，负数为卖出，绝对值表示买入或卖出的索引
 	selfOperations:[],			//自己的交易信息，
 	opponentOperations:[],		//对手的交易信息
@@ -87,6 +88,18 @@ var KLineScene = SceneBase.extend(
 		cc.eventManager.removeAllListeners();
 		if(gSocketConn!=null)
 			gSocketConn.UnRegisterEvent("onmessage",this.messageCallBack);
+		if(this.playerInfoLayer!=null)
+		{
+			this.playerInfoLayer.onExit();
+		}
+		if(this.matchEndInfoLayer!=null)
+		{
+			this.matchEndInfoLayer.onExit();
+		}
+
+		userInfo.endInfoOfAllPlayers = null;
+		userInfo.playerListData = null;
+        userInfo.matchId = null;
 		this.removeAllChildrenWithCleanup(true);
 		gKlineScene=null;
 
@@ -858,9 +871,11 @@ var KLineScene = SceneBase.extend(
             var ended=this.klineLayerMain.drawSingleCandleLineByCurrentIndex(this.currentCandleIndex);
             this.volumnTechLayerMain.drawSingleCandleLineByCurrentIndex(this.currentCandleIndex);
 
+			this.matchRunFlag=true;
             if(ended)
             {
                 cc.log("绘制结束");
+				this.matchRunFlag=false;
                 this.sendEndMessage();
                 this.matchEnd();
                 return;
@@ -873,7 +888,8 @@ var KLineScene = SceneBase.extend(
             this.currentCandleIndex+=1;
         }
         var self=this;
-        pageTimer["drawTimer"] = setTimeout(function(){self.drawCandlesOneByOneForMatch();},500);
+		pageTimer["drawMatchTimer"] = setTimeout(function(){self.drawCandlesOneByOneForMatch();},100);
+        // pageTimer["drawTimer"] = setTimeout(function(){self.drawCandlesOneByOneForMatch();},500);
     },
 
 
@@ -886,9 +902,11 @@ var KLineScene = SceneBase.extend(
             var ended=this.klineLayerMain.drawSingleCandleLineByCurrentIndex(this.currentCandleIndex);
             this.volumnTechLayerMain.drawSingleCandleLineByCurrentIndex(this.currentCandleIndex);
 
+			this.matchRunFlag=true;
             if(ended)
             {
                 cc.log("绘制结束");
+				this.matchRunFlag=false;
                 this.sendEndMessage();
                 this.matchEnd();
                 return;
@@ -1373,9 +1391,11 @@ var KLineScene = SceneBase.extend(
 
 			if(gMainMenuScene==false)
 				gMainMenuScene=new MainMenuScene();
-			var errorInfo = "";
-			gSocketConn.SendEndErrorMessage(errorInfo);
-
+			if(this.matchRunFlag==true){
+				var errorInfo = "";
+				gSocketConn.SendEndErrorMessage(errorInfo);
+			}
+			
 			gSocketConn.RegisterEvent("onmessage",gMainMenuScene.messageCallBack);
 			gSocketConn.SendEHMessage(userInfo.userId,userInfo.deviceId);
 			//cc.director.runScene(cc.TransitionFade.create(0.5,klineSceneNext,cc.color(255,255,255,255)));

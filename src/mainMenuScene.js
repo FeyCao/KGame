@@ -75,8 +75,13 @@ var MainMenuScene =SceneBase.extend(
 		//gMainMenusSceneInst=this;
         cc.view.enableRetina(userInfo.viewFlag);
         if(userInfo.bgSoundFlag==true){
-            var musicFile = "res/sound/home_bg.mp3";
-            cc.audioEngine.playMusic(musicFile,true);
+
+            if(cc.audioEngine.isMusicPlaying()==false)
+            {
+                var musicFile = "res/sound/home_bg.mp3";
+                cc.audioEngine.playMusic(musicFile,true);
+            }
+
         }
         var size = cc.director.getWinSize();
         var fXScale = size.width/1280;

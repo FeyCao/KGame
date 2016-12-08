@@ -73,6 +73,14 @@ var PlayerInfoLayer= cc.Layer.extend({
 		this.setPlayerInfo();
 		this.drawAreaBorder();
 	},
+
+	onExit:function()
+	{
+		this._super();
+		cc.eventManager.removeAllListeners();
+		this.removeAllChildrenWithCleanup(true);
+		cc.log("PlayerInfoLayer onExit end");
+	},
 	setPlayerInfo:function()
 	{
         //.setScale(this.fXScale,this.fYScale);
@@ -94,7 +102,7 @@ var PlayerInfoLayer= cc.Layer.extend({
 			}
 			case 1:
 			{
-				cc.log("PlayerInfoLayer setPlayerInfo:function()=1" );
+				cc.log("PlayerInfoLayer setPlayerInfo:function()=1" );// this.avatarSprite.setVisible(false);
 				for(var i=0;i<2;i++)
 				{
 					if(this.playerInfo_bg[i] ==null)
@@ -102,12 +110,11 @@ var PlayerInfoLayer= cc.Layer.extend({
 						this.playerInfo_bg[i]=cc.Sprite.create("res/playerInfo_bg.png");
 						this.playerInfo_bg[i].setPosition(60*this.fXScale,(500-252*i)*this.fYScale);
 						this.playerInfo_bg[i].setScale(this.fXScale,this.fYScale);
-						this.playerNameLabel[i] = cc.LabelTTF.create(cutstr(userInfo.nickName,12), "Arial", fontSize);
-						// this.playerNameLabel[i] =cc.LabelTTF.create(userInfo.nickName, "Arial", fontSize,cc.size(80,80));
+						this.playerNameLabel[i] = cc.LabelTTF.create(userInfo.nickName, "Arial", fontSize,cc.size(100,100));
+						this.playerNameLabel[i].setAnchorPoint(0,1);
 						this.playerScoreLabel[i] = cc.LabelTTF.create("0.00%", "Arial", 24);
 						this.playerInfo_btn[i] = new Button("res/less_bg.png");
 						// var size = this.playerInfo_btn[i].getContentSize();
-
 						this.playerInfo_btn[i].setContentSize(size);
 						// this.playerInfo_btn[i].setScale(40/size.width,40/size.height);
 						this.playerInfo_btn[i].setPosition(InfoposX,190);
@@ -142,10 +149,12 @@ var PlayerInfoLayer= cc.Layer.extend({
 						this.playerHead_Sprite[i].setPosition(10,140);
 						this.playerHead_Sprite[i].setVisible(false);
 
-						this.playerNameLabel[i].setPosition(0,InfoposY1);
+						this.playerInfo_bg[i].addChild(this.playerHead_Sprite[i]);
+
+						this.playerNameLabel[i].setPosition(10,InfoposY1);
 						this.playerScoreLabel[i].setPosition(InfoposX,InfoposY2);
 						this.playerInfo_bg[i].addChild(this.playerInfo_btn[i]);
-						this.playerInfo_bg[i].addChild(this.playerHead_Sprite[i]);
+
 						this.playerInfo_bg[i].addChild(this.playerNameLabel[i]);
 						this.playerInfo_bg[i].addChild(this.playerScoreLabel[i]);
 						this.addChild(this.playerInfo_bg[i],5);
