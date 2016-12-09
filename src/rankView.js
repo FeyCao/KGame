@@ -103,7 +103,7 @@ var RankTableViewCell = cc.TableViewCell.extend({
                 }
             });
 
-            CellnameLabel = new cc.LabelTTF( cutstr(playerInfo["nickName"],12), "Arial", 24.0);
+            CellnameLabel = new cc.LabelTTF( cutstr(playerInfo["nickName"],11), "Arial", 24.0);
             CellnameLabel.setAnchorPoint(0,0.5);
             CellnameLabel.setColor(WhiteColor);
             CellnameLabel.setPosition(cc.pAdd(touxiangSprite.getPosition(),cc.p(touxiangSprite.getContentSize().width/2,0)));

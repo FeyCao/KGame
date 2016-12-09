@@ -81,7 +81,6 @@ var MainMenuScene =SceneBase.extend(
                 var musicFile = "res/sound/home_bg.mp3";
                 cc.audioEngine.playMusic(musicFile,true);
             }
-
         }
         var size = cc.director.getWinSize();
         var fXScale = size.width/1280;
@@ -166,6 +165,26 @@ var MainMenuScene =SceneBase.extend(
         self.sumAILabel.setPosition(cc.pAdd(self.winAILabel.getPosition(),cc.p(self.winAILabel.getContentSize().width,0)));
         this.backgroundSprite.addChild(self.sumAILabel,5);
 
+
+        self.infoLabelMore=cc.LabelTTF.create("多人战:", "Arial",fontSize);
+        // self.infoLabelMore.setScale(0.8);
+        //this.zhanjiLabel=cc.LabelTTF.create(gPlayerName, "Arial", 20);
+        self.infoLabelMore.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
+        self.infoLabelMore.setAnchorPoint(0,0.5);
+        // self.infoLabelMore.setPosition(cc.p(450*fXScale,(pButtonY-30)*fYScale));
+        self.infoLabelMore.setPosition(cc.p(450,(pButtonY-60)));
+        this.backgroundSprite.addChild(self.infoLabelMore,5);
+
+        self.winMoreLabel= cc.LabelTTF.create("", "Arial",fontSize);
+        self.winMoreLabel.setAnchorPoint(0,0.5);
+        self.winMoreLabel.setColor(YellowColor);
+        self.winMoreLabel.setPosition(cc.pAdd(self.infoLabelMore.getPosition(),cc.p(self.infoLabelMore.getContentSize().width,0)));
+        this.backgroundSprite.addChild(self.winMoreLabel,5);
+        self.sumMoreLabel= cc.LabelTTF.create("", "Arial",fontSize);
+        self.sumMoreLabel.setAnchorPoint(0,0.5);
+        self.sumMoreLabel.setColor(WhiteColor);
+        self.sumMoreLabel.setPosition(cc.pAdd(self.winMoreLabel.getPosition(),cc.p(self.winMoreLabel.getContentSize().width,0)));
+        this.backgroundSprite.addChild(self.sumMoreLabel,5);
 
         // //设置对战信息时数据可能还没取到
         // this.setDataforInfo();
@@ -274,7 +293,10 @@ var MainMenuScene =SceneBase.extend(
             gSocketConn.UnRegisterEvent("onmessage",this.messageCallBack);
         this.removeAllChildrenWithCleanup(true);
         gMainMenuScene=false;
-
+        // if(cc.audioEngine.isMusicPlaying()==true)
+        // {
+        // 	cc.audioEngine.stopMusic();
+        // }
         cc.log("MainMenuScene onExit end");
     },
 
@@ -472,7 +494,7 @@ var MainMenuScene =SceneBase.extend(
 	},
     controlViewLayer_Close:function()
     {
-        //关闭战绩界面
+        //关闭kongzhi界面
         this.controlViewLayer.hideLayer();
         this.resumeLowerLayer();
     },
@@ -623,6 +645,16 @@ var MainMenuScene =SceneBase.extend(
             cc.log("setDataforInfoS="+ userInfo.sumOfMatchForAI);
             self.sumAILabel.setString("/"+userInfo.sumOfMatchForAI);
             self.sumAILabel.setPosition(cc.pAdd(self.winAILabel.getPosition(),cc.p(self.winAILabel.getContentSize().width,0)));
+        }
+        if(userInfo.winOfMatchForMore!=null&&self.winMoreLabel!=null)
+        {
+            cc.log("setDataforInfoW="+userInfo.winOfMatchForMore);
+            self.winMoreLabel.setPosition(cc.pAdd(self.infoLabelMore.getPosition(),cc.p(self.infoLabelMore.getContentSize().width,0)));
+            self.winMoreLabel.setString(userInfo.winOfMatchForMore);
+
+            cc.log("setDataforInfoS="+ userInfo.sumOfMatchForMore);
+            self.sumMoreLabel.setString("/"+userInfo.sumOfMatchForMore);
+            self.sumMoreLabel.setPosition(cc.pAdd(self.winMoreLabel.getPosition(),cc.p(self.winMoreLabel.getContentSize().width,0)));
         }
     },
     setMainMenuScenedata:function(jsonText)

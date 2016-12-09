@@ -201,7 +201,6 @@ SocketConn.prototype.SendEndErrorMessage=function(errorInfo)
 
 SocketConn.prototype.SendShareMessage=function()
 {
-	if(SocketConnLogFlag!=false)
 	cc.log("send share msg= S||");
 	ws.send("S||");
 }

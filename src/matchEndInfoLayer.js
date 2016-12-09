@@ -178,6 +178,7 @@ var MatchEndInfoLayer= cc.Layer.extend({
 
 		this.btnShare=new Button("res/meBtnShare.png");
 		this.btnShare.setClickEvent(function(){
+			cc.log("res/meBtnShare.png Click!!!");
 			self.share();
 		});
 
@@ -523,7 +524,7 @@ var PlayerInfoCell = cc.TableViewCell.extend({
 			sprite.addChild(rankLabel);
 			//设置用户名
 			strNameText= userInfo.endInfoOfAllPlayers[idx]["nickName"];
-			textNameLabel = new cc.LabelTTF(cutstr(strNameText,12), "Arial", 25.0);
+			textNameLabel = new cc.LabelTTF(cutstr(strNameText,11), "Arial", 25.0);
 			textNameLabel.setPosition(cc.p(200,40));
 			// textNameLabel.setAnchorPoint(0,0.5);
 			sprite.addChild(textNameLabel);

@@ -243,12 +243,12 @@ LoginScene = SceneBase.extend(
 		}
 		if(src=="" && this.checkUsername()==false)
 		{
-			this.showMessageBox("用户名只能包含英文和数字",function(){self.messageBoxClosed();});
+			self.showErrorBox("用户名只能包含英文和数字",function(){self.errorBoxClosed();});
 			return;
 		}
 		if(src=="" && this.checkPassword()==false)
 		{
-			this.showMessageBox("密码只能包含英文和数字",function(){self.messageBoxClosed();});
+			self.showErrorBox("密码只能包含英文和数字",function(){self.errorBoxClosed();});
 			return;
 		}
 		
@@ -288,7 +288,7 @@ LoginScene = SceneBase.extend(
 		//	self.showMessageBox("服务器连接失败，请稍候再试！",function(){self.messageBoxClosed();});
 		//	},2000);
 		this.stopProgress();
-		this.showMessageBox("服务器连接失败，请稍候再试！",function(){this.messageBoxClosed();});
+		this.showErrorBox("服务器连接失败，请稍候再试！",function(){this.errorBoxClosed();});
 	},
 	
 	messageCallback:function(packet)
@@ -305,7 +305,7 @@ LoginScene = SceneBase.extend(
 		{
 			//登录失败
 			this.stopProgress();
-			this.showMessageBox("登录失败:"+packet.content,function(){self.messageBoxClosed();});
+			this.showErrorBox("登录失败:"+packet.content,function(){self.errorBoxClosed();});
 		}
 		else if(packet.msgType=="B")
 		{
@@ -328,7 +328,7 @@ LoginScene = SceneBase.extend(
 		{
 			//注册失败
 			this.stopProgress();
-			this.showMessageBox("快速登录失败:"+packet.content,function(){self.messageBoxClosed();});
+			this.showErrorBox("快速登录失败:"+packet.content,function(){self.errorBoxClosed();});
 		}
 	},
 	

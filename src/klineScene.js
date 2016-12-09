@@ -39,7 +39,7 @@ var KLineScene = SceneBase.extend(
 	middleHorizontalLineCount:11,	//在中间的横线的个数
 	
 	currentCandleIndex:0,		//当前显示的是第几个蜡烛，从0开始
-	CANDAL_DRAW_INTERVAL:100,		//每个K线相隔的时间
+	CANDAL_DRAW_INTERVAL:500,		//每个K线相隔的时间
 	currentCandleDrawInterval:null,	//当前的K线绘画间隔
 	drawCandleStoped:false,			//是否绘画停止了
 	
@@ -102,7 +102,10 @@ var KLineScene = SceneBase.extend(
         userInfo.matchId = null;
 		this.removeAllChildrenWithCleanup(true);
 		gKlineScene=null;
-
+		// if(cc.audioEngine.isMusicPlaying()==true)
+		// {
+		// 	cc.audioEngine.stopMusic();
+		// }
 		cc.log("KLineScene onExit end");
 	},
 	onEnter:function () 
@@ -112,6 +115,15 @@ var KLineScene = SceneBase.extend(
 		// cc.director.setDisplayStats(true);
 		cc.log("KLineScene onEnter begin");
 		cc.view.enableRetina(userInfo.viewFlag);
+
+		// if(userInfo.bgSoundFlag==true){
+        //
+		// 	if(cc.audioEngine.isMusicPlaying()==false)
+		// 	{
+		// 		var musicFile = "res/sound/home_bg.mp3";
+		// 		cc.audioEngine.playMusic(musicFile,true);
+		// 	}
+		// }
         this.size = cc.director.getWinSize();
         this.fXScale = this.size.width/1280;
 		this.fYScale = this.size.height/720;
@@ -888,8 +900,8 @@ var KLineScene = SceneBase.extend(
             this.currentCandleIndex+=1;
         }
         var self=this;
-		pageTimer["drawMatchTimer"] = setTimeout(function(){self.drawCandlesOneByOneForMatch();},100);
-        // pageTimer["drawTimer"] = setTimeout(function(){self.drawCandlesOneByOneForMatch();},500);
+		// pageTimer["drawMatchTimer"] = setTimeout(function(){self.drawCandlesOneByOneForMatch();},100);
+        pageTimer["drawTimerMatch"] = setTimeout(function(){self.drawCandlesOneByOneForMatch();},self.currentCandleDrawInterval);
     },
 
 

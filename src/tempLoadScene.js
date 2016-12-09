@@ -119,8 +119,9 @@ var TempLoadScene = SceneBase.extend(
 		//	self.stopProgress();
 		//	self.showMessageBox("服务器连接失败，请稍候再试！",function(){self.messageBoxClosed();});
 		//	},2000);
-		this.stopProgress();
-		this.showMessageBox("服务器连接失败，请稍候再试！",function(){this.messageBoxClosed();});
+		// this.stopProgress();
+		self.stopProgress();
+		self.showErrorBox("服务器连接失败，请稍候再试！",function(){self.errorBoxClosed();});
 	},
 	
 	messageCallback:function(packet)
@@ -173,8 +174,8 @@ var TempLoadScene = SceneBase.extend(
 		else if(packet.msgType=="2")
 		{
 			//登录失败
-			this.stopProgress();
-			this.showMessageBox("登录失败:"+packet.content,function(){self.messageBoxClosed();});
+            self.stopProgress();
+            self.showErrorBox("登录失败:"+packet.content,function(){self.errorBoxClosed();});
 		}
 		else if(packet.msgType=="B")
 		{
@@ -210,8 +211,8 @@ var TempLoadScene = SceneBase.extend(
 		else if(packet.msgType=="C")
 		{
 			//注册失败
-			this.stopProgress();
-			this.showMessageBox("快速登录失败:"+packet.content,function(){self.messageBoxClosed();});
+            self.stopProgress();
+            self.showErrorBox("快速登录失败:"+packet.content,function(){self.errorBoxClosed();});
 		}
 		else if(packet.msgType=="S")
 		{

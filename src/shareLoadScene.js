@@ -71,8 +71,8 @@ var ShareLoadScene = SceneBase.extend(
 		//	self.stopProgress();
 		//	self.showMessageBox("服务器连接失败，请稍候再试！",function(){self.messageBoxClosed();});
 		//	},2000);
-		this.stopProgress();
-		this.showMessageBox("服务器连接失败，请稍候再试！",function(){this.messageBoxClosed();});
+        self.stopProgress();
+        self.showErrorBox("服务器连接失败，请稍候再试！",function(){self.errorBoxClosed();});
 	},
 	messageBoxClosed:function()
 	{

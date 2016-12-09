@@ -49,7 +49,7 @@ var PlayerInfoLayer= cc.Layer.extend({
 		this.playerInfoArea.height=this.height;
 		this.addChild(this.playerInfoArea, 1);
 
-		this.selfNameLabel=cc.LabelTTF.create(cutstr(userInfo.nickName,12), "Arial", 20);
+		this.selfNameLabel=cc.LabelTTF.create(cutstr(userInfo.nickName,11), "Arial", 20);
         this.selfNameLabel.setScale(this.fXScale,this.fYScale);
 		//this.selfNameLabel=cc.LabelTTF.create(gPlayerName, "Arial", 20);
 		this.selfNameLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
@@ -282,7 +282,7 @@ var PlayerInfoLayer= cc.Layer.extend({
 
 		var self = this;
 
-		this.selfNameLabel.setString(cutstr(userInfo.nickName,12));
+		this.selfNameLabel.setString(cutstr(userInfo.nickName,11));
 		if(this.headSprite==null){
 			this.headSprite=cc.Sprite.create("res/touxiang.png");
 			this.headSprite.setPosition(120*this.fXScale,this.height-20);
@@ -384,7 +384,7 @@ var PlayerInfoLayer= cc.Layer.extend({
                 {
                     var score=parseFloat(userInfo.playerListData[i]["score"]);
 
-                    this.playerNameLabel[i].setString(cutstr(userInfo.playerListData[i]["userName"],12));
+                    this.playerNameLabel[i].setString(cutstr(userInfo.playerListData[i]["userName"],11));
                     this.playerScoreLabel[i].setString(score.toFixed(2)+"%");
 					this.playerScoreLabel[i].setColor(setLabelColor(score));
 

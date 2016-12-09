@@ -34,7 +34,15 @@ SceneBase = cc.Scene.extend(
 	{
 		this._super();
 		this.sceneEnterTime=new Date().getTime();
-		
+		// if(userInfo.bgSoundFlag==true){
+        //
+		// 	var musicFile = "res/sound/home_bg.mp3";
+		// 	cc.audioEngine.playMusic(musicFile,true);
+		// 	// if(cc.audioEngine.isMusicPlaying()==false)
+		// 	// {
+		// 	//
+		// 	// }
+		// }
 		var self=this;
 		var size = cc.director.getWinSize();
 		var fXScale = size.width/1280;
@@ -96,14 +104,22 @@ SceneBase = cc.Scene.extend(
 		// errorBtn.setClickEvent(function(){
 		// 	self.closeErrorBox();
 		// });
-		this.confirmBtn=new Button("res/messageboxbutton.png");
-		this.confirmBtn.setPosition(bgSize.width/2,150);
-		this.confirmBtn.setClickEvent(function(){
+		closeErrorBtn=new Button("res/close.png");
+		closeErrorBtn.setPosition(cc.p(bgSize.width-40,bgSize.height-40));
+		closeErrorBtn.setClickEvent(function(){
 			if(null!=self.errorLayer&&self.errorLayer.isVisible()==true){
 				self.closeErrorBox();
 			}
 		});
-		errorSprite.addChild(this.confirmBtn,3);
+		errorSprite.addChild(closeErrorBtn,3);
+		// this.confirmBtn=new Button("res/messageboxbutton.png");
+		// this.confirmBtn.setPosition(bgSize.width/2,150);
+		// this.confirmBtn.setClickEvent(function(){
+		// 	if(null!=self.errorLayer&&self.errorLayer.isVisible()==true){
+		// 		self.closeErrorBox();
+		// 	}
+		// });
+		// errorSprite.addChild(this.confirmBtn,3);
 		this.errorLabelShadow=new cc.LabelTTF("登录失败", "黑体", 30);
 		this.errorLabelShadow.setColor(cc.color(0, 0, 0,100));
 		this.errorLabelShadow.setPosition(bgSize.width/2+2,bgSize.height/2-2);
@@ -127,7 +143,15 @@ SceneBase = cc.Scene.extend(
 	
 		this.messageBoxLayer.setVisible(false);
 		this.errorLayer.setVisible(false);
-		cc.log("SceneBase onEnter begin");
+		cc.log("SceneBase onEnter end");
+	},
+	onExit:function()
+	{
+		// if(cc.audioEngine.isMusicPlaying()==true)
+		// {
+		// 	cc.audioEngine.stopMusic();
+		// }
+		cc.log("SceneBase onExit end");
 	},
 
 	showProgress:function()
@@ -180,6 +204,7 @@ SceneBase = cc.Scene.extend(
 		// {
 		// 	this.closeCallback();
 		// }
+		window.location.href="http://analyse.kiiik.com";
 		cc.log("closeErrorBox sceneBase");
 	},
 
@@ -252,10 +277,10 @@ SceneBase = cc.Scene.extend(
 		var sys = cc.sys;
 
 		if(sys.os === sys.OS_IOS || sys.os === sys.OS_OSX){
-			var url = "https://itunes.apple.com/cn/app/zhang-kong-quan-qiu/id804429363?ls=1&mt=8";
+			var url = "http://m.cesfutures.com/kiiikweixin/apppro/phoned.jsp";
 			// cc.log(url);
 		}else{
-			var url = "http://zhushou.360.cn/detail/index/soft_id/3004951?recrefer=SE_D_%E4%B8%9C%E8%88%AA%E9%87%91%E8%9E%8D";
+			var url = "http://m.cesfutures.com/kiiikweixin/apppro/phoned.jsp";
 			// cc.view.enableRetina(true);
 		}
 		window.open(url);

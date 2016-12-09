@@ -55,7 +55,7 @@ var ZhanjiTableViewCell = cc.TableViewCell.extend({
         });
 
         strNameText= userInfo.MatchListData[idx]["nickName"];
-        textNameLabel = new cc.LabelTTF(cutstr(strNameText,12), "Arial", 25.0);
+        textNameLabel = new cc.LabelTTF(cutstr(strNameText,11), "Arial", 25.0);
         textNameLabel.setPosition(cc.p(150,20));
         textNameLabel.setAnchorPoint(0,0.5);
         this.addChild(textNameLabel);
@@ -157,7 +157,7 @@ var ZhanjiTableViewCell = cc.TableViewCell.extend({
                 cc.log("loadImg="+userInfo.headSprite); // self.addChild(logo);
             });
             playerNameText= playerdata[1]["userName"];
-            playerNameLabel = new cc.LabelTTF(cutstr(playerNameText,12), "Arial", 25.0);
+            playerNameLabel = new cc.LabelTTF(cutstr(playerNameText,11), "Arial", 25.0);
             playerNameLabel.setPosition(cc.p(570,20));
             playerNameLabel.setAnchorPoint(0,0.5);
             this.addChild(playerNameLabel);
@@ -222,7 +222,7 @@ var ZhanjiTableViewCell = cc.TableViewCell.extend({
                     });
 
                     strNameText= userInfo.MatchListData[idx]["nickName"];
-                    textNameLabel = new cc.LabelTTF(cutstr(strNameText,12), "Arial", 25.0);
+                    textNameLabel = new cc.LabelTTF(cutstr(strNameText,11), "Arial", 25.0);
                     textNameLabel.setPosition(cc.p(150,40));
                     textNameLabel.setAnchorPoint(0,0.5);
                     this.addChild(textNameLabel);
