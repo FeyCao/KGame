@@ -70,7 +70,7 @@ var userInfo ={
     operationType:0,//1为登录，2为快速登录
 
     //
-    nickName:"塞外小王子",
+    nickName:"无名的游客",
     headSprite:null,	//头像
     userName:null,
     userPassword:null,

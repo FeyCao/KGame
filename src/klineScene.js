@@ -1034,6 +1034,7 @@ var KLineScene = SceneBase.extend(
         // {
         //     this.btnHome.setVisible(false);
         // }
+		this.matchRunFlag=true;
 		if(this.btnStart!=null)
 		{
 			this.btnStart.setVisible(false);

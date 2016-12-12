@@ -110,7 +110,7 @@ var PlayerInfoLayer= cc.Layer.extend({
 						this.playerInfo_bg[i]=cc.Sprite.create("res/playerInfo_bg.png");
 						this.playerInfo_bg[i].setPosition(60*this.fXScale,(500-252*i)*this.fYScale);
 						this.playerInfo_bg[i].setScale(this.fXScale,this.fYScale);
-						this.playerNameLabel[i] = cc.LabelTTF.create(userInfo.nickName, "Arial", fontSize,cc.size(100,100));
+						this.playerNameLabel[i] = cc.LabelTTF.create(userInfo.nickName, "fonts/Arial.ttf", fontSize,cc.size(100,100));
 						this.playerNameLabel[i].setAnchorPoint(0,1);
 						this.playerScoreLabel[i] = cc.LabelTTF.create("0.00%", "Arial", 24);
 						this.playerInfo_btn[i] = new Button("res/less_bg.png");
