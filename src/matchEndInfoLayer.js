@@ -127,7 +127,7 @@ var MatchEndInfoLayer= cc.Layer.extend({
 			this.bgSprtie.addChild(this.scoreLabel2,2);
 
 
-			this.avatarSprite=cc.Sprite.create("res/touxiang.png");
+			this.avatarSprite=cc.Sprite.create("res/bg_touxiang.png");
 			this.avatarSprite.setPosition(bgSize.width /4, bgSize.height-160);
 			// this.avatarSprite.setScale(0.4);
 			this.bgSprtie.addChild(this.avatarSprite,5);
@@ -141,7 +141,7 @@ var MatchEndInfoLayer= cc.Layer.extend({
 				if(img){
 					cc.log("img!=null"+img);
 					var headSprite = new cc.Sprite();
-					//     this.touxiangSprite = cc.Sprite.create("res/touxiang.png");
+					//     this.touxiangSprite = cc.Sprite.create("res/bg_touxiang.png");
 					// cc.textureCache.addImage(imgUrl);
 					var texture2d = new cc.Texture2D();
 					texture2d.initWithElement(img);

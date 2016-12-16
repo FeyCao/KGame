@@ -6,7 +6,7 @@ window.onload = function()
 		cc.view.setDesignResolutionSize(gDesignResolutionWidth, gDesignResolutionHeight, cc.ResolutionPolicy.SHOW_ALL);
 	 
 	  	//load resources
-	  	cc.LoaderScene.preload(["res/avatar1.png","res/avatar2.png","res/avatar3.png","res/avatar4.png","res/avatar5.png","res/buyOpenTag.png","res/buyCloseTag.png","res/sellOpenTag.png","res/sellCloseTag.png"], function () {
+	  	cc.LoaderScene.preload(["res/buyOpenTag.png","res/buyCloseTag.png","res/sellOpenTag.png","res/sellCloseTag.png"], function () {
 		  cc.director.runScene(new KLineScene());
 	  }, this);
   };

@@ -74,7 +74,7 @@ var RankTableViewCell = cc.TableViewCell.extend({
                 }
             }
 
-            touxiangSprite = cc.Sprite.create("res/touxiang.png");
+            touxiangSprite = cc.Sprite.create("res/bg_touxiang.png");
             touxiangSprite.setScale(0.6);
             touxiangSprite.setPosition(cc.p(100,40));
             this.addChild(touxiangSprite,2);
@@ -88,7 +88,7 @@ var RankTableViewCell = cc.TableViewCell.extend({
                 if(img){
                     cc.log("img!=null"+img);
                     var headSprite = new cc.Sprite();
-                    //     this.touxiangSprite = cc.Sprite.create("res/touxiang.png");
+                    //     this.touxiangSprite = cc.Sprite.create("res/bg_touxiang.png");
                     // cc.textureCache.addImage(imgUrl);
                     var texture2d = new cc.Texture2D();
                     texture2d.initWithElement(img);
@@ -380,6 +380,10 @@ var RankViewLayer = cc.Layer.extend({
         this.tableView.setDelegate(this);
         this.tableView.setVerticalFillOrder(cc.TABLEVIEW_FILL_TOPDOWN);
         this.addChild(this.tableView);
+        if(this.tableView!=null)
+        {
+            this.tableView.reloadData();
+        }
         this.refreshRankViewLayer();
 
         this.setScale(fXScale,fYScale);
@@ -387,6 +391,7 @@ var RankViewLayer = cc.Layer.extend({
     },
 
     setButtonList:function(){
+
 
         if(this.mode1Button==null)
         {

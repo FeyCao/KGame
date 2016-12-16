@@ -131,8 +131,6 @@ var MatchInfoLayer= cc.Layer.extend({
 		});
 
 
-
-
         this.meBtnStart=new Button("res/meBtnStart.png");
         this.meBtnStart.setPosition(cc.p(363,posY));
 		this.meBtnStart.setScale(0.5);

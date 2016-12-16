@@ -27,6 +27,7 @@ var KLineScene = SceneBase.extend(
 
 	matchInfoLayer:null,		//显示游戏按钮的层
 	playerInfoLayer:null,		//显示对手信息，比赛分数信息的层
+	matchViewLayer:null,
 	phase2:false,				//主K线阶段
 	opponentsInfo:[],			//对手信息
 
@@ -39,7 +40,7 @@ var KLineScene = SceneBase.extend(
 	middleHorizontalLineCount:11,	//在中间的横线的个数
 	
 	currentCandleIndex:0,		//当前显示的是第几个蜡烛，从0开始
-	CANDAL_DRAW_INTERVAL:500,		//每个K线相隔的时间
+	CANDAL_DRAW_INTERVAL:100,		//每个K线相隔的时间
 	currentCandleDrawInterval:null,	//当前的K线绘画间隔
 	drawCandleStoped:false,			//是否绘画停止了
 	
@@ -130,6 +131,8 @@ var KLineScene = SceneBase.extend(
 		//document.getElementById("mainBody").style
 		document.bgColor="#152936";
 		gKlineScene=this;
+		gSocketConn.RegisterEvent("onmessage",gKlineScene.messageCallBack);
+
 		this.currentCandleDrawInterval=this.CANDAL_DRAW_INTERVAL;
 		cc.log("............klinescene on enter called");
 		this.backgroundLayer=new cc.LayerColor(cc.color(21,41,54, 255));
@@ -228,6 +231,7 @@ var KLineScene = SceneBase.extend(
 		
 		if(this.onEnteredFunction!=null)
 		{
+			cc.log("KLineScene onEnteredFunction end");
 			this.onEnteredFunction();
 		}
 	},
@@ -435,8 +439,11 @@ var KLineScene = SceneBase.extend(
 				//接收到了K线数据的消息
 				cc.log("jsonText parseK线数据over");
 				self.getklinedata(packet.content);
-				self.setDataForLlineLayer();
+
+				self.stopProgress();
 				// self.setDataForLlineLayerTest();
+				self.setDataForLlineLayer();
+
 				cc.log("get kline K线数据 passed");
 				break;
 			}
@@ -598,6 +605,7 @@ var KLineScene = SceneBase.extend(
 		this.resumeLowerLayer();
 		gSocketConn.UnRegisterEvent("onmessage",this.messageCallBack);
 		//再开始一盘
+
 		this.beginNextKLineScene();
 	},
 	
@@ -675,20 +683,24 @@ var KLineScene = SceneBase.extend(
 	beginNextKLineScene:function()
 	{
 
+		cc.log("klineSceneNext begin");
 		// cc.director.runScene(gKlineScene);
 		var klineSceneNext=new KLineScene();
 		var self=this;
 		klineSceneNext.onEnteredFunction=function(){
 
+			cc.log("klineSceneNext onEnteredFunction end");
 			// klineSceneNext.showProgress();
 		};
+		cc.log("klineSceneNext middle");
+		//不能放到onEnteredFunction里面
 		gSocketConn.RegisterEvent("onmessage",klineSceneNext.messageCallBack);
 		cc.director.runScene(klineSceneNext);
-
 		switch(userInfo.matchMode)
 		{
 			case 0:
 			{
+				this.showProgress();
 				gSocketConn.BeginMatch(0);
 				break;
 			}
@@ -696,11 +708,13 @@ var KLineScene = SceneBase.extend(
 			{
 				// this.KlineWidth = 700;
 				// this.KlinePosX = 60;
+				this.showProgress();
 				gSocketConn.BeginMatch(1);
 				break;
 			}
 			case 2:
 			{
+				this.showProgress();
 				gSocketConn.BeginMatch("2#DON");
 				break;
 			}
@@ -714,6 +728,8 @@ var KLineScene = SceneBase.extend(
 				break;
 			}
 		}
+		cc.log("klineSceneNext end");
+
 		// gKlineScene.stopProgress();
 		// gSocketConn.BeginMatch(userInfo.matchMode);
 	},
@@ -722,9 +738,13 @@ var KLineScene = SceneBase.extend(
 	getklinedata:function(jsonText)
 	{
 		cc.log("begin to parse json text");
-		var data=JSON.parse(jsonText);
-		cc.log("jsonText parse over");
-		this.toSetklinedata(data);
+		if(jsonText!=""||jsonText==null){
+			var data=JSON.parse(jsonText);
+			cc.log("jsonText parse over");
+			this.toSetklinedata(data);
+		}else{
+			cc.log("begin to parse json text="+jsonText+"|");
+		}
 		// this.ongotklinedata(data);
 	},
 	// ///获取K线数据
@@ -796,6 +816,8 @@ var KLineScene = SceneBase.extend(
 		{
 			this.prevKlineData.push({o:dailyData[5*i],x:dailyData[5*i+1],i:dailyData[5*i+2],c:dailyData[5*i+3],v:dailyData[5*i+4]});
 		}
+
+
 	},
 
 	clearBuySellOperation:function()
@@ -1002,6 +1024,7 @@ var KLineScene = SceneBase.extend(
 		{
 			this.playerInfoLayer.setPlayerInfo();
 		}
+
 		if(userInfo.matchMode==1){
 			if(gKlineScene!=null)
 			{

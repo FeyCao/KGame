@@ -44,7 +44,7 @@ var ControlViewLayer = cc.Layer.extend({
         var fYScale = size.height/720;
 
 
-        this.backgroundSprite=cc.Sprite.create("res/control_bg.png");
+        this.backgroundSprite=cc.Sprite.create("res/bg_control.png");
         this.backgroundSprite.setScale(fXScale,fYScale);
         this.backgroundSprite.setPosition(size.width/2,size.height/2);
         this.addChild(this.backgroundSprite);
@@ -52,16 +52,24 @@ var ControlViewLayer = cc.Layer.extend({
         var bgSize = this.backgroundSprite.getContentSize();
 
 
+        var mu = new cc.Menu();
+        mu.x = 0;
+        mu.y = 0;
+        this.backgroundSprite.addChild(mu,3);
+        // closeBtn=new Button("res/close.png");
+        closeBtn = new cc.MenuItemImage("res/close.png", "res/close.png", self.toMainScene, this);
+        closeBtn.setPosition(cc.p(bgSize.width-40,bgSize.height-40));
+        mu.addChild(closeBtn);
 
-        this.closeButton=new Button("res/close.png");
-        // this.closeButton.setScale(fXScale,fYScale);
-        //this.closeButton.setPosition(cc.p(size.width,size.height));
-        this.closeButton.setPosition(cc.p(bgSize.width-40,bgSize.height-40));
-        this.closeButton.setClickEvent(function(){
-            cc.log("closeButton ClickEvent");
-            self.toMainScene();
-        });
-        this.backgroundSprite.addChild(this.closeButton);
+        // this.closeButton=new Button("res/close.png");
+        // // this.closeButton.setScale(fXScale,fYScale);
+        // //this.closeButton.setPosition(cc.p(size.width,size.height));
+        // this.closeButton.setPosition(cc.p(bgSize.width-40,bgSize.height-40));
+        // this.closeButton.setClickEvent(function(){
+        //     cc.log("closeButton ClickEvent");
+        //     self.toMainScene();
+        // });
+        // this.backgroundSprite.addChild(this.closeButton);
 
 
 
@@ -94,7 +102,7 @@ var ControlViewLayer = cc.Layer.extend({
         soundBgButton.setPosition(cc.p(bgSize.width/2+posX1,posY+120));
         // soundBgButton.setScale(0.8);
         soundBgButton.setClickEvent(function(){
-            cc.log("soundBgButton ClickEvent");
+            cc.log("soundBgButton ClickEvent cc.audioEngine.isMusicPlaying() ="+cc.audioEngine.isMusicPlaying());
             if(soundBgButton.isSelected==false)
             {
                 cc.log("soundBgButton.isSelected()==true");
@@ -107,17 +115,12 @@ var ControlViewLayer = cc.Layer.extend({
 
             if(userInfo.bgSoundFlag==true){
 
-                if(cc.audioEngine.isMusicPlaying()==false)
-                {
-                    var musicFile = "res/sound/home_bg.mp3";
-                    cc.audioEngine.playMusic(musicFile,true);
-                }
+                resumeBgSound();
+               // self.openBgSound();
             }else
             {
-                if(cc.audioEngine.isMusicPlaying()==true)
-                {
-                    cc.audioEngine.stopMusic();
-                }
+                pauseBgSound();
+              //  self.closeBgSound();
             }
             // cc.audioEngine.stopMusic();
 
@@ -129,7 +132,7 @@ var ControlViewLayer = cc.Layer.extend({
         soundButton.setPosition(cc.p(bgSize.width/2+posX1,posY));
         // soundButton.setScale(0.8);
         soundButton.setClickEvent(function(){
-            cc.log("soundBgButton ClickEvent");
+            cc.log("soundButton ClickEvent cc.audioEngine.isMusicPlaying() ="+cc.audioEngine.isMusicPlaying());
             if(soundButton.isSelected==false)
             {
                 cc.log("soundButton.isSelected()==true");
@@ -148,32 +151,32 @@ var ControlViewLayer = cc.Layer.extend({
         soundButton.setTextureByStatus(!userInfo.buttonSoundFlag);
         this.backgroundSprite.addChild(soundButton,5);
 
-        bdButton=new CheckButton("res/btn_general.png","res/btn_general1.png");
-        bdButton.setPosition(cc.p(bgSize.width/2-20,posY-100));
-        // bdButton.setScale(0.8);
-//"res/btn_general.png","res/btn_hd.png","res/btn_hd1.png","res/btn_general1.png",
-        hdButton=new CheckButton("res/btn_hd.png","res/btn_hd1.png");
-        hdButton.setPosition(cc.p(bgSize.width/2+200,posY-100));
-        // hdButton.setScale(0.8);
-
-        bdButton.setTextureByStatus(!userInfo.viewFlag);
-        hdButton.setTextureByStatus(userInfo.viewFlag);
-
-        bdButton.setClickEvent(function(){
-
-            userInfo.viewFlag=!bdButton.isSelected;
-            cc.view.enableRetina(userInfo.viewFlag);
-            hdButton.setTextureByStatus(!bdButton.isSelected);
-            cc.log("userInfo.viewFlag"+userInfo.viewFlag);
-        });
-
-        hdButton.setClickEvent(function(){
-            userInfo.viewFlag=hdButton.isSelected;
-            cc.view.enableRetina(userInfo.viewFlag);
-            // cc.view.enableRetina(true);
-            bdButton.setTextureByStatus(!hdButton.isSelected);
-            cc.log("userInfo.viewFlag"+userInfo.viewFlag);
-        });
+//         bdButton=new CheckButton("res/btn_general.png","res/btn_general1.png");
+//         bdButton.setPosition(cc.p(bgSize.width/2-20,posY-100));
+//         // bdButton.setScale(0.8);
+// //"res/btn_general.png","res/btn_hd.png","res/btn_hd1.png","res/btn_general1.png",
+//         hdButton=new CheckButton("res/btn_hd.png","res/btn_hd1.png");
+//         hdButton.setPosition(cc.p(bgSize.width/2+200,posY-100));
+//         // hdButton.setScale(0.8);
+//
+//         bdButton.setTextureByStatus(!userInfo.viewFlag);
+//         hdButton.setTextureByStatus(userInfo.viewFlag);
+//
+//         bdButton.setClickEvent(function(){
+//
+//             userInfo.viewFlag=!bdButton.isSelected;
+//             cc.view.enableRetina(userInfo.viewFlag);
+//             hdButton.setTextureByStatus(!bdButton.isSelected);
+//             cc.log("userInfo.viewFlag"+userInfo.viewFlag);
+//         });
+//
+//         hdButton.setClickEvent(function(){
+//             userInfo.viewFlag=hdButton.isSelected;
+//             cc.view.enableRetina(userInfo.viewFlag);
+//             // cc.view.enableRetina(true);
+//             bdButton.setTextureByStatus(!hdButton.isSelected);
+//             cc.log("userInfo.viewFlag"+userInfo.viewFlag);
+//         });
 
         // this.backgroundSprite.addChild(text3Label);
         // this.backgroundSprite.addChild(bdButton,5);
@@ -190,6 +193,38 @@ var ControlViewLayer = cc.Layer.extend({
         }
     },
 
+    closeBgSound:function(){
+        if(cc.audioEngine.isMusicPlaying()==true){
+            pauseBgSound();
+        }else{
+            cc.audioEngine.stopMusic();
+        }
+
+    },
+    openBgSound:function(){
+
+        if(cc.audioEngine.isMusicPlaying()==false)
+        {
+            var musicFile = "res/sound/home_bg.mp3";
+            cc.audioEngine.playMusic(musicFile,true);
+        }else {
+            resumeBgSound();
+        }
+    },
+
+
+// （1）playMusic(url,loop)播放背景音乐，参数url是播放文件的路径，参数loop控制是否循环播放，默认情况下为false
+// （2）stopMusic() 停止播放背景音乐
+// （3）pauseMusic() 暂停播放背景音乐
+// （4）resumeMusic() 继续播放背景音乐
+// （5）isMusicPlaying() 判断背景音乐是否在播放
+// （6）playEffect(url,loop)播放音效，参数同playMusic函数
+// （7）pauseAllEffects暂停所有播放音效。参数audioID是playEffect函数返回ID
+// （8）pauseAllEffects()暂停所有播放音效
+// （9）resumeEffect(audioID)继续播放音效，参数audioID是playEffect函数返回ID
+// （10）resumeAllEffects()继续播放所有音效
+// （11）stopEffect(audioID)停止播放音效，参数audioID是playEffect函数返回ID
+// （12）stopAllEffects()停止所有播放音效
 
 
     showLayer:function()

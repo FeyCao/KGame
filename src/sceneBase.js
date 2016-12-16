@@ -48,10 +48,12 @@ SceneBase = cc.Scene.extend(
 		var fXScale = size.width/1280;
 		var fYScale = size.height/720;
 
+
+
 		this.messageBoxLayer=new cc.LayerColor(cc.color(0,0,0,127),size.width,size.height);
 		
 		this.lowerLayer=new cc.Layer();
-		
+
 		this.otherMessageTipLayer=new cc.Layer();
 		
 		this.messageBoxSprite=cc.Sprite.create("res/bg_message.png");
@@ -59,29 +61,35 @@ SceneBase = cc.Scene.extend(
 		this.messageBoxSprite.setPosition(size.width / 2, size.height / 2);
 		this.messageBoxSprite.setScale(fXScale,fYScale);
 		this.messageBoxLayer.addChild(this.messageBoxSprite,2);
-
+		var mu = new cc.Menu();
+		mu.x = 0;
+		mu.y = 0;
+		// this.messageBoxLayer.addChild(mu, 2);
 		var bgSize = this.messageBoxSprite.getContentSize();
 
-
-		closeBtn=new Button("res/close.png");
+		this.messageBoxSprite.addChild(mu,3);
+		// closeBtn=new Button("res/close.png");
+		closeBtn = new cc.MenuItemImage("res/close.png", "res/close.png", self.closeMessageBox, this);
 		closeBtn.setPosition(cc.p(bgSize.width-40,bgSize.height-40));
-		closeBtn.setClickEvent(function(){
-			if(null!=self.messageBoxLayer&&self.messageBoxLayer.isVisible()==true){
-				self.closeMessageBox();
-			}
-		});
-		this.messageBoxSprite.addChild(closeBtn,3);
-		loginBtn=new Button("res/btn_login.png");
+		mu.addChild(closeBtn);
+		// closeBtn.setClickEvent(function(){
+		// 	if(null!=self.messageBoxLayer&&self.messageBoxLayer.isVisible()==true){
+		// 		self.closeMessageBox();
+		// 	}
+		// });
+
+		loginBtn= new cc.MenuItemImage("res/btn_login.png", "res/btn_login.png", self.login, this);//new Button("res/btn_login.png");
 		loginBtn.setPosition(cc.p(bgSize.width/2,150));
-		loginBtn.setClickEvent(function(){
-
-			if(null!=self.messageBoxLayer&&self.messageBoxLayer.isVisible()==true){
-				self.closeMessageBox();
-				self.login();
-			}
-
-		});
-		this.messageBoxSprite.addChild(loginBtn,3);
+		mu.addChild(loginBtn);
+		// loginBtn.setClickEvent(function(){
+        //
+		// 	if(null!=self.messageBoxLayer&&self.messageBoxLayer.isVisible()==true){
+		// 		self.closeMessageBox();
+		// 		self.login();
+		// 	}
+        //
+		// });
+		// this.messageBoxSprite.addChild(loginBtn,3);
 
 		this.messageLabelShadow=new cc.LabelTTF("登录失败", "黑体", 20);
 		this.messageLabelShadow.setColor(cc.color(0, 0, 0,100));
@@ -104,14 +112,25 @@ SceneBase = cc.Scene.extend(
 		// errorBtn.setClickEvent(function(){
 		// 	self.closeErrorBox();
 		// });
-		closeErrorBtn=new Button("res/close.png");
+		var Errormu = new cc.Menu();
+		Errormu.x = 0;
+		Errormu.y = 0;
+		// this.messageBoxLayer.addChild(mu, 2);
+		var bgSize = this.messageBoxSprite.getContentSize();
+
+		errorSprite.addChild(Errormu,3);
+		// closeBtn=new Button("res/close.png");
+		closeErrorBtn = new cc.MenuItemImage("res/close.png", "res/close.png", self.closeErrorBox, this);
 		closeErrorBtn.setPosition(cc.p(bgSize.width-40,bgSize.height-40));
-		closeErrorBtn.setClickEvent(function(){
-			if(null!=self.errorLayer&&self.errorLayer.isVisible()==true){
-				self.closeErrorBox();
-			}
-		});
-		errorSprite.addChild(closeErrorBtn,3);
+		Errormu.addChild(closeErrorBtn);
+		// closeErrorBtn=new Button("res/close.png");
+		// closeErrorBtn.setPosition(cc.p(bgSize.width-40,bgSize.height-40));
+		// closeErrorBtn.setClickEvent(function(){
+		// 	if(null!=self.errorLayer&&self.errorLayer.isVisible()==true){
+		// 		self.closeErrorBox();
+		// 	}
+		// });
+		// errorSprite.addChild(closeErrorBtn,3);
 		// this.confirmBtn=new Button("res/messageboxbutton.png");
 		// this.confirmBtn.setPosition(bgSize.width/2,150);
 		// this.confirmBtn.setClickEvent(function(){
@@ -273,6 +292,7 @@ SceneBase = cc.Scene.extend(
     },
 	login:function() {
 
+		this.closeMessageBox();
 		cc.log("login sceneBase");
 		var sys = cc.sys;
 

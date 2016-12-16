@@ -22,7 +22,7 @@ var ZhanjiTableViewCell = cc.TableViewCell.extend({
     setCellView:function(idx){
         cc.log("ZhanjiTableViewCell setCellView begin");
         var self = this;
-        touxiangSprite = cc.Sprite.create("res/touxiang.png");
+        touxiangSprite = cc.Sprite.create("res/bg_touxiang.png");
         var size = touxiangSprite.getContentSize();
         touxiangSprite.setScale(68/size.width,68/size.height);
         touxiangSprite.setPosition(cc.p(80,40));
@@ -36,7 +36,7 @@ var ZhanjiTableViewCell = cc.TableViewCell.extend({
             if(img){
                 cc.log("img!=null"+img);
                 var headSprite = new cc.Sprite();
-                //     this.touxiangSprite = cc.Sprite.create("res/touxiang.png");
+                //     this.touxiangSprite = cc.Sprite.create("res/bg_touxiang.png");
                 // cc.textureCache.addImage(imgUrl);
                 var texture2d = new cc.Texture2D();
                 texture2d.initWithElement(img);
@@ -141,7 +141,7 @@ var ZhanjiTableViewCell = cc.TableViewCell.extend({
                 if(img){
                     cc.log("img!=null"+img);
                     var headSpriteAI = new cc.Sprite();
-                    //     this.touxiangSprite = cc.Sprite.create("res/touxiang.png");
+                    //     this.touxiangSprite = cc.Sprite.create("res/bg_touxiang.png");
                     // cc.textureCache.addImage(imgUrl);
                     var texture2d = new cc.Texture2D();
                     texture2d.initWithElement(img);
@@ -190,7 +190,7 @@ var ZhanjiTableViewCell = cc.TableViewCell.extend({
 
                 case 0:
                 {
-                    touxiangSprite = cc.Sprite.create("res/touxiang.png");
+                    touxiangSprite = cc.Sprite.create("res/bg_touxiang.png");
                     touxiangSprite.setScale(0.6);
                     touxiangSprite.setPosition(cc.p(80,40));
                     this.addChild(touxiangSprite,2);
@@ -204,7 +204,7 @@ var ZhanjiTableViewCell = cc.TableViewCell.extend({
                         if(img){
                             cc.log("img!=null"+img);
                             var headSprite = new cc.Sprite();
-                            //     this.touxiangSprite = cc.Sprite.create("res/touxiang.png");
+                            //     this.touxiangSprite = cc.Sprite.create("res/bg_touxiang.png");
                             // cc.textureCache.addImage(imgUrl);
                             var texture2d = new cc.Texture2D();
                             texture2d.initWithElement(img);

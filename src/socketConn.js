@@ -146,6 +146,7 @@ SocketConn.prototype.SendRecordMatchMessage=function(matchId,userId)//查看比�
 
 SocketConn.prototype.BeginMatch=function(mode)
 {
+	cc.log("send BeginMatchMessage=="+"3|"+mode+"|");
 	ws.send("3|"+mode+"|");
 }
 
@@ -236,6 +237,14 @@ SocketConn.prototype.SendRankMessage=function(matchType,userId)//查看比赛的
 	// if(SocketConnLogFlag!=false)
 		cc.log("send SendRANKMessage=="+recordMsg);
 	ws.send(recordMsg);
+}
+
+SocketConn.prototype.SendInfoMessage=function(infoType,infoMsg)//发送不确定信息
+{
+	var infoTypeAndMsg = infoType+"|"+infoMsg+"|";
+	// if(SocketConnLogFlag!=false)
+	cc.log("send infoTypeAndMsg=="+infoTypeAndMsg);
+	ws.send(infoTypeAndMsg);
 }
 
 

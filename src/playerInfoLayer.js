@@ -65,7 +65,15 @@ var PlayerInfoLayer= cc.Layer.extend({
 		this.addChild(this.selfScoreLabel,5);
 
 
-		this.avatarSprite=cc.Sprite.create("res/touxiang.png");
+		// if(gPlayerAvatarSprite==null)
+		// {
+		// 	gPlayerAvatarSprite=cc.Sprite.create("res/avatar"+(1+Math.round(Math.random()*10)%5)+".png");
+		// }
+		// this.avatarSprite=cc.Sprite.create(gPlayerAvatarSprite.getTexture());
+
+		// var frameCache = cc.spriteFrameCache;
+		// frameCache.addSpriteFrames("res/touxiang.plist", "res/bg_touxiang.png");
+		this.avatarSprite=cc.Sprite.create("res/bg_touxiang.png");
 		this.avatarSprite.setPosition(120*this.fXScale,this.height-20);
 		this.avatarSprite.setScale(0.3);
 		this.addChild(this.avatarSprite,5);
@@ -143,7 +151,7 @@ var PlayerInfoLayer= cc.Layer.extend({
 						}
 						this.playerInfo_btn[i].setVisible(false);
 
-						this.playerHead_Sprite[i] = cc.Sprite.create("res/touxiang.png");
+						this.playerHead_Sprite[i] = cc.Sprite.create("res/bg_touxiang.png");
 						this.playerHead_Sprite[i].setContentSize(size);
 						this.playerHead_Sprite[i].setAnchorPoint(0,0);
 						this.playerHead_Sprite[i].setPosition(10,140);
@@ -206,7 +214,7 @@ var PlayerInfoLayer= cc.Layer.extend({
 						}
 						this.playerInfo_btn[i].setVisible(false);
 
-						this.playerHead_Sprite[i] = cc.Sprite.create("res/touxiang.png");
+						this.playerHead_Sprite[i] = cc.Sprite.create("res/bg_touxiang.png");
 						this.playerHead_Sprite[i].setContentSize(size);
 						this.playerHead_Sprite[i].setAnchorPoint(0,0);
 						this.playerHead_Sprite[i].setPosition(10,140);
@@ -284,34 +292,12 @@ var PlayerInfoLayer= cc.Layer.extend({
 
 		this.selfNameLabel.setString(cutstr(userInfo.nickName,11));
 		if(this.headSprite==null){
-			this.headSprite=cc.Sprite.create("res/touxiang.png");
+			this.headSprite=cc.Sprite.create("res/bg_touxiang.png");
 			this.headSprite.setPosition(120*this.fXScale,this.height-20);
 			var size = self.headSprite.getContentSize();
 			self.headSprite.setScale(33/size.width,33/size.height);
 			this.addChild(this.headSprite,5);
 		}
-		var url = userInfo.headSprite;
-		cc.loader.loadImg(url, {isCrossOrigin : false }, function(err,img){
-			if(err){
-				cc.log(err);
-			}
-			if(img){
-				cc.log("img!=null"+img);
-				if(gPlayerAvatarSprite==null)
-				{
-					// gPlayerAvatarSprite=cc.Sprite.create("res/avatar"+(1+Math.round(Math.random()*10)%5)+".png");
-					gPlayerAvatarSprite=new cc.Texture2D();
-				}
-				// var texture2d = new cc.Texture2D();
-				gPlayerAvatarSprite.initWithElement(img);
-				gPlayerAvatarSprite.handleLoadedTexture();
-				self.headSprite.initWithTexture(gPlayerAvatarSprite);
-
-				var size = self.headSprite.getContentSize();
-				self.headSprite.setScale(33/size.width,33/size.height);
-			}
-			cc.log("loadImg="+userInfo.headSprite); // self.addChild(logo);
-		});
 
 
 		var score=0;
@@ -320,6 +306,28 @@ var PlayerInfoLayer= cc.Layer.extend({
 		var scoreLabel=this.selfScoreLabel;
 		if(userInfo.playerListData!=null)
 		{
+			var url = userInfo.headSprite;
+			cc.loader.loadImg(url, {isCrossOrigin : false }, function(err,img){
+				if(err){
+					cc.log(err);
+				}
+				if(img){
+					cc.log("img!=null"+img);
+					if(gPlayerAvatarSprite==null)
+					{
+						// gPlayerAvatarSprite=cc.Sprite.create("res/avatar"+(1+Math.round(Math.random()*10)%5)+".png");
+						gPlayerAvatarSprite=new cc.Texture2D();
+					}
+					// var texture2d = new cc.Texture2D();
+					gPlayerAvatarSprite.initWithElement(img);
+					gPlayerAvatarSprite.handleLoadedTexture();
+					self.headSprite.initWithTexture(gPlayerAvatarSprite);
+
+					var size = self.headSprite.getContentSize();
+					self.headSprite.setScale(33/size.width,33/size.height);
+				}
+				cc.log("loadImg="+userInfo.headSprite); // self.addChild(logo);
+			});
             for(var i=0;i<userInfo.playerListData.length&&i<self.playerInfo_bg.length;i++)
             {
 
@@ -334,7 +342,7 @@ var PlayerInfoLayer= cc.Layer.extend({
 						if(img){
 							cc.log("img!=null"+img);
 							var headSprite = new cc.Sprite();
-							//     this.touxiangSprite = cc.Sprite.create("res/touxiang.png");
+							//     this.touxiangSprite = cc.Sprite.create("res/bg_touxiang.png");
 							// cc.textureCache.addImage(imgUrl);
 							var texture2d = new cc.Texture2D();
 							texture2d.initWithElement(img);
@@ -361,7 +369,7 @@ var PlayerInfoLayer= cc.Layer.extend({
 						if(img){
 							cc.log("img!=null"+img);
 							var headSprite = new cc.Sprite();
-							//     this.touxiangSprite = cc.Sprite.create("res/touxiang.png");
+							//     this.touxiangSprite = cc.Sprite.create("res/bg_touxiang.png");
 							// cc.textureCache.addImage(imgUrl);
 							var texture2d = new cc.Texture2D();
 							texture2d.initWithElement(img);

@@ -34,7 +34,7 @@ var BaseGraphLayer= cc.Layer.extend({
 		//this.maxCandleCountPerPage=60;
 		//this.historyCandleCount=10;
 		//this.pageIndex=0;
-		this.maxCandleCountPerPage=120;
+		this.maxCandleCountPerPage=60;
 		this.historyCandleCount=0;
 		this.pageIndex=0;
 	},
@@ -124,6 +124,8 @@ var BaseGraphLayer= cc.Layer.extend({
 	{
 		// cc.log("basegraphlayer setKLineData instanceid="+this.__instanceid+" klineData="+klineData+" klineDataPrev="+klineDataPrev);
 		this.klineData=klineData;
+		this.maxCandleCountPerPage = this.klineData.length;
+		cc.log("this.maxCandleCountPerPage=="+this.maxCandleCountPerPage);
 		if(klineDataPrev!=undefined)
 		{
 			this.klineDataPrev=klineDataPrev;

@@ -23,7 +23,7 @@ Button=cc.Sprite.extend({
 	setClickEvent:function(clickevent)
 	{
 		this.clickevent=clickevent;
-		
+		// cc.MenuItemImage
 		var self=this;
 		this.listener= cc.EventListener.create({
 			event: cc.EventListener.TOUCH_ONE_BY_ONE,
@@ -69,7 +69,6 @@ Button=cc.Sprite.extend({
 					if(buttonLogFlag!=false)
                      cc.log("Button onTouchEnded");
 					//var nextSceneM=new NextScene();
-					;
 					var target = event.getCurrentTarget();	
 					var touchLocation=touch.getLocation();
 					//Get the position of the current point relative to the button

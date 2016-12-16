@@ -32,6 +32,7 @@ var MainMenuScene =SceneBase.extend(
     zhanjiInfoLayer:null,
     rankViewLayer:null,
     controlViewLayer:null,
+    matchViewLayer:null,
     loadTime:null,
     onEnteredFunction:null,	//OnEnter调用结束后的Function
 
@@ -73,14 +74,13 @@ var MainMenuScene =SceneBase.extend(
 		this._super();
         gMainMenuScene=this;
 		//gMainMenusSceneInst=this;
+        var musicFile = "res/sound/home_bg.mp3";
+        cc.audioEngine.playMusic(musicFile,true);
         cc.view.enableRetina(userInfo.viewFlag);
         if(userInfo.bgSoundFlag==true){
-
-            if(cc.audioEngine.isMusicPlaying()==false)
-            {
-                var musicFile = "res/sound/home_bg.mp3";
-                cc.audioEngine.playMusic(musicFile,true);
-            }
+            resumeBgSound();//恢复
+        }else{
+            pauseBgSound();
         }
         var size = cc.director.getWinSize();
         var fXScale = size.width/1280;
@@ -88,15 +88,7 @@ var MainMenuScene =SceneBase.extend(
         var pButtonY = 520;
         var pButtonScale = cc.p(30*fXScale,55*fYScale);
 
-
 		var self=this;
-        // cc.log("fXScale="+fXScale);
-		// cc.log("fYScale="+fYScale);
-
-
-        //
-        // this.backgroundLayer=new cc.Layer();
-        // this.addChild(this.backgroundLayer, 1);
 
         if(this.backgroundSprite==null)
         {
@@ -109,9 +101,7 @@ var MainMenuScene =SceneBase.extend(
 		//"res/mainMenu_bg.png","res/btn_control.png","res/btn_zhanji.png","res/btn_paihang.png","res/btn_help.png"，"res/btn_model1_u.png","res/btn_model1_d.png"，"res/btn_model2_u.png","res/btn_model2_d.png"，"res/btn_model3_u.png","res/btn_model3_d.png"，"res/btn_model4_u.png","res/btn_model4_d.png"
 
 
-        // "res/touxiang.png"
-
-        this.touxiangSprite = cc.Sprite.create("res/touxiang.png");
+        this.touxiangSprite = cc.Sprite.create("res/bg_touxiang.png");
         this.touxiangSprite.setPosition(cc.p(180,500));
         this.backgroundSprite.addChild(this.touxiangSprite,2);
 
@@ -186,64 +176,25 @@ var MainMenuScene =SceneBase.extend(
         self.sumMoreLabel.setPosition(cc.pAdd(self.winMoreLabel.getPosition(),cc.p(self.winMoreLabel.getContentSize().width,0)));
         this.backgroundSprite.addChild(self.sumMoreLabel,5);
 
+        self.infoLabel.setVisible(userInfo.operationType==1);
+        self.infoLabelAI.setVisible(userInfo.operationType==1);
+        self.infoLabelMore.setVisible(userInfo.operationType==1);
+        self.winAILabel.setVisible(userInfo.operationType==1);
+        self.winMoreLabel.setVisible(userInfo.operationType==1);
+        self.winOneLabel.setVisible(userInfo.operationType==1);
+        self.sumOneLabel.setVisible(userInfo.operationType==1);
+        self.sumAILabel.setVisible(userInfo.operationType==1);
+        self.sumMoreLabel.setVisible(userInfo.operationType==1);
+
         // //设置对战信息时数据可能还没取到
-        // this.setDataforInfo();
+         this.setDataforInfo();
 
         this.setButtonInfo();
 
-        var pModeXdistance = 300;
-		var pModeY = 220;
-
-        this.firstMode=new CheckButton("res/btn_mode1_d.png","res/btn_mode1_u.png");
-        // this.firstMode.setScale(fXScale,fYScale);
-        this.firstMode.setPosition(cc.p((190),pModeY));
-        this.firstMode.setClickEvent(function(){
-            self.firstModeChanged();
-        });
-
-		this.secondMode=new CheckButton("res/btn_mode2_d.png","res/btn_mode2_u.png");
-        // this.secondMode.setScale(fXScale,fYScale);
-		this.secondMode.setPosition(cc.p((190+pModeXdistance),pModeY));
-		this.secondMode.setClickEvent(function(){
-            self.secondModeChanged();
-        });
-		
-		this.thirdMode=new CheckButton("res/btn_mode3_d.png","res/btn_mode3_u.png");
-		this.thirdMode.setPosition(cc.p((190+2*pModeXdistance),pModeY));
-		this.thirdMode.setClickEvent(function(){
-			self.thirdModeChanged();
-		});
-        this.thirdMode.setDisabled(userInfo.operationType!=1);//1为登录，2为快速登录
-        this.thirdMode.setTextureByStatus(userInfo.operationType!=1);
+        // this.thirdMode.setDisabled(userInfo.operationType!=1);//1为登录，2为快速登录
+        // this.thirdMode.setTextureByStatus(userInfo.operationType!=1);
         // this.mode1Button.setTextureByStatus(userInfo.recordMode==0);
-		
-		this.fourthMode=new CheckButton("res/btn_mode4_d.png","res/btn_mode4_u.png");
-        // this.fourthMode.setScale(fXScale,fYScale);
-        // this.fourthMode.setPosition(cc.p((190+3*pModeXdistance)*fXScale,pModeY*fYScale));
-        this.fourthMode.setPosition(cc.p((190+3*pModeXdistance),pModeY));
-		this.fourthMode.setClickEvent(function(){
-			self.fourthModeChanged();
-		});
-        this.fourthMode.setDisabled(true);
-        this.fourthMode.setTextureByStatus(true);
 
-        this.backgroundSprite.addChild(this.zhanjiButton, 2);
-        this.backgroundSprite.addChild(this.configButton, 2);
-        this.backgroundSprite.addChild(this.paimingButton, 2);
-        this.backgroundSprite.addChild(this.helpButton, 2);
-        this.backgroundSprite.addChild(this.firstMode, 2);
-        this.backgroundSprite.addChild(this.secondMode, 2);
-        this.backgroundSprite.addChild(this.thirdMode, 2);
-        this.backgroundSprite.addChild(this.fourthMode, 2);
-
-
-
-        this.btnHome=new Button("res/home.png");
-        this.btnHome.setPosition(cc.p(40*fXScale,size.height-35*fYScale));
-        this.btnHome.setScale(fXScale*0.8,fYScale*0.8);
-        //this.btnHome.setScale(0.8);
-        this.btnHome.setClickEvent(function(){self.toHome();});
-        this.addChild(this.btnHome,123);
         //this.backgroundLayer.setScale(0.8);
 		//this.firstMode.setChecked(true);
         //this.firstMode.setDisabled(true)
@@ -252,37 +203,8 @@ var MainMenuScene =SceneBase.extend(
         {
             this.onEnteredFunction();
         }
-
-
+        loadTime=new Date().getTime();
         cc.log("MainMenuScene onEnter end");
-//test
-
-
-        //
-        // this._itemMenu = new cc.Menu();
-        //
-        //
-        // var label = new cc.LabelTTF("setOpacity", "Arial", 25);
-        // var menuItem1 = new cc.MenuItemLabel(label,this.setOpacityTest,this);
-        // menuItem1.setPosition(cc.p(180*fXScale,500*fYScale));
-        // this._itemMenu.addChild(menuItem1,101);
-        //
-        // // var touxiangSprite = cc.MenuItemImage("res/touxiang.png","res/touxiang.png",this.setOpacityTest,this);
-        // // var touxiangSprite = cc.MenuItemImage("res/touxiang.png","res/touxiang.png",this.setOpacityTest,this);
-        // //     // cc.Sprite.create("res/touxiang.png");
-        // //touxiangSprite.setScale(fXScale,fYScale);
-        // //touxiangSprite.setPosition(cc.p(180*fXScale,500*fYScale));
-        //
-        // // this._itemMenu.addChild(touxiangSprite,101);
-        //
-        //
-        //
-        //
-        //
-        // this._itemMenu.setPosition(0,0);
-        // this.addChild(this._itemMenu,1);
-        // cc.log("menu.x",this._itemMenu.getPositionX());
-        //cc.log("menuItem.x",touxiangSprite.getPositionX());
 	},
 
     onExit:function()
@@ -293,47 +215,13 @@ var MainMenuScene =SceneBase.extend(
             gSocketConn.UnRegisterEvent("onmessage",this.messageCallBack);
         this.removeAllChildrenWithCleanup(true);
         gMainMenuScene=false;
-        // if(cc.audioEngine.isMusicPlaying()==true)
-        // {
-        // 	cc.audioEngine.stopMusic();
-        // }
+        //全部清除方法
+        for(var each in pageTimer){
+            clearTimeout(pageTimer[each]);
+        }
         cc.log("MainMenuScene onExit end");
     },
 
-    setOpacityTest:function(){
-        cc.log(".....setOpacityTest Touch Down");
-
-    },
-    setTouxiangTest:function(){
-        cc.log(".....setTouxiangTest Touch Down");
-
-    },
-    touchEvent: function (sender, type) {
-        switch (type) {
-            case ccui.Widget.TOUCH_BEGAN:
-                cc.log(".....Touch Down");
-                // this._topDisplayLabel.setString("Touch Down");
-                break;
-
-            case ccui.Widget.TOUCH_MOVED:
-                cc.log(".....Touch Move");
-                //this._topDisplayLabel.setString("Touch Move");
-                break;
-
-            case ccui.Widget.TOUCH_ENDED:
-                cc.log(".....Touch Up");
-                //this._topDisplayLabel.setString("Touch Up");
-                break;
-
-            case ccui.Widget.TOUCH_CANCELED:
-                cc.log(".....Touch Cancelled");
-                // this._topDisplayLabel.setString("Touch Cancelled");
-                break;
-
-            default:
-                break;
-        }
-    },
     
     moveTofirstMode:function()
     {
@@ -349,107 +237,128 @@ var MainMenuScene =SceneBase.extend(
             setTimeout(function(){self.firstModeChanged,5000-(endTime-loadTime);});
         }
     },
-    //
-    // firstModeChanged:function()
-    // {
-    //     cc.log("Waiting for .firstModeChanged"+this.secondMode.isSelected);
-    //     cc.log("准备切换到KGameScene下一个场景");
-    //     this.stopProgress();
-    //     var self =gMainMenuScene;
-    //     if(self.klineScene==null)
-    //     {
-    //         self.klineScene=new KLineScene();
-    //     }
-    //
-    //     //self.klineScene.onEnteredFunction=function(){
-    //     //    self.klineScene.showProgress();
-    //     //};
-    //     gSocketConn.RegisterEvent("onmessage",self.klineScene.messageCallBack);
-    //     gSocketConn.BeginMatch(0);
-    //     //cc.director.runScene(cc.TransitionFade.create(0.5,klineSceneNext,cc.color(255,255,255,255)));
-    //     cc.director.runScene(self.klineScene);
-    //     cc.log("切换KGameScene场景调用完毕");
-    //     cc.log("Waiting for .firstModeChanged end");
-    // },
     firstModeChanged:function()
     {
-        if(this.firstMode.isSelected==true)
-        {
-            cc.log("Waiting for firstModeChanged");
-            this.showProgress();
-            var self =gMainMenuScene;
-            // if(gKlineScene==null)
-            // {
-            //     gKlineScene=new KLineScene();
-            // }
 
-            var klineSceneNext=new KLineScene();
-            klineSceneNext.onEnteredFunction=function(){
+        cc.log("Waiting for firstModeChanged");
+        // this.showProgress();
+        var self =gMainMenuScene;
+        // if(gKlineScene==null)
+        // {
+        //     gKlineScene=new KLineScene();
+        // }
 
-                // klineSceneNext.showProgress();
-            };
-            gSocketConn.RegisterEvent("onmessage",klineSceneNext.messageCallBack);
 
-            userInfo.matchMode = 0;
-           // gSocketConn.RegisterEvent("onmessage",gKlineScene.messageCallBack);
-            gSocketConn.BeginMatch(userInfo.matchMode);
-            //cc.director.runScene(cc.TransitionFade.create(0.5,klineSceneNext,cc.color(255,255,255,255)));
-            cc.director.runScene(klineSceneNext);
-            cc.log("切换KGameScene场景调用完毕");
+
+        userInfo.matchMode = 0;
+        if(this.matchViewLayer==null){
+            this.matchViewLayer=new MatchViewLayer();
+            this.matchViewLayer.setVisible(false);
+            this.matchViewLayer.setPosition(0,0);
+            this.otherMessageTipLayer.addChild(this.matchViewLayer, 1,this.matchViewLayer.getTag());
+            this.matchViewLayer.closeCallBackFunction=function(){self.matchViewLayer_Close()};
+            // this.controlViewLayer.replayCallBackFunction=function(){self.MatchEndInfoLayer_Replay()};
         }
+        this.matchViewLayer.refreshMatchViewLayer();
+        this.matchViewLayer.showLayer();
+        this.pauseLowerLayer();
+        // if(this.firstMode.isSelected==true)
+        // {
+        //     cc.log("Waiting for firstModeChanged");
+        //     this.showProgress();
+        //     var self =gMainMenuScene;
+        //     // if(gKlineScene==null)
+        //     // {
+        //     //     gKlineScene=new KLineScene();
+        //     // }
+        //
+        //     var klineSceneNext=new KLineScene();
+        //     klineSceneNext.onEnteredFunction=function(){
+        //
+        //         // klineSceneNext.showProgress();
+        //     };
+        //     gSocketConn.RegisterEvent("onmessage",klineSceneNext.messageCallBack);
+        //
+        //     userInfo.matchMode = 0;
+        //    // gSocketConn.RegisterEvent("onmessage",gKlineScene.messageCallBack);
+        //     gSocketConn.BeginMatch(userInfo.matchMode);
+        //     //cc.director.runScene(cc.TransitionFade.create(0.5,klineSceneNext,cc.color(255,255,255,255)));
+        //     cc.director.runScene(klineSceneNext);
+        //     cc.log("切换KGameScene场景调用完毕");
+        // }
     },
 
 	secondModeChanged:function()
 	{
-		if(this.secondMode.isSelected==true)
-		{
-			cc.log("Waiting for secondModeChanged");
-            this.showProgress();
-            var self =gMainMenuScene;
-            // if(gKlineScene==null)
-            // {
-            //     gKlineScene=new KLineScene();
-            // }
 
-            var klineSceneNext=new KLineScene();
-            klineSceneNext.onEnteredFunction=function(){
-
-                // klineSceneNext.showProgress();
-            };
-            // gSocketConn.RegisterEvent("onmessage",klineSceneNext.messageCallBack);
-            // cc.director.runScene(klineSceneNext);
-            //gKlineScene.onEnteredFunction=function(){
-            //    gKlineScene.showProgress();
-            //};
-            userInfo.matchMode = 2;
-            //gSocketConn.RegisterEvent("onmessage",gKlineScene.messageCallBack);
-            // gSocketConn.BeginMatch("0");
-            gSocketConn.BeginMatch("2#DON");
-            //cc.director.runScene(cc.TransitionFade.create(0.5,klineSceneNext,cc.color(255,255,255,255)));
-            cc.director.runScene(klineSceneNext);
-            cc.log("切换KGameScene场景调用完毕");
-		}
+        cc.log("Waiting for secondModeChanged");
+        var self =gMainMenuScene;
+        userInfo.matchMode = 2;
+        if(this.matchViewLayer==null){
+            this.matchViewLayer=new MatchViewLayer();
+            this.matchViewLayer.setVisible(false);
+            this.matchViewLayer.setPosition(0,0);
+            this.otherMessageTipLayer.addChild(this.matchViewLayer, 1,this.matchViewLayer.getTag());
+            this.matchViewLayer.closeCallBackFunction=function(){self.matchViewLayer_Close()};
+            // this.controlViewLayer.replayCallBackFunction=function(){self.MatchEndInfoLayer_Replay()};
+        }
+        this.matchViewLayer.refreshMatchViewLayer();
+        this.matchViewLayer.showLayer();
+        this.pauseLowerLayer();
+        // this.showProgress();
+        // var self =gMainMenuScene;
+        // // if(gKlineScene==null)
+        // // {
+        // //     gKlineScene=new KLineScene();
+        // // }
+        //
+        // var klineSceneNext=new KLineScene();
+        // klineSceneNext.onEnteredFunction=function(){
+        //
+        //
+        //     // klineSceneNext.showProgress();
+        // };
+        // gSocketConn.BeginMatch(userInfo.matchMode+"#"+userInfo.matchAiMode+"#"+userInfo.matchDayCount);
+        // //cc.director.runScene(cc.TransitionFade.create(0.5,klineSceneNext,cc.color(255,255,255,255)));
+        // cc.director.runScene(klineSceneNext);
+        // cc.log("切换KGameScene场景调用完毕");
+        //
+		// if(this.secondMode.isSelected==true)
+		// {
+		// }
 	},
 	
 	thirdModeChanged:function()
 	{
-		if(this.thirdMode.isSelected==true)
-		{
-            cc.log("Waiting for thirdModeChanged");
-            this.showProgress();
-            var self =gMainMenuScene;
-            userInfo.matchMode = 1;
-            gSocketConn.BeginMatch("1");
-            cc.log("Waiting for thirdModeChanged");
-		}
+        cc.log("Waiting for thirdModeChanged");
+        var self = this;
+        userInfo.matchMode = 1;
+        if(this.matchViewLayer==null){
+            this.matchViewLayer=new MatchViewLayer();
+            this.matchViewLayer.setVisible(false);
+            this.matchViewLayer.setPosition(0,0);
+            this.otherMessageTipLayer.addChild(this.matchViewLayer, 1,this.matchViewLayer.getTag());
+            this.matchViewLayer.closeCallBackFunction=function(){self.matchViewLayer_Close()};
+            // this.controlViewLayer.replayCallBackFunction=function(){self.MatchEndInfoLayer_Replay()};
+        }
+        this.matchViewLayer.refreshMatchViewLayer();
+        this.matchViewLayer.showLayer();
+        this.pauseLowerLayer();
+        // this.showProgress();
+        // var self =gMainMenuScene;
+        // userInfo.matchMode = 1;
+        // gSocketConn.BeginMatch("1");
+        cc.log("Waiting for thirdModeChanged");
+
+        // if(this.thirdMode.isSelected==true)
+		// {
+		// }
 	},
 	
 	fourthModeChanged:function()
 	{
-		if(this.fourthMode.isSelected==true)
-		{
-			cc.log("Waiting for fourthMode...");
-		}
+        cc.log("Waiting for fourthMode...");
+
 	},
 
 	zhanji:function()
@@ -514,14 +423,22 @@ var MainMenuScene =SceneBase.extend(
         var pButtonScale = cc.p(28,60);
         var fontSize = 25;
 
-        this.zhanjiButton=new Button("res/btn_zhanji.png");
-        // this.zhanjiButton.setScale(fXScale,fYScale);
-        this.zhanjiButton.setPosition(cc.p(780,pButtonY));
+        var mu = new cc.Menu();
+        mu.x = 0;
+        mu.y = 0;
+        this.backgroundSprite.addChild(mu, 2);
 
-        this.zhanjiButton.setClickEvent(function(){
-            cc.log("zhanjiButton ClickEvent");
-            self.zhanji();
-        });
+        var bgSize = this.backgroundSprite.getContentSize();
+        this.zhanjiButton = new cc.MenuItemImage("res/btn_zhanji.png", "res/btn_zhanji.png", self.zhanji, this);
+        mu.addChild(this.zhanjiButton);
+        // this.zhanjiButton=new Button("res/btn_zhanji.png");
+        // // this.zhanjiButton.setScale(fXScale,fYScale);
+        // this.zhanjiButton.setPosition(cc.p(780,pButtonY));
+        // this.zhanjiButton.setClickEvent(function(){
+        //     cc.log("zhanjiButton ClickEvent");
+        //     self.zhanji();
+        // });
+        this.zhanjiButton.setPosition(cc.p(780,pButtonY));
         this.zhanjiLabel=cc.LabelTTF.create("战绩", "fonts/Self.ttf",fontSize);
         //this.zhanjiLabel=cc.LabelTTF.create(gPlayerName, "Arial", 20);
         this.zhanjiLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
@@ -530,12 +447,14 @@ var MainMenuScene =SceneBase.extend(
         this.backgroundSprite.addChild(this.zhanjiLabel,5);
 
 
-        this.paimingButton=new Button("res/btn_paihang.png");
-        // this.paimingButton.setScale(fXScale,fYScale);
+        this.paimingButton = new cc.MenuItemImage("res/btn_paihang.png","res/btn_paihang.png",self.rank, this);
+        mu.addChild(this.paimingButton);
+        // this.paimingButton=new Button("res/btn_paihang.png");
+        // // this.paimingButton.setScale(fXScale,fYScale);
+        // this.paimingButton.setClickEvent(function(){
+        //     self.rank();
+        // });
         this.paimingButton.setPosition(cc.p(890,pButtonY));
-        this.paimingButton.setClickEvent(function(){
-            self.rank();
-        });
         this.paimingLabel=cc.LabelTTF.create("排名", "fonts/Arial.ttf", fontSize);
         //this.paimingLabel=cc.LabelTTF.create(gPlayerName, "Arial", 20);
         this.paimingLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
@@ -543,12 +462,14 @@ var MainMenuScene =SceneBase.extend(
         this.paimingLabel.setPosition(cc.pSub(cc.p(890,pButtonY),pButtonScale));
         this.backgroundSprite.addChild(this.paimingLabel,5);
 
-        this.helpButton=new Button("res/btn_help.png");
+        this.helpButton =new cc.MenuItemImage("res/btn_help.png");
+        mu.addChild(this.helpButton);
+        // this.helpButton=new Button("res/btn_help.png");
         // this.helpButton.setScale(fXScale,fYScale);
         this.helpButton.setPosition(cc.p(1000,pButtonY));
-        this.helpButton.setClickEvent(function(){
-            self.help();
-        });
+        // this.helpButton.setClickEvent(function(){
+        //     self.help();
+        // });
         this.helpLabel=cc.LabelTTF.create("帮助", "fonts/Georgia.ttf", fontSize);
         //this.helpLabel=cc.LabelTTF.create(gPlayerName, "Arial", 20);
         this.helpLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
@@ -556,12 +477,14 @@ var MainMenuScene =SceneBase.extend(
         this.helpLabel.setPosition(cc.pSub(cc.p(1000,pButtonY),pButtonScale));
         this.backgroundSprite.addChild(this.helpLabel,5);
 
-        this.configButton=new Button("res/btn_control.png");
-        // this.configButton.setScale(fXScale,fYScale);
+        // this.configButton=new Button("res/btn_control.png");
+        // // this.configButton.setScale(fXScale,fYScale);
+        // this.configButton.setClickEvent(function(){
+        //     self.config();
+        // });
+        this.configButton = new cc.MenuItemImage("res/btn_control.png","res/btn_control.png",self.config,this);
         this.configButton.setPosition(cc.p(1110,pButtonY));
-        this.configButton.setClickEvent(function(){
-            self.config();
-        });
+        mu.addChild(this.configButton);
         this.configLabel=cc.LabelTTF.create("设置", "fonts/Arial.ttf", fontSize);
         //this.configLabel=cc.LabelTTF.create(gPlayerName, "Arial", 20);
         this.configLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);
@@ -569,6 +492,75 @@ var MainMenuScene =SceneBase.extend(
         this.configLabel.setPosition(cc.pSub(cc.p(1110,pButtonY),pButtonScale));
         this.backgroundSprite.addChild(this.configLabel,5);
 
+
+
+        var pModeXdistance = 300;
+        var pModeY = 220;
+
+        // this.firstMode=new Button("res/btn_mode1_u.png");
+        // this.firstMode.setPosition(cc.p((190),pModeY));
+        // this.firstMode.setClickEvent(function(){
+        //     self.firstModeChanged();
+        // });
+        //
+        // // this.secondMode=new CheckButton("res/btn_mode2_u.png","res/btn_mode2_u.png");
+        // this.secondMode=new Button("res/btn_mode2_u.png");
+        // this.secondMode.setPosition(cc.p((190+pModeXdistance),pModeY));
+        // this.secondMode.setClickEvent(function(){
+        //     self.secondModeChanged();
+        // });
+
+        // this.thirdMode=new CheckButton("res/btn_mode3_u.png","res/btn_mode3_u.png");
+        // this.thirdMode=new Button("res/btn_mode3_u.png");
+        // this.thirdMode.setPosition(cc.p((190+2*pModeXdistance),pModeY));
+        // this.thirdMode.setClickEvent(function(){
+        //     self.thirdModeChanged();
+        // });
+
+
+        this.firstMode = new cc.MenuItemImage("res/btn_mode1_u.png", "res/btn_mode1_d.png", self.firstModeChanged, this);
+        mu.addChild(this.firstMode);
+        this.firstMode.setPosition(cc.p((190),pModeY));
+
+        this.secondMode = new cc.MenuItemImage("res/btn_mode2_u.png", "res/btn_mode2_d.png", self.secondModeChanged, this);
+        mu.addChild(this.secondMode);
+        this.secondMode.setPosition(cc.p((190+pModeXdistance),pModeY));
+
+
+        this.thirdMode = new cc.MenuItemImage("res/btn_mode3_u.png", "res/btn_mode3_d.png", self.thirdModeChanged, this);
+        mu.addChild(this.thirdMode);
+        this.thirdMode.setPosition(cc.p((190+2*pModeXdistance),pModeY));
+
+        // this.fourthMode=new CheckButton("res/btn_mode4_d.png","res/btn_mode4_u.png");
+        // this.fourthMode.setScale(fXScale,fYScale);
+        this.fourthMode = new cc.MenuItemImage("res/btn_mode4_d.png", "res/btn_mode4_d.png", self.fourthModeChanged, this);
+        mu.addChild(this.fourthMode);
+        this.fourthMode.setPosition(cc.p((190+3*pModeXdistance),pModeY));
+        this.fourthMode.setEnabled(false);
+        // this.fourthMode.setDisabledImage( "res/btn_mode4_d.png");
+        // this.fourthMode.setClickEvent(function(){
+        //     self.fourthModeChanged();
+        // });
+        // this.fourthMode.setDisabled(true);
+        // this.fourthMode.setTextureByStatus(true);
+
+
+        this.btnHome=new cc.MenuItemImage("res/home.png", "res/home.png", self.toHome, this);//new Button("res/home.png");
+        this.btnHome.setPosition(cc.p(40,bgSize.height-40));
+        mu.addChild(this.btnHome);
+        // this.btnHome.setScale(fXScale*0.8,fYScale*0.8);
+        //this.btnHome.setScale(0.8);
+        // this.btnHome.setClickEvent(function(){self.toHome();});
+        // this.addChild(this.btnHome,123);
+
+        // this.backgroundSprite.addChild(this.zhanjiButton, 2);
+        // this.backgroundSprite.addChild(this.configButton, 2);
+        // this.backgroundSprite.addChild(this.paimingButton, 2);
+        // this.backgroundSprite.addChild(this.helpButton, 2);
+        // this.backgroundSprite.addChild(this.firstMode, 2);
+        // this.backgroundSprite.addChild(this.secondMode, 2);
+        // this.backgroundSprite.addChild(this.thirdMode, 2);
+        // this.backgroundSprite.addChild(this.fourthMode, 2);
         // this.paimingButton.setDisabled(true);
         // this.helpButton.setDisabled(true);
         // this.configButton.setDisabled(true);
@@ -602,7 +594,7 @@ var MainMenuScene =SceneBase.extend(
                 {
                     cc.log("img!=null"+img);
                     var headSprite = new cc.Sprite();
-                    //     this.touxiangSprite = cc.Sprite.create("res/touxiang.png");
+                    //     this.touxiangSprite = cc.Sprite.create("res/bg_touxiang.png");
                     // cc.textureCache.addImage(imgUrl);
                     var texture2d = new cc.Texture2D();
                     texture2d.initWithElement(img);
@@ -722,14 +714,13 @@ var MainMenuScene =SceneBase.extend(
                 // self.stopProgress();
                 break;
             }
-            case "Matching"://人机对战结束信息
+            case "Matching"://人人人对战信息Matching|"playerList":["http://7xpfdl.com1.z0.glb.clouddn.com/M1 E__1480588002710__166279_3596","http://ohfw64y24.bkt.clouddn.com/54"]|###
             {
-                //收到对方买入的信息
-                // if(gKlineScene==null)
-                //     gKlineScene=new KLineScene();
-                // if(gKlineScene!=null) {
-                //     gKlineScene.showMatchEndInfo(packet.content);
-                // }
+                cc.log("gMainMenuScene 人人机对战信息");
+                if(this.matchViewLayer!=null) {
+
+                    this.matchViewLayer.stopHeadChange();
+                }
                 // self.stopProgress();
                 break;
             }
@@ -786,7 +777,8 @@ var MainMenuScene =SceneBase.extend(
                     gKlineScene=new KLineScene();
 
                 //接收到了K线数据的消息
-                // gSocketConn.UnRegisterEvent("onmessage",gKlineScene.messageCallBack);
+                gSocketConn.UnRegisterEvent("onmessage",gMainMenuScene.messageCallBack);
+                gSocketConn.RegisterEvent("onmessage",gKlineScene.messageCallBack);
                 if(gKlineScene!=null)
                 {
                     cc.log("call get kline data");
@@ -911,7 +903,7 @@ var MainMenuScene =SceneBase.extend(
         cc.log("showZhanjiInfo  visible = true");
         // cc.log(content);
         var self=this;
-        // ###Z|{"uid":"3434343770","totalCount":189,"winRate":"52.91","AvgGain":"0.70","historyMatchList":[{"matchId":7661,"uid":3434343770,"nickName":"誓约者艾琳诺","score":"0.00","matchTime":"11-16 16:36","playerNum":1,"matchType":2,"playerList":[{"userName":"誓约者艾琳诺","score":"0.00","ranking":1},{"userName":"唐奇安通道","score":"-1.22","ranking":2}]},{"matchId":7643,"uid":3434343770,"nickName":"誓约者艾琳诺","score":"21.14","matchTime":"11-16 12:59","playerNum":1,"matchType":2,"playerList":[{"userName":"誓约者艾琳诺","score":"21.14","ranking":1},{"userName":"红三兵","score":"10.34","ranking":2}]},{"matchId":7641,"uid":3434343770,"nickName":"誓约者艾琳诺","score":"0.00","matchTime":"11-16 10:43","playerNum":1,"matchType":2,"playerList":[{"userName":"誓约者艾琳诺","score":"0.00","ranking":2},{"userName":"红三兵","score":"146.26","ranking":1}]},{"matchId":7640,"uid":3434343770,"nickName":"誓约者艾琳诺","score":"0.00","matchTime":"11-16 10:43","playerNum":1,"matchType":2,"playerList":[{"userName":"誓约者艾琳诺","score":"0.00","ranking":2},{"userName":"唐奇安通道","score":"37.63","ranking":1}]},{"matchId":7639,"uid":3434343770,"nickName":"誓约者艾琳诺","score":"0.00","matchTime":"11-16 10:42","playerNum":1,"matchType":2,"playerList":[
+        // ###Z|{"uid":"3434343770","totalCount":189,"winRate":"52.91","AvgGain":"0.70","historyMatchList":[{"matchId":7661,"uid":3434343770,"nickName":"誓约者艾琳诺","score":"0.00","matchTime":"11-16 16:36","playerNum":1,"matchType":2,"playerList":[{"userName":"誓约者艾琳诺","score":"0.00","ranking":1},{"userName":"唐奇安通道","score":"-1.22","ranking":2}]},{"matchId":7643,"uid":3434343770,"nickName":"誓约者艾琳诺","score":"21.14","matchTime":"11-16 12:59","playerNum":1,"matchType":2,
         var data=JSON.parse(content);
         userInfo.userId = data["uid"];
         userInfo.totalCount=data["totalCount"];
@@ -966,7 +958,6 @@ var MainMenuScene =SceneBase.extend(
             userInfo.rankList.push(rankData);
         }
 
-
         if(this.rankViewLayer==null){
             this.rankViewLayer=new RankViewLayer();
             this.rankViewLayer.setVisible(false);
@@ -976,15 +967,26 @@ var MainMenuScene =SceneBase.extend(
             //content的内容为:   总用户个数(假设为2)#用户名A#收益率A#得分A#用户名B#收益率B#得分B#品种名字#起始日期#终止日期
             this.rankViewLayer.closeCallBackFunction=function(){self.rankViewLayer_Close()};
         }
+        pageTimer["rank"] = setTimeout(function(){self.rankrefreshRViewLayer();},100);
+    },
+    rankrefreshRViewLayer:function()
+    {
+        //刷新显示排名界面
         this.rankViewLayer.refreshRankViewLayer();
         this.rankViewLayer.showLayer();
         this.pauseLowerLayer();
-
     },
+
     rankViewLayer_Close:function()
     {
         //关闭战绩界面
         this.rankViewLayer.hideLayer();
+        this.resumeLowerLayer();
+    },
+    matchViewLayer_Close:function()
+    {
+        //关闭战绩界面
+        this.matchViewLayer.hideLayer();
         this.resumeLowerLayer();
     },
     toHome:function()
