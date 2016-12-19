@@ -166,21 +166,40 @@ var MatchEndInfoLayer= cc.Layer.extend({
 
 		}
 		// this.btnReplay=new Button("res/meBtnReplay.png");
-		this.btnReplay=new Button("res/btnEnd.png");
-		this.btnReplay.setClickEvent(function(){
-			self.replay();
-		});
 
-		this.btnAgain=new Button("res/meBtnAgain.png");
-		this.btnAgain.setClickEvent(function(){
-			self.again();
-		});
+		var mu = new cc.Menu();
+		mu.x = 0;
+		mu.y = 0;
+		this.bgSprtie.addChild(mu, 2);
 
-		this.btnShare=new Button("res/meBtnShare.png");
-		this.btnShare.setClickEvent(function(){
-			cc.log("res/meBtnShare.png Click!!!");
-			self.share();
-		});
+		this.btnAgain=new cc.MenuItemImage("res/meBtnAgain.png","", self.again, this);//new Button("res/home.png");
+		// this.btnAgain.setScale(fXScale,fYScale);
+		// this.btnAgain.setPosition(cc.p(size.width/4,posY));
+		mu.addChild(this.btnAgain);
+		this.btnShare=new cc.MenuItemImage("res/meBtnShare.png","", self.share, this);//new Button("res/home.png");
+		// this.btnShare.setScale(fXScale,fYScale);
+		// this.btnShare.setPosition(cc.p(size.width/4*3,posY));
+		mu.addChild(this.btnShare);
+		this.btnReplay=new cc.MenuItemImage("res/btnEnd.png","", self.replay, this);//new Button("res/home.png");
+		// this.meBtnStart.setScale(fXScale,fYScale);
+		// this.meBtnStart.setPosition(cc.p(size.width/2,posY));
+		mu.addChild(this.btnReplay);
+
+		// this.btnReplay=new Button("res/btnEnd.png");
+		// this.btnReplay.setClickEvent(function(){
+		// 	self.replay();
+		// });
+
+		// this.btnAgain=new Button("res/meBtnAgain.png");
+		// this.btnAgain.setClickEvent(function(){
+		// 	self.again();
+		// });
+
+		// this.btnShare=new Button("res/meBtnShare.png");
+		// this.btnShare.setClickEvent(function(){
+		// 	cc.log("res/meBtnShare.png Click!!!");
+		// 	self.share();
+		// });
 
 
 		// this.width = 985*this.fXScale;
@@ -191,9 +210,9 @@ var MatchEndInfoLayer= cc.Layer.extend({
 		this.btnReplay.setPosition(bgSize.width/4,posBtnY);
 		this.btnAgain.setPosition(bgSize.width/2,posBtnY);
 		this.btnShare.setPosition(3*bgSize.width/4,posBtnY);
-		this.bgSprtie.addChild(this.btnReplay,2);
-		this.bgSprtie.addChild(this.btnAgain,2);
-		this.bgSprtie.addChild(this.btnShare,2);
+		// this.bgSprtie.addChild(this.btnReplay,2);
+		// this.bgSprtie.addChild(this.btnAgain,2);
+		// this.bgSprtie.addChild(this.btnShare,2);
 
 		this.bgSprtie.setPosition(this.width / 2, this.height / 2);
 		// this.bgSprtie.setScale(this.fXScale,this.fYScale);

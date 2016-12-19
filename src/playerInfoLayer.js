@@ -254,7 +254,7 @@ var PlayerInfoLayer= cc.Layer.extend({
 	{
 		
 		this.refreshScoreForPlayer(currentIndex,data,selfOperations,true);
-		this.refreshScoreForPlayer(currentIndex,data,opponentOperations,false);
+		// this.refreshScoreForPlayer(currentIndex,data,opponentOperations,false);
 		
 	},
 	

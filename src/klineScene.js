@@ -194,19 +194,34 @@ var KLineScene = SceneBase.extend(
 		this.volumnTechLayerPrev.addNewTais(macdTais2);
 
 
-        this.btnHome=new Button("res/home.png");
-        this.btnHome.setPosition(cc.p(40*this.fXScale,this.size.height-35*this.fYScale));
-        this.btnHome.setScale(this.fXScale*0.8,this.fYScale*0.8);
-        this.btnHome.setClickEvent(function(){self.toHome();});
-        this.addChild(this.btnHome,123);
+		var mu = new cc.Menu();
+		mu.x = 0;
+		mu.y = 0;
+		this.backgroundSprite.addChild(mu, 2);
 
-		this.btnStart=new Button("res/btnStart.png");
-		this.btnStart.setPosition(cc.p(363,40));
-		this.btnStart.setScale(this.fXScale,this.fYScale);
-		this.btnStart.setClickEvent(function(){
-			self.start();
-		});
-		this.addChild(this.btnStart,123);
+		var bgSize = this.backgroundSprite.getContentSize();
+		// this.zhanjiButton = new cc.MenuItemImage("res/btn_zhanji.png", "res/btn_zhanji.png", self.zhanji, this);
+
+
+        this.btnHome=new cc.MenuItemImage("res/home.png", "res/home.png", self.toHome, this);//new Button("res/home.png");
+		this.btnHome.setPosition(cc.p(40,bgSize.height-40));
+		mu.addChild(this.btnHome);
+		this.btnStart=new cc.MenuItemImage("res/btnStart.png", "res/btnStart.png", self.start, this);//new cc.MenuItemImage("res/home.png", "res/home.png", self.start, this);
+		this.btnStart.setPosition(cc.p(bgSize.width/2,60));
+		mu.addChild(this.btnStart);
+		// this.btnHome.setScale(this.fXScale*0.8,this.fYScale*0.8);
+        // this.btnHome.setPosition(cc.p(40*this.fXScale,this.size.height-35*this.fYScale));
+        // this.btnHome.setScale(this.fXScale*0.8,this.fYScale*0.8);
+        // this.btnHome.setClickEvent(function(){self.toHome();});
+        // this.addChild(this.btnHome,123);
+
+		// this.btnStart=new Button("res/btnStart.png");
+		// this.btnStart.setPosition(cc.p(363,40));
+		// this.btnStart.setScale(this.fXScale,this.fYScale);
+		// this.btnStart.setClickEvent(function(){
+		// 	self.start();
+		// });
+		// this.addChild(this.btnStart,123);
 
 		//调用下面这个函数的时候，可能数据还未获取到，也可能获取到了
 		this.setDataForLlineLayer();
@@ -685,6 +700,8 @@ var KLineScene = SceneBase.extend(
 
 		cc.log("klineSceneNext begin");
 		// cc.director.runScene(gKlineScene);
+		var matchInfoMessage =userInfo.matchMode+"#"+userInfo.matchAiMode+"#"+userInfo.matchDayCount;
+		cc.log(" beginMatch:function() begin matchInfoMessage="+matchInfoMessage);
 		var klineSceneNext=new KLineScene();
 		var self=this;
 		klineSceneNext.onEnteredFunction=function(){
@@ -701,7 +718,8 @@ var KLineScene = SceneBase.extend(
 			case 0:
 			{
 				this.showProgress();
-				gSocketConn.BeginMatch(0);
+
+				gSocketConn.BeginMatch(matchInfoMessage);
 				break;
 			}
 			case 1:
@@ -715,7 +733,7 @@ var KLineScene = SceneBase.extend(
 			case 2:
 			{
 				this.showProgress();
-				gSocketConn.BeginMatch("2#DON");
+				gSocketConn.BeginMatch(matchInfoMessage);
 				break;
 			}
 			case 3:
@@ -1361,6 +1379,7 @@ var KLineScene = SceneBase.extend(
 	
 	buyClick:function()
 	{
+		cc.log("buyClick:function() begin");
 		if(this.phase2==false)return;
 		//注意：此处存入的买入操作的index不是从0开始，而是从1开始的
 		var lastCandleIndex=this.currentCandleIndex;
@@ -1377,6 +1396,7 @@ var KLineScene = SceneBase.extend(
 	
 	sellClick:function()
 	{
+		cc.log("sellClick:function() begin");
 		if(this.phase2==false)return;
 		//注意：此处存入的卖出操作的index不是从0开始，而是从1开始的
 		var lastCandleIndex=this.currentCandleIndex;

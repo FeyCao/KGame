@@ -33,7 +33,7 @@ window.onload = function()
       cc.view.setDesignResolutionSize(gDesignResolutionWidth, gDesignResolutionHeight, cc.ResolutionPolicy.SHOW_ALL);
       cc.view.resizeWithBrowserSize(true);//设置随浏览器窗口变化
 	  //load resources
-	  cc.LoaderScene.preload(["res/title.png","res/battle_bg.png","res/selected.png","res/messagebox.png","res/rotate.png","res/rotate_shadow.png","res/cd_1.png","res/cd_2.png","res/cd_3.png","res/cd_4.png","res/cd_5.png","res/btnBuyDisable.png","res/btnBuyEnable.png","res/btnCloseBuy.png","res/btnCloseDisable.png","res/btnCloseSell.png","res/btnSellDisable.png","res/btnSellEnable.png","res/buyOpenTag.png","res/buyCloseTag.png","res/sellOpenTag.png","res/sellCloseTag.png","res/cursor.png","res/selectedBar.png","res/meBtnStart.png"], function () {
+	  cc.LoaderScene.preload(["res/title.png","res/battle_bg.png","res/selected.png","res/rotate.png","res/rotate_shadow.png","res/cd_1.png","res/cd_2.png","res/cd_3.png","res/cd_4.png","res/cd_5.png","res/btnBuyDisable.png","res/btnBuyEnable.png","res/btnCloseBuy.png","res/btnCloseDisable.png","res/btnCloseSell.png","res/btnSellDisable.png","res/btnSellEnable.png","res/buyOpenTag.png","res/buyCloseTag.png","res/sellOpenTag.png","res/sellCloseTag.png","res/cursor.png","res/selectedBar.png","res/meBtnStart.png"], function () {
 		 cc.director.runScene(new ShareLoadScene());
 	  }, this);
 	  cc.view.enableRetina(true);

@@ -187,7 +187,7 @@ var MainMenuScene =SceneBase.extend(
         self.sumMoreLabel.setVisible(userInfo.operationType==1);
 
         // //设置对战信息时数据可能还没取到
-         this.setDataforInfo();
+        //  this.setDataforInfo();
 
         this.setButtonInfo();
 

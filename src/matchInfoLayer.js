@@ -34,13 +34,16 @@ var MatchInfoLayer= cc.Layer.extend({
 	scHalfCheckButton:null,			//半速
 	scNormalCheckButton:null,		//普通速度
 	scDoubleCheckButton:null,		//2倍速度
-	
+
+	//menuControlLayer:null,			//放功能按钮的层
+	// menuControlLayer:null,
 	btnReplay:null,		//复盘
 	btnShare:null,		//分享
     meBtnStart:null,        //我也要玩
 	againCallBackFunction:null,
 	shareCallBackFunction:null,
     startCallBackFunction:null,
+	// menu:null,
 
 	statusFlag:0,
 
@@ -56,34 +59,80 @@ var MatchInfoLayer= cc.Layer.extend({
 	{
 		this._super();
 		var self=this;
-		
-		// this.buyDisableSprite=cc.Sprite.create("res/btnBuyDisable.png");
-		// this.buyCloseDisableSprite=cc.Sprite.create("res/btnCloseDisable.png");
-		// this.sellDisableSprite=cc.Sprite.create("res/btnSellDisable.png");
-		// this.sellCloseDisableSprite=cc.Sprite.create("res/btnCloseDisable.png");
+		var size = cc.director.getWinSize();
+		var fXScale = size.width/1280;
+		var fYScale = size.height/720;
+		var fontSize = 25;
+		var posY = 35;
+		// this.backgroundSprite=cc.Sprite.create("res/battle_bg.png");
+		// var bgSize = this.backgroundSprite.getContentSize();
+
+
+
+		// this.menuControlLayer = new cc.Layer();
+		// this.menuControlLayer.setScale(fXScale,fYScale);
+		// this.menuControlLayer.setPosition(0,0);
+		// this.addChild(this.menuControlLayer);
+		var mu = new cc.Menu();
+		mu.x = 0;
+		mu.y = 0;
+		this.addChild(mu, 2);
+
+		this.btnAgain=new cc.MenuItemImage("res/meBtnAgain.png","", self.again, this);//new Button("res/home.png");
+		this.btnAgain.setScale(fXScale,fYScale);
+		this.btnAgain.setPosition(cc.p(size.width/4,posY));
+		mu.addChild(this.btnAgain);
+		this.btnShare=new cc.MenuItemImage("res/meBtnShare.png","",self.share, this);//new Button("res/home.png");
+		this.btnShare.setScale(fXScale,fYScale);
+		this.btnShare.setPosition(cc.p(size.width/4*3,posY));
+		mu.addChild(this.btnShare);
+		this.meBtnStart=new cc.MenuItemImage("res/meBtnStart.png","", self.meStart, this);//new Button("res/home.png");
+		this.meBtnStart.setScale(fXScale,fYScale);
+		this.meBtnStart.setPosition(cc.p(size.width/2,posY));
+		mu.addChild(this.meBtnStart);
+
+		// this.btnStart=new Button("res/btnStart.png");
+		// this.btnStart.setPosition(cc.p(363,posY));
+		// this.btnStart.setClickEvent(function(){
+		//     self.start();
+		// });
 		//
-		// this.buyDisableSprite.setScale(0.7);
-		// this.buyCloseDisableSprite.setScale(0.7);
-		// this.sellDisableSprite.setScale(0.7);
-		// this.sellCloseDisableSprite.setScale(0.7);
-		//
-		// this.addChild(this.buyDisableSprite, 2);
-		// this.addChild(this.buyCloseDisableSprite, 2);
-		// this.addChild(this.sellDisableSprite, 2);
-		// this.addChild(this.sellCloseDisableSprite, 2);
+		// this.btnHome=new Button("res/home.png");
+		// this.btnHome.setPosition(cc.p(363,posY));
+		// this.btnHome.setClickEvent(function(){
+		//     self.meStart();
+		// });
+
+		// this.addChild(this.btnAgain,3);
+		// this.addChild(this.btnShare,3);
+		// this.addChild(this.meBtnStart,3);
+		// this.addChild(this.btnStart,3);
 
 
-		var posY = 40;
-
+		this.buyButton=new cc.MenuItemImage("res/btnBuyEnable.png","res/btnBuyEnable.png", self.buyClick, this);//new Button("res/home.png");
+		this.buyButton.setScale(fXScale*0.5,fYScale*0.5);
+		this.buyButton.setPosition(cc.p(size.width/6,posY));
+		mu.addChild(this.buyButton);
+		this.sellButton=new cc.MenuItemImage("res/btnSellEnable.png","res/btnSellEnable.png", self.sellClick, this);//new Button("res/home.png");
+		this.sellButton.setScale(fXScale*0.5,fYScale*0.5);
+		this.sellButton.setPosition(cc.p(size.width/6*5,posY));
+		mu.addChild(this.sellButton);
 		//////////////////////////////////////////////////////////////
-		this.buyButton=new Button("res/btnBuyEnable.png");
-		//this.buyButton.setPosition(cc.p(77,44));
-		this.buyButton.setPosition(cc.p(106,posY-5));
-		this.buyButton.setClickEvent(function(){
-			self.buyClick();
-		});
-		this.addChild(this.buyButton, 3);
-		
+		// this.buyButton=new Button("res/btnBuyEnable.png");
+		// //this.buyButton.setPosition(cc.p(77,44));
+		// this.buyButton.setPosition(cc.p(106,posY-5));
+		// this.buyButton.setClickEvent(function(){
+		// 	self.buyClick();
+		// });
+		// this.addChild(this.buyButton, 3);
+		// this.sellButton=new Button("res/btnSellEnable.png");
+		// //this.sellButton.setPosition(cc.p(600,44));
+		// this.sellButton.setPosition(cc.p(630,posY-5));
+		// this.sellButton.setClickEvent(function(){
+		// 	self.sellClick();
+		// });
+		// this.addChild(this.sellButton, 3);
+
 		// this.sellCloseButton=new Button("res/btnCloseSell.png");
 		// this.sellCloseButton.setPosition(cc.p(136,44));
         //
@@ -94,15 +143,9 @@ var MatchInfoLayer= cc.Layer.extend({
 		// 	self.sellCloseClick();
 		// });
 		// this.addChild(this.sellCloseButton, 3);
-		
-		this.sellButton=new Button("res/btnSellEnable.png");
-		//this.sellButton.setPosition(cc.p(600,44));
-		this.sellButton.setPosition(cc.p(630,posY-5));
-		this.sellButton.setClickEvent(function(){
-			self.sellClick();
-		});
-		this.addChild(this.sellButton, 3);
-		
+		//
+		//
+		//
 		// this.buyCloseButton=new Button("res/btnCloseBuy.png");
 		// this.buyCloseButton.setPosition(cc.p(659,44));
         //
@@ -114,46 +157,30 @@ var MatchInfoLayer= cc.Layer.extend({
 		// 	self.buyCloseClick();
 		// });
 		// this.addChild(this.buyCloseButton, 3);
-		
-		this.btnAgain=new Button("res/meBtnAgain.png");
-		this.btnAgain.setPosition(cc.p(276,posY));
-		this.btnAgain.setScale(0.5);
-		this.btnAgain.setClickEvent(function(){
-			self.again();
-		});
-		
-		
-		this.btnShare=new Button("res/meBtnShare.png");
-		this.btnShare.setPosition(cc.p(460,posY));this.btnShare.setScale(0.5);
-		this.btnShare.setScale(0.5);
-		this.btnShare.setClickEvent(function(){
-			self.share();
-		});
-
-
-        this.meBtnStart=new Button("res/meBtnStart.png");
-        this.meBtnStart.setPosition(cc.p(363,posY));
-		this.meBtnStart.setScale(0.5);
-        this.meBtnStart.setClickEvent(function(){
-            self.meStart();
-        });
-		
-        // this.btnStart=new Button("res/btnStart.png");
-        // this.btnStart.setPosition(cc.p(363,posY));
-        // this.btnStart.setClickEvent(function(){
-        //     self.start();
-        // });
-        //
-        // this.btnHome=new Button("res/home.png");
-        // this.btnHome.setPosition(cc.p(363,posY));
-        // this.btnHome.setClickEvent(function(){
-        //     self.meStart();
+		//
+		// this.btnAgain=new Button("res/meBtnAgain.png");
+		// this.btnAgain.setPosition(cc.p(276,posY));
+		// this.btnAgain.setScale(0.5);
+		// this.btnAgain.setClickEvent(function(){
+		// 	self.again();
+		// });
+		//
+		// this.btnShare=new Button("res/meBtnShare.png");
+		// this.btnShare.setPosition(cc.p(460,posY));this.btnShare.setScale(0.5);
+		// this.btnShare.setScale(0.5);
+		// this.btnShare.setClickEvent(function(){
+		// 	self.share();
+		// });
+		//
+        // this.meBtnStart=new Button("res/meBtnStart.png");
+        // this.meBtnStart.setPosition(cc.p(363,posY));
+		// this.meBtnStart.setScale(0.5);
+        // this.meBtnStart.setClickEvent(function(){
+         //    self.meStart();
         // });
 
-		this.addChild(this.btnAgain,3);
-		this.addChild(this.btnShare,3);
-        this.addChild(this.meBtnStart,3);
-		// this.addChild(this.btnStart,3);
+
+
 		this.matchInfoArea=new cc.DrawNodeCanvas();
 		//设置K线图的区域
 		this.matchInfoArea.setPosition(cc.p(0,0));
@@ -210,117 +237,175 @@ var MatchInfoLayer= cc.Layer.extend({
 
 	initSpeedControlArea:function()
 	{
-		 //设置变速信息的信息
-		 var self=this;
-		 
-		 this.speedControlLayer=new cc.Layer();
-		 this.addChild(this.speedControlLayer,3);
-		 var posY = 35;
-		 this.scBackgroundSprite=cc.Sprite.create("res/btn_sc_bg.png");
-		 this.scPlayCheckButton=new CheckButton("res/btn_sc_pause.png","res/btn_sc_play.png");
-		 this.scHalfCheckButton=new CheckButton("res/btn_sc_a_half.png","res/btn_sc_d_half.png");
-		 this.scNormalCheckButton=new CheckButton("res/btn_sc_a_normal.png","res/btn_sc_d_normal.png");
-		 this.scDoubleCheckButton=new CheckButton("res/btn_sc_a_double.png","res/btn_sc_d_double.png");
-		 
-		  this.scBackgroundSprite.setPosition(cc.p(406,posY));
-	   	  this.scPlayCheckButton.setPosition(cc.p(302,posY));
-		  this.scHalfCheckButton.setPosition(cc.p(359,posY));
-		  this.scNormalCheckButton.setPosition(cc.p(406,posY));
-		  this.scDoubleCheckButton.setPosition(cc.p(453,posY));
-		  
-		  this.scPlayCheckButton.setClickEvent(function(){
-			self.playCheckChanged();
-		   });
-		   
-		    this.scHalfCheckButton.setClickEvent(function(){
-			self.halfSpeedCheckClicked();
-		   });
-		   
-		    this.scNormalCheckButton.setClickEvent(function(){
-			self.normalSpeedCheckClicked();
-		   });
-		   
-		    this.scDoubleCheckButton.setClickEvent(function(){
-			self.doubleSpeedCheckClicked();
-		   });
-		   
-		    this.scNormalCheckButton.setChecked(true);
-			this.scPlayCheckButton.setChecked(true);
-		  
-		 
-		 this.speedControlLayer.addChild(this.scBackgroundSprite,1);
-		 this.speedControlLayer.addChild(this.scPlayCheckButton,1);
-		 this.speedControlLayer.addChild(this.scHalfCheckButton,1);
-		 this.speedControlLayer.addChild(this.scNormalCheckButton,1);
-		 this.speedControlLayer.addChild(this.scDoubleCheckButton,1);
+		//设置变速信息的信息
+		var self=this;
+		var size = cc.director.getWinSize();
+        var posX =83;
+		var posY = 35;
+		var fXScale = size.width/1280;
+		var fYScale = size.height/720;
+		this.speedControlLayer=cc.Sprite.create("res/btn_sc_bg.png");
+		this.speedControlLayer.setPosition(size.width/2,posY);
+		this.speedControlLayer.setScale(fXScale*0.6,fYScale*0.6);
+		this.addChild(this.speedControlLayer,3);
+
+		var bgSize = this.speedControlLayer.getContentSize();
+		cc.log("speedControlLayer  bgSize.width=="+bgSize.width+"bgSize.height=="+bgSize.height);
+
+		var mu = new cc.Menu();
+		mu.x = 0;
+		mu.y = 0;
+		this.speedControlLayer.addChild(mu, 2);
+
+		// this.zhanjiButton = new cc.MenuItemImage("res/btn_zhanji.png", "res/btn_zhanji.png", self.zhanji, this);
+
+
+		this.scPlayCheckButton=new cc.MenuItemImage("res/btn_sc_play.png","res/btn_sc_pause.png", self.playCheckChanged, self);//new Button("res/home.png");
+		this.scPlayCheckButton.setPosition(cc.p(posX,bgSize.height/2));
+		mu.addChild(this.scPlayCheckButton);
+		this.scPauseCheckButton=new cc.MenuItemImage("res/btn_sc_pause.png","res/btn_sc_play.png", self.playCheckChanged, self);//new Button("res/home.png");
+		this.scPauseCheckButton.setPosition(cc.p(posX,bgSize.height/2));
+		mu.addChild(this.scPauseCheckButton);
+		this.scPlayCheckButton.setVisible(gKlineScene.drawCandleStoped);
+		this.scPauseCheckButton.setVisible(!gKlineScene.drawCandleStoped);
+
+		this.scHalfCheckButton=new cc.MenuItemImage("res/btn_sc_a_half.png","res/btn_sc_a_normal.png",self.halfSpeedCheckClicked, self);//new Button("res/home.png");
+		this.scHalfCheckButton.setPosition(cc.p(bgSize.width-posX,bgSize.height/2));
+		this.scHalfCheckButton.setVisible(false);
+		mu.addChild(this.scHalfCheckButton);//new CheckButton("res/btn_sc_a_half.png","res/btn_sc_d_half.png");
+		this.scNormalCheckButton=new cc.MenuItemImage("res/btn_sc_a_normal.png","res/btn_sc_a_double.png",self.normalSpeedCheckClicked, self);//new Button("res/home.png");
+		this.scNormalCheckButton.setPosition(cc.p(bgSize.width-posX,bgSize.height/2));
+		mu.addChild(this.scNormalCheckButton);//new CheckButton("res/btn_sc_a_normal.png","res/btn_sc_d_normal.png");
+		this.scDoubleCheckButton=new cc.MenuItemImage("res/btn_sc_a_double.png","res/btn_sc_a_half.png", self.doubleSpeedCheckClicked, self);//new Button("res/home.png");
+		this.scDoubleCheckButton.setPosition(cc.p(bgSize.width-posX,bgSize.height/2));
+		this.scDoubleCheckButton.setVisible(false);
+		mu.addChild(this.scDoubleCheckButton);//new CheckButton("res/btn_sc_a_double.png","res/btn_sc_d_double.png");
+
+		// this.scBackgroundSprite=cc.Sprite.create("res/btn_sc_bg.png");
+		// this.scPlayCheckButton=new CheckButton("res/btn_sc_pause.png","res/btn_sc_play.png");
+		// this.scHalfCheckButton=new CheckButton("res/btn_sc_a_half.png","res/btn_sc_d_half.png");
+		// this.scNormalCheckButton=new CheckButton("res/btn_sc_a_normal.png","res/btn_sc_d_normal.png");
+		// this.scDoubleCheckButton=new CheckButton("res/btn_sc_a_double.png","res/btn_sc_d_double.png");
+
+		// this.scBackgroundSprite.setPosition(cc.p(406,posY));
+		// this.scPlayCheckButton.setPosition(cc.p(302,posY));
+		// this.scHalfCheckButton.setPosition(cc.p(359,posY));
+		// this.scNormalCheckButton.setPosition(cc.p(406,posY));
+		// this.scDoubleCheckButton.setPosition(cc.p(453,posY));
+
+		// this.scPlayCheckButton.setClickEvent(function(){
+		// 	self.playCheckChanged();
+		// });
+
+		// this.scHalfCheckButton.setClickEvent(function(){
+		// 	self.halfSpeedCheckClicked();
+		// });
+        //
+		// this.scNormalCheckButton.setClickEvent(function(){
+		// 	self.normalSpeedCheckClicked();
+		// });
+        //
+		// this.scDoubleCheckButton.setClickEvent(function(){
+		// 	self.doubleSpeedCheckClicked();
+		// });
+        //
+		// this.scNormalCheckButton.setChecked(true);
+		// this.scPlayCheckButton.setChecked(true);
+
+		// this.speedControlLayer.addChild(this.scBackgroundSprite,1);
+		// this.speedControlLayer.addChild(this.scPlayCheckButton,1);
+		// this.speedControlLayer.addChild(this.scHalfCheckButton,1);
+		// this.speedControlLayer.addChild(this.scNormalCheckButton,1);
+		// this.speedControlLayer.addChild(this.scDoubleCheckButton,1);
 	},
 	
 	playCheckChanged:function()
 	{
-		gKlineScene.drawCandleStoped=!this.scPlayCheckButton.isSelected;
+        cc.log("playCheckChanged gKlineScene.drawCandleStoped=="+gKlineScene.drawCandleStoped);
+		gKlineScene.drawCandleStoped=!gKlineScene.drawCandleStoped;
+		this.scPlayCheckButton.setVisible(gKlineScene.drawCandleStoped);
+		this.scPauseCheckButton.setVisible(!gKlineScene.drawCandleStoped);
 	},
 	
 	halfSpeedCheckClicked:function()
 	{
-		if(this.scHalfCheckButton.isSelected==true)
-		{
-			 this.scHalfCheckButton.setDisabled(true);
-			
-			 this.scNormalCheckButton.setChecked(false);
-			 this.scNormalCheckButton.setDisabled(false);
-			 
-			 this.scDoubleCheckButton.setChecked(false);
-			 this.scDoubleCheckButton.setDisabled(false);
-			 
-			 gKlineScene.currentCandleDrawInterval=gKlineScene.CANDAL_DRAW_INTERVAL*2;
-			 if(gKlineScene.drawCandleStoped==true)
-			 {
-				 gKlineScene.drawCandleStoped=false;
-				 this.scPlayCheckButton.setChecked(true);
-			 }
-		}
+		cc.log("begin gKlineScene.currentCandleDrawInterval=="+gKlineScene.currentCandleDrawInterval);
+		this.scHalfCheckButton.setVisible(false);
+		this.scNormalCheckButton.setVisible(true);
+		this.scDoubleCheckButton.setVisible(false);
+		gKlineScene.currentCandleDrawInterval=gKlineScene.CANDAL_DRAW_INTERVAL;
+		cc.log("end gKlineScene.currentCandleDrawInterval=="+gKlineScene.currentCandleDrawInterval);
+		// if(this.scHalfCheckButton.isSelected==true)
+		// {
+		// 	 this.scHalfCheckButton.setDisabled(true);
+		//
+		// 	 this.scNormalCheckButton.setChecked(false);
+		// 	 this.scNormalCheckButton.setDisabled(false);
+		//
+		// 	 this.scDoubleCheckButton.setChecked(false);
+		// 	 this.scDoubleCheckButton.setDisabled(false);
+		//
+		// 	 gKlineScene.currentCandleDrawInterval=gKlineScene.CANDAL_DRAW_INTERVAL*2;
+		// 	 if(gKlineScene.drawCandleStoped==true)
+		// 	 {
+		// 		 gKlineScene.drawCandleStoped=false;
+		// 		 this.scPlayCheckButton.setChecked(true);
+		// 	 }
+		// }
 	},
 	
 	normalSpeedCheckClicked:function()
 	{
-		if(this.scNormalCheckButton.isSelected==true)
-		{
-			 this.scNormalCheckButton.setDisabled(true);
-			
-			 this.scHalfCheckButton.setChecked(false);
-			 this.scHalfCheckButton.setDisabled(false);
-			 
-			 this.scDoubleCheckButton.setChecked(false);
-			 this.scDoubleCheckButton.setDisabled(false);
-			 
-			 gKlineScene.currentCandleDrawInterval=gKlineScene.CANDAL_DRAW_INTERVAL;
-			 if(gKlineScene.drawCandleStoped==true)
-			 {
-				 gKlineScene.drawCandleStoped=false;
-				 this.scPlayCheckButton.setChecked(true);
-			 }
-		}
+		cc.log("begin gKlineScene.currentCandleDrawInterval=="+gKlineScene.currentCandleDrawInterval);
+		this.scHalfCheckButton.setVisible(false);
+		this.scNormalCheckButton.setVisible(false);
+		this.scDoubleCheckButton.setVisible(true);
+		gKlineScene.currentCandleDrawInterval=gKlineScene.CANDAL_DRAW_INTERVAL/2;
+		cc.log("end gKlineScene.currentCandleDrawInterval=="+gKlineScene.currentCandleDrawInterval);
+		// if(this.scNormalCheckButton.isSelected==true)
+		// {
+		// 	 this.scNormalCheckButton.setDisabled(true);
+		//
+		// 	 this.scHalfCheckButton.setChecked(false);
+		// 	 this.scHalfCheckButton.setDisabled(false);
+		//
+		// 	 this.scDoubleCheckButton.setChecked(false);
+		// 	 this.scDoubleCheckButton.setDisabled(false);
+		//
+		// 	 gKlineScene.currentCandleDrawInterval=gKlineScene.CANDAL_DRAW_INTERVAL;
+		// 	 if(gKlineScene.drawCandleStoped==true)
+		// 	 {
+		// 		 gKlineScene.drawCandleStoped=false;
+		// 		 this.scPlayCheckButton.setChecked(true);
+		// 	 }
+		// }
 	},
 	
 	doubleSpeedCheckClicked:function()
 	{
-		if(this.scDoubleCheckButton.isSelected==true)
-		{
-			 this.scDoubleCheckButton.setDisabled(true);
-			
-			 this.scNormalCheckButton.setChecked(false);
-			 this.scNormalCheckButton.setDisabled(false);
-			 
-			 this.scHalfCheckButton.setChecked(false);
-			 this.scHalfCheckButton.setDisabled(false);
-			 
-			 gKlineScene.currentCandleDrawInterval=gKlineScene.CANDAL_DRAW_INTERVAL/2;
-			 if(gKlineScene.drawCandleStoped==true)
-			 {
-				 gKlineScene.drawCandleStoped=false;
-				 this.scPlayCheckButton.setChecked(true);
-			 }
-		}
+		cc.log("begin gKlineScene.currentCandleDrawInterval=="+gKlineScene.currentCandleDrawInterval);
+		this.scHalfCheckButton.setVisible(true);
+		this.scNormalCheckButton.setVisible(false);
+		this.scDoubleCheckButton.setVisible(false);
+		gKlineScene.currentCandleDrawInterval=gKlineScene.CANDAL_DRAW_INTERVAL*2;
+		cc.log("end gKlineScene.currentCandleDrawInterval=="+gKlineScene.currentCandleDrawInterval);
+		// if(this.scDoubleCheckButton.isSelected==true)
+		// {
+		// 	 this.scDoubleCheckButton.setDisabled(true);
+		//
+		// 	 this.scNormalCheckButton.setChecked(false);
+		// 	 this.scNormalCheckButton.setDisabled(false);
+		//
+		// 	 this.scHalfCheckButton.setChecked(false);
+		// 	 this.scHalfCheckButton.setDisabled(false);
+		//
+		// 	 gKlineScene.currentCandleDrawInterval=gKlineScene.CANDAL_DRAW_INTERVAL/2;
+		// 	 if(gKlineScene.drawCandleStoped==true)
+		// 	 {
+		// 		 gKlineScene.drawCandleStoped=false;
+		// 		 this.scPlayCheckButton.setChecked(true);
+		// 	 }
+		// }
 	},
 	
 	disableAllButtons:function()
@@ -346,8 +431,8 @@ var MatchInfoLayer= cc.Layer.extend({
 	{
 		this.buyButton.setVisible(true);
 		this.sellButton.setVisible(true);
-		this.buyButton.setDisabled(false);
-		this.sellButton.setDisabled(false);
+		// this.buyButton.setDisabled(false);
+		// this.sellButton.setDisabled(false);
 		this.statusFlag = 0;
 		// this.buyCloseButton.setVisible(false);
 		// this.sellCloseButton.setVisible(false);
@@ -359,8 +444,8 @@ var MatchInfoLayer= cc.Layer.extend({
 		this.buyButton.setVisible(false);
 		this.sellButton.setVisible(true);
 
-		this.buyButton.setDisabled(true);
-		this.sellButton.setDisabled(false);
+		// this.buyButton.setDisabled(true);
+		// this.sellButton.setDisabled(false);
 		this.statusFlag = 1;
 		// this.buyCloseButton.setVisible(false);
 		// this.sellCloseButton.setVisible(true);
@@ -371,8 +456,8 @@ var MatchInfoLayer= cc.Layer.extend({
 	{
 		this.buyButton.setVisible(true);
 		this.sellButton.setVisible(false);
-		this.buyButton.setDisabled(false);
-		this.sellButton.setDisabled(true);
+		// this.buyButton.setDisabled(false);
+		// this.sellButton.setDisabled(true);
 		this.statusFlag = -1;
 		// this.buyCloseButton.setVisible(true);
 		// this.sellCloseButton.setVisible(false);
@@ -439,9 +524,12 @@ var MatchInfoLayer= cc.Layer.extend({
 	
 	sellCloseClick:function()
 	{
-		var klineScene=this.parent.parent;
-		klineScene.sellClick();
-		
+		// var klineScene=this.parent.parent;
+		// klineScene.sellClick();
+		if(gKlineScene!=null)
+		{
+			gKlineScene.sellClick();
+		}
 		this.setButtonsToNoPosition();
 	},
 	
@@ -481,14 +569,22 @@ var MatchInfoLayer= cc.Layer.extend({
 
 	buyButtonCallBack:function()
 	{
-		var klineScene=arguments[0].parent.parent.parent.parent;
-		klineScene.buyClick();
+		// var klineScene=arguments[0].parent.parent.parent.parent;
+		// klineScene.buyClick();
+		if(gKlineScene!=null)
+		{
+			gKlineScene.buyClick();
+		}
 	},
 
 	sellButtonCallBack:function()
 	{
-		var klineScene=arguments[0].parent.parent.parent.parent;
-		klineScene.sellClick();
+		if(gKlineScene!=null)
+		{
+			gKlineScene.sellClick();
+		}
+		// var klineScene=arguments[0].parent.parent.parent.parent;
+		// klineScene.sellClick();
 	},
 
 	setReplayKLineScene:function()
