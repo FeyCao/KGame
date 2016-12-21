@@ -396,7 +396,11 @@ var PlayerInfoLayer= cc.Layer.extend({
                     this.playerScoreLabel[i].setString(score.toFixed(2)+"%");
 					this.playerScoreLabel[i].setColor(setLabelColor(score));
 
+
 					var selectflag =userInfo.playerListData[i]["userName"]==userInfo.nickName?true:false;
+					if(selectflag){
+						this.refreshScores(score);
+					}
 					// this.playerHead_Sprite[i].setVisible();
 					this.playerHead_Sprite[i].setVisible(selectflag);
                 }

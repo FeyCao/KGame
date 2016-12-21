@@ -132,7 +132,6 @@ var MatchInfoLayer= cc.Layer.extend({
 		// 	self.sellClick();
 		// });
 		// this.addChild(this.sellButton, 3);
-
 		// this.sellCloseButton=new Button("res/btnCloseSell.png");
 		// this.sellCloseButton.setPosition(cc.p(136,44));
         //
@@ -178,7 +177,6 @@ var MatchInfoLayer= cc.Layer.extend({
         // this.meBtnStart.setClickEvent(function(){
          //    self.meStart();
         // });
-
 
 
 		this.matchInfoArea=new cc.DrawNodeCanvas();

@@ -40,7 +40,7 @@ var KLineScene = SceneBase.extend(
 	middleHorizontalLineCount:11,	//在中间的横线的个数
 	
 	currentCandleIndex:0,		//当前显示的是第几个蜡烛，从0开始
-	CANDAL_DRAW_INTERVAL:100,		//每个K线相隔的时间
+	CANDAL_DRAW_INTERVAL:500,		//每个K线相隔的时间
 	currentCandleDrawInterval:null,	//当前的K线绘画间隔
 	drawCandleStoped:false,			//是否绘画停止了
 	
@@ -982,7 +982,7 @@ var KLineScene = SceneBase.extend(
         if(this.drawCandleStoped==false)
         {
             this.drawCandleStoped=true;
-            this.refreshScores(this.currentCandleIndex);
+            // this.refreshScores(this.currentCandleIndex);
             var ended=this.klineLayerMain.drawSingleCandleLineByCurrentIndex(this.currentCandleIndex);
             this.volumnTechLayerMain.drawSingleCandleLineByCurrentIndex(this.currentCandleIndex);
 
@@ -1013,7 +1013,10 @@ var KLineScene = SceneBase.extend(
         if(this.drawCandleStoped==false)
         {
             // this.drawCandleStoped=true;
-            this.refreshScores(this.currentCandleIndex);
+			if(userInfo.matchMode==0){
+				this.refreshScores(this.currentCandleIndex);
+			}
+            
             var ended=this.klineLayerMain.drawSingleCandleLineByCurrentIndex(this.currentCandleIndex);
             this.volumnTechLayerMain.drawSingleCandleLineByCurrentIndex(this.currentCandleIndex);
 
@@ -1251,18 +1254,15 @@ var KLineScene = SceneBase.extend(
 		if(this.matchInfoLayer!=null)
 		{
 			this.matchInfoLayer.disableAllButtons();
+			this.matchInfoLayer.setButtonsToNoPosition();
+			//依次画后面的K线
 			if(userInfo.matchMode!=1){
 				this.matchInfoLayer.ableSpeedButtons();
                 this.drawCandlesOneByOne();
 			}else{
                 this.drawCandlesOneByOneForMatch();
-
 			}
-			//依次画后面的K线
-
-			this.matchInfoLayer.setButtonsToNoPosition();
 		}
-
 
 		cc.log("advanceToMainKLine_PhaseMatch:function()//比赛图 end");
 	},

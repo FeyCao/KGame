@@ -124,7 +124,10 @@ var BaseGraphLayer= cc.Layer.extend({
 	{
 		// cc.log("basegraphlayer setKLineData instanceid="+this.__instanceid+" klineData="+klineData+" klineDataPrev="+klineDataPrev);
 		this.klineData=klineData;
-		this.maxCandleCountPerPage = this.klineData.length;
+		if(this.klineData!=null){
+			this.maxCandleCountPerPage = this.klineData.length;
+		}
+
 		cc.log("this.maxCandleCountPerPage=="+this.maxCandleCountPerPage);
 		if(klineDataPrev!=undefined)
 		{
