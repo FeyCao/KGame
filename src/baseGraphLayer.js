@@ -351,7 +351,10 @@ var BaseGraphLayer= cc.Layer.extend({
 	
 	redrawCandlesToIndex:function(index)
 	{
-		this.graphArea.clear();
+		if(this.graphArea!=null){
+			this.graphArea.clear();
+		}
+
 		this.drawAreaBorder();
 		var startIndex=this.getHistoryCandleIndexByPageIndex();
 		

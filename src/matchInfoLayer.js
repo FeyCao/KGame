@@ -418,6 +418,7 @@ var MatchInfoLayer= cc.Layer.extend({
         this.meBtnStart.setVisible(false);
 		// this.btnStart.setVisible(false);
 		this.speedControlLayer.setVisible(false);
+		cc.log("disableAllButtons ====setButtonsToNoPosition");
 	},
 	ableSpeedButtons:function()
 	{
@@ -427,6 +428,7 @@ var MatchInfoLayer= cc.Layer.extend({
 	//将按钮设置为平仓的状态
 	setButtonsToNoPosition:function()
 	{
+		cc.log("setButtonsToNoPosition");
 		this.buyButton.setVisible(true);
 		this.sellButton.setVisible(true);
 		// this.buyButton.setDisabled(false);

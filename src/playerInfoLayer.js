@@ -128,6 +128,7 @@ var PlayerInfoLayer= cc.Layer.extend({
 						this.playerInfo_btn[i].setPosition(InfoposX,190);
 						if (i==0)
 						{
+							this.playerNameLabel[i].setString(userInfo.nickName);
 							this.playerInfo_btn[i].setClickEvent(function (){
 								cc.log("playerInfo_btn0 ClickEvent ");
 								var matchId = userInfo.matchId;
@@ -139,6 +140,7 @@ var PlayerInfoLayer= cc.Layer.extend({
 						}
 						else
 						{
+							this.playerNameLabel[i].setString("");
 							this.playerInfo_btn[i].setClickEvent(function () {
 								cc.log("playerInfo_btn1 ClickEvent ");
 
