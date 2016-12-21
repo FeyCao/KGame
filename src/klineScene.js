@@ -145,12 +145,15 @@ var KLineScene = SceneBase.extend(
 		this.backgroundSprite.setPosition(this.size.width/2,this.size.height/2);
 		this.backgroundLayer.addChild(this.backgroundSprite, 1);
 
+		var background = this.backgroundSprite.getContentSize();
 
 		this.playerInfoLayer=new PlayerInfoLayer(this.size.width,this.size.height);
 		this.playerInfoLayer.setPosition(cc.p(0,0));
 		// this.playerInfoLayer.setPosition(cc.p(this.size.width/2,this.size.height/2));
 		this.addChild(this.playerInfoLayer, 8,this.playerInfoLayer.getTag());
 		this.setPlayerInfo();
+
+
  		 //设置K线图的区域
 		this.klineLayerMain=new KlineLayer(this.KlineWidth,192);
 		this.klineLayerMain.setPosition(cc.p(this.KlinePosX,170));
@@ -173,7 +176,8 @@ var KLineScene = SceneBase.extend(
 		
 		this.volumnTechLayerPrev=new VolumnTechLayer(this.volumnTechLayerMain.width,this.volumnTechLayerMain.height);
 		this.volumnTechLayerPrev.setPosition(this.volumnTechLayerMain.getPosition());
-		
+
+
 		var self=this;
 		this.volumnTechLayerPrev.setClickEvent(function(){self.changeTechLayer();});
 		this.volumnTechLayerMain.setClickEvent(function(){self.changeTechLayer();});
@@ -193,6 +197,11 @@ var KLineScene = SceneBase.extend(
 		this.volumnTechLayerMain.addNewTais(macdTais1);
 		this.volumnTechLayerPrev.addNewTais(macdTais2);
 
+
+		// this.addChild(this.klineLayerMain,this.mainLayerNumber,this.klineLayerMain.getTag());
+
+		this.addChild(this.klineLayerPrev,this.mainLayerNumber,this.klineLayerPrev.getTag());
+		this.addChild(this.volumnTechLayerPrev,this.volumnTechLayerNumber,this.volumnTechLayerPrev.getTag());
 
 		var mu = new cc.Menu();
 		mu.x = 0;
@@ -249,6 +258,60 @@ var KLineScene = SceneBase.extend(
 			cc.log("KLineScene onEnteredFunction end");
 			this.onEnteredFunction();
 		}
+
+
+		// //pageView begin
+		// var pageView = new ccui.PageView();
+		// pageView.setTouchEnabled(true);
+		// pageView.setContentSize(cc.size(this.size .width,this.size .height));
+		// // pageView.x = ( this.size.width - background.width) / 2 + (background.width - pageView.width) / 2;
+		// // pageView.y = ( this.size.height - background.height) / 2 + (background.height - pageView.height) / 2;
+        //
+		// pageView.x = (this.size .width - pageView.width) / 2;
+		// pageView.y = (this.size .height - pageView.height) / 2;
+		// cc.log("pageView.x = "+pageView.x);
+		// cc.log("pageView.y = "+pageView.y);
+		// // //设置K线图的区域
+		// // this.klineLayerMain=new KlineLayer(this.KlineWidth,192);
+		// // this.klineLayerMain.setPosition(cc.p(this.KlinePosX,170));
+		// for (var i = 0; i < 3; ++i) {
+		// 	var layout = new ccui.Layout();
+		// 	layout.setContentSize(cc.size(this.size .width,this.size .height));
+		// 	var layoutRect = layout.getContentSize();
+        //
+		// 	cc.log("layout.getContentSize()"+layoutRect.width);
+		// 	var imageView =cc.Sprite.create("res/title.png");
+		// 	// imageView.setPose
+		// 	// var imageView = new ccui.ImageView();
+		// 	// imageView.setTouchEnabled(true);
+		// 	// // imageView.setScale9Enabled(true);
+		// 	// imageView.loadTexture("res/title.png");
+		// 	// // imageView.setContentSize(cc.size(240, 130));
+		// 	imageView.x = layoutRect.width / 2;
+		// 	imageView.y = layoutRect.height / 2;
+		// 	layout.addChild(imageView);
+		// 	//
+		// 	var text = new ccui.Text();
+		// 	text.string = "page" + (i + 1);
+		// 	text.font = "30px 'Marker Felt'";
+		// 	text.color = cc.color(192, 192, 192);
+		// 	text.x = layoutRect.width / 2;
+		// 	text.y = layoutRect.height / 2;
+		// 	layout.addChild(text);
+        //
+		// 	cc.log("pageView layer ="+i);
+		// 	pageView.addPage(layout, i);
+		// }
+		// // pageView.setCurrent(1);
+		// pageView.addEventListener(this.pageViewEvent, this);
+        //
+		// pageView.setCurrent(2);
+		// //for test purpose only
+		// cc.log(pageView.getPages());
+		// cc.log(pageView.getPage(0));
+		// this.addChild(pageView,2,pageView.getTag());
+		// ///pageView end
+		// return true;
 	},
 
 	setPlayerInfo:function()
@@ -326,6 +389,7 @@ var KLineScene = SceneBase.extend(
 		
 		if(this.phase2==false)
 		{
+			cc.log("changeTechLayer to begin");
 			if(this.volumnTechLayerPrev.isTaisEnabled("MACD")==true)
 			{
 				//如果MACD是激活的，则切换到"MA"
@@ -903,9 +967,8 @@ var KLineScene = SceneBase.extend(
 		//设置前面的一副蜡烛图
 
 		this.klineLayerPrev.setKLineData(this.prevKlineData);
-		this.addChild(this.klineLayerPrev,this.mainLayerNumber,this.klineLayerPrev.getTag());
 		this.volumnTechLayerPrev.setKLineData(this.prevKlineData);
-		this.addChild(this.volumnTechLayerPrev,this.volumnTechLayerNumber,this.volumnTechLayerPrev.getTag());
+
 
 		this.drawAllCandlesOneByOne();
 		// this.klineLayerPrev.drawAllCandlesTillIndexOrEnd();
@@ -1028,9 +1091,12 @@ var KLineScene = SceneBase.extend(
 		// this.removeChild(this.volumnTechLayerPrev);
 		//先显示前面一副蜡烛图（历史数据）
 		this.klineLayerPrev.setKLineData(this.prevKlineData);
-		this.addChild(this.klineLayerPrev,this.mainLayerNumber,this.klineLayerPrev.getTag());
 		this.volumnTechLayerPrev.setKLineData(this.prevKlineData);
-		this.addChild(this.volumnTechLayerPrev,this.volumnTechLayerNumber,this.volumnTechLayerPrev.getTag());
+		// this.addChild(this.klineLayerPrev,this.mainLayerNumber,this.klineLayerPrev.getTag());
+		if(this.getChildByTag(this.volumnTechLayerPrev.getTag())==null){
+			this.addChild(this.volumnTechLayerPrev,this.volumnTechLayerNumber,this.volumnTechLayerPrev.getTag());
+		}
+
 		
 		cc.log("drawAllCandlesTillIndexOrEnd");
 		this.klineLayerPrev.drawAllCandlesTillIndexOrEnd();
@@ -1172,8 +1238,12 @@ var KLineScene = SceneBase.extend(
 		this.klineLayerMain.setKLineData(this.klinedataMain,this.prevKlineData);
 		//设置附图的数据
 		this.volumnTechLayerMain.setKLineData(this.klinedataMain,this.prevKlineData);
-		this.addChild(this.klineLayerMain,this.mainLayerNumber,this.klineLayerMain.getTag());
-		this.addChild(this.volumnTechLayerMain,this.volumnTechLayerNumber,this.volumnTechLayerMain.getTag());
+		if(this.lowerLayer.getChildByTag(this.klineLayerMain.getTag())){
+			this.addChild(this.klineLayerMain,this.mainLayerNumber,this.klineLayerMain.getTag());
+		}
+		if(this.lowerLayer.getChildByTag(this.volumnTechLayerMain.getTag())){
+			this.addChild(this.volumnTechLayerMain,this.volumnTechLayerNumber,this.volumnTechLayerMain.getTag());
+		}
 		this.setPlayerInfo();
 		this.setDisableAllButtons();
 		//先画前面的部分
@@ -1248,11 +1318,17 @@ var KLineScene = SceneBase.extend(
 
 		//设置主K线图的数据
 		this.klineLayerMain.setKLineData(this.klinedataMain,this.prevKlineData);
-		this.addChild(this.klineLayerMain,this.mainLayerNumber,this.klineLayerMain.getTag());
-
+		// this.addChild(this.klineLayerMain,this.mainLayerNumber,this.klineLayerMain.getTag());
 		//设置附图的数据
 		this.volumnTechLayerMain.setKLineData(this.klinedataMain,this.prevKlineData);
-		this.addChild(this.volumnTechLayerMain,this.volumnTechLayerNumber,this.volumnTechLayerMain.getTag());
+		// this.addChild(this.volumnTechLayerMain,this.volumnTechLayerNumber,this.volumnTechLayerMain.getTag());
+
+		if(this.lowerLayer.getChildByTag(this.klineLayerMain.getTag())){
+			this.addChild(this.klineLayerMain,this.mainLayerNumber,this.klineLayerMain.getTag());
+		}
+		if(this.lowerLayer.getChildByTag(this.volumnTechLayerMain.getTag())){
+			this.addChild(this.volumnTechLayerMain,this.volumnTechLayerNumber,this.volumnTechLayerMain.getTag());
+		}
 
 		var self=this;
 		this.setPlayerInfo();
@@ -1281,12 +1357,17 @@ var KLineScene = SceneBase.extend(
 		
 		//设置主K线图的数据
 		this.klineLayerMain.setKLineData(this.klinedataMain,this.prevKlineData);
-		this.addChild(this.klineLayerMain,this.mainLayerNumber,this.klineLayerMain.getTag());
+		// this.addChild(this.klineLayerMain,this.mainLayerNumber,this.klineLayerMain.getTag());
 		
 		//设置附图的数据
 		this.volumnTechLayerMain.setKLineData(this.klinedataMain,this.prevKlineData);
-		this.addChild(this.volumnTechLayerMain,this.volumnTechLayerNumber,this.volumnTechLayerMain.getTag());
-
+		// this.addChild(this.volumnTechLayerMain,this.volumnTechLayerNumber,this.volumnTechLayerMain.getTag());
+		if(this.lowerLayer.getChildByTag(this.klineLayerMain.getTag())){
+			this.addChild(this.klineLayerMain,this.mainLayerNumber,this.klineLayerMain.getTag());
+		}
+		if(this.lowerLayer.getChildByTag(this.volumnTechLayerMain.getTag())){
+			this.addChild(this.volumnTechLayerMain,this.volumnTechLayerNumber,this.volumnTechLayerMain.getTag());
+		}
 
 		var self=this;
 

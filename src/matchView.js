@@ -12,6 +12,16 @@ var MatchViewLayer = cc.Layer.extend({
     PersonBattleView:null,
     AiBattleView:null,
 
+    bgSprite:null,
+    AiMenu:null,
+    AiModeSelect:null,
+    // PracticeBattleView:null,
+
+    dayCount1Btn:null,
+    dayCount2Btn:null,
+    dayCount3Btn:null,
+    dayCount4Btn:null,
+    dayCountSelect:null,
 
     onEnter: function () {
         this._super();
@@ -67,6 +77,39 @@ var MatchViewLayer = cc.Layer.extend({
         var self =this;
         var matchInfoMessage =userInfo.matchMode+"#"+userInfo.matchAiMode+"#"+userInfo.matchDayCount;
         cc.log(" beginMatch:function() begin matchInfoMessage="+matchInfoMessage);
+
+
+        // var matchInfoMessage ="2#DON";
+        // var matchModeFlag =Math.round(Math.random()*100)%3;
+        // switch (matchModeFlag)
+        // {
+        //     case 0:
+        //     {
+        //         matchInfoMessage ="2#DON";
+        //         break;
+        //     }
+        //     case 1:
+        //     {
+        //         matchInfoMessage ="2#3MA";
+        //         break;
+        //     }
+        //     case 2:
+        //     {
+        //
+        //         matchInfoMessage ="2#3RED";
+        //         break;
+        //     }
+        //     case 3:
+        //     {
+        //         break;
+        //     }
+        //     default:
+        //     {
+        //         cc.log("userInfo.recordMode=="+userInfo.recordMode);
+        //         break;
+        //     }
+        // }
+
 
         switch (userInfo.matchMode)
         {
@@ -179,12 +222,64 @@ var MatchViewLayer = cc.Layer.extend({
         cc.eventManager.pauseTarget(this,true);
     },
 
-    // setPracticeBattleView:function(){
-    //
-    //     if(this.AiBattleView ==null){
-    //
-    //     }
-    // },
+    setPracticeBattleView:function(){
+
+        if(this.AiBattleView ==null){
+            this.setAiBattleView();
+        }
+        if(this.AiBattleView !=null){
+            this.bgSprite.initWithFile("res/bg_select0.png");
+
+            var posX0 = 40;
+            var spaceX = 140 ;
+            var spaceY = 10 ;
+            var fscale = 1.2;
+            var posY=100;
+            this.dayCount1Btn.setPosition(cc.p(posX0+spaceX*1,bgSize.height/2+spaceY));
+            this.dayCount1Btn.setScale(fscale);
+            this.dayCount1Btn.setTag(101);
+
+            this.dayCount2Btn.setPosition(cc.p(posX0+spaceX*2,bgSize.height/2+spaceY));
+            this.dayCount2Btn.setScale(fscale);
+            this.dayCount2Btn.setTag(102);
+
+            this.dayCount3Btn.setPosition(cc.p(posX0+spaceX*3,bgSize.height/2+spaceY));
+            this.dayCount3Btn.setScale(fscale);
+            this.dayCount3Btn.setTag(103);
+
+            this.dayCount4Btn.setPosition(cc.p(posX0+spaceX*4,bgSize.height/2+spaceY));
+            this.dayCount4Btn.setTag(104);
+            this.dayCount4Btn.setScale(fscale);
+            this.dayCountSelect.setScale(fscale);
+
+            this.AiBeginButton.setPosition(cc.p(bgSize.width/2,posY));
+            switch(userInfo.matchDayCount)
+            {
+                case 60:
+                    this.dayCountSelect.setPosition(this.dayCount1Btn.getPosition());
+                    break;
+                case 120:
+                    this.dayCountSelect.setPosition(this.dayCount2Btn.getPosition());
+                    break;
+                case 180:
+                    this.dayCountSelect.setPosition(this.dayCount3Btn.getPosition());
+                    break;
+                case 240:
+                    this.dayCountSelect.setPosition(this.dayCount4Btn.getPosition());
+                    break;
+                default:
+                    break;
+            }
+            this.AiMenu.setVisible(false);
+            this.AiModeSelect.setVisible(false);
+            this.AiBattleView.setVisible(true);
+        }
+
+        if(this.PersonBattleView !=null){
+
+            this.PersonBattleView.setVisible(false);
+        }
+    },
 
     setAiBattleView:function(){
         var self=this;
@@ -196,132 +291,189 @@ var MatchViewLayer = cc.Layer.extend({
         var fontSize = 25;
 
         if(this.AiBattleView ==null){
-
-
-
             this.AiBattleView =new cc.LayerColor(cc.color(0,0,0,127),size.width,size.height);
-            var bgSprite=cc.Sprite.create("res/bg_control.png");
-            bgSize = bgSprite.getContentSize();
+            this.bgSprite=cc.Sprite.create("res/bg_control.png");
+            bgSize = this.bgSprite.getContentSize();
 
-            bgSprite.initWithFile("res/bg_select.png");
+            this.bgSprite.initWithFile("res/bg_select.png");
             cc.log("MatchViewLayer backgroundSprite bgSize="+bgSize.width);
-
-
 
             var mu = new cc.Menu();
             mu.x = 0;
             mu.y = 0;
-            bgSprite.addChild(mu,3);
+            this.bgSprite.addChild(mu,3);
             // closeBtn=new Button("res/close.png");
             var closeBtn = new cc.MenuItemImage("res/close.png", "res/close.png", self.toMainScene, this);
             closeBtn.setPosition(cc.p(bgSize.width-40,bgSize.height-40));
             mu.addChild(closeBtn);
-            var beginButton=new cc.MenuItemImage("res/btn_begin.png", "res/btn_begin.png", self.beginMatch, this);//new CheckButton("res/btn_begin.png","res/btn_begin.png");//new Button("res/btn_mode1d.png");
-            beginButton.setPosition(cc.p(bgSize.width/2,posY));
-            mu.addChild(beginButton);
+            this.AiBeginButton=new cc.MenuItemImage("res/btn_begin.png", "res/btn_begin.png", self.beginMatch, this);//new CheckButton("res/btn_begin.png","res/btn_begin.png");//new Button("res/btn_mode1d.png");
+            this.AiBeginButton.setPosition(cc.p(bgSize.width/2,posY));
+            mu.addChild(this.AiBeginButton);
 
             var posX0 = 120;
             var spaceX = 110 ;
             var spaceY = 60 ;
-            dayCount1Btn =  new cc.MenuItemImage("res/select_60.png", "res/select_60.png", self.setDayCount1, this);
-            dayCount1Btn.setPosition(cc.p(posX0+spaceX*1,bgSize.height/2+spaceY));
-            dayCount1Btn.setTag(101);
-            mu.addChild(dayCount1Btn);
+            if(this.dayCount1Btn==null){
+                this.dayCount1Btn =  new cc.MenuItemImage("res/select_60.png", "res/select_60.png", self.setDayCount1, this);
+                mu.addChild(this.dayCount1Btn);
+            }
+            this.dayCount1Btn.setPosition(cc.p(posX0+spaceX*1,bgSize.height/2+spaceY));
+            this.dayCount1Btn.setTag(101);
 
-            dayCount2Btn =  new cc.MenuItemImage("res/select_120.png", "res/select_120.png", self.setDayCount2, this);
-            dayCount2Btn.setPosition(cc.p(posX0+spaceX*2,bgSize.height/2+spaceY));
-            dayCount2Btn.setTag(102);
-            mu.addChild(dayCount2Btn);
+            if(this.dayCount2Btn==null){
+                this.dayCount2Btn =  new cc.MenuItemImage("res/select_120.png", "res/select_120.png", self.setDayCount2, this);
+                mu.addChild(this.dayCount2Btn);
+            }
+            this.dayCount2Btn.setPosition(cc.p(posX0+spaceX*2,bgSize.height/2+spaceY));
+            this.dayCount2Btn.setTag(102);
 
-            dayCount3Btn =  new cc.MenuItemImage("res/select_180.png", "res/select_180.png", self.setDayCount3, this);
-            dayCount3Btn.setPosition(cc.p(posX0+spaceX*3,bgSize.height/2+spaceY));
-            dayCount3Btn.setTag(103);
-            mu.addChild(dayCount3Btn);
+            if(this.dayCount3Btn==null){
+                this.dayCount3Btn =  new cc.MenuItemImage("res/select_180.png", "res/select_180.png", self.setDayCount3, this);
+                mu.addChild(this.dayCount3Btn);
+            }
+            this.dayCount3Btn.setPosition(cc.p(posX0+spaceX*3,bgSize.height/2+spaceY));
+            this.dayCount3Btn.setTag(103);
 
-            dayCount4Btn =  new cc.MenuItemImage("res/select_240.png", "res/select_240.png", self.setDayCount4, this);
-            dayCount4Btn.setPosition(cc.p(posX0+spaceX*4,bgSize.height/2+spaceY));
-            dayCount4Btn.setTag(104);
-            mu.addChild(dayCount4Btn);
+            if(this.dayCount4Btn==null){
+                this.dayCount4Btn =  new cc.MenuItemImage("res/select_240.png", "res/select_240.png", self.setDayCount4, this);
+                mu.addChild(this.dayCount4Btn);
+            }
+            this.dayCount4Btn.setPosition(cc.p(posX0+spaceX*4,bgSize.height/2+spaceY));
+            this.dayCount4Btn.setTag(104);
 
+            if(this.dayCountSelect==null){
+                this.dayCountSelect = cc.Sprite.create("res/select_bg.png");
+                this.bgSprite.addChild(this.dayCountSelect,3);
+            }
 
-            AiMode1Btn =  new cc.MenuItemImage("res/select_1.png", "res/select_1.png", self.setAiMode1, this);
-            AiMode1Btn.setPosition(cc.p(posX0+spaceX*1,bgSize.height/2-posD));
-            AiMode1Btn.setTag(101);
-            mu.addChild(AiMode1Btn);
-
-            AiMode2Btn =  new cc.MenuItemImage("res/select_2.png", "res/select_2.png", self.setAiMode2, this);
-            AiMode2Btn.setPosition(cc.p(posX0+spaceX*2,bgSize.height/2-posD));
-            AiMode2Btn.setTag(102);
-            mu.addChild(AiMode2Btn);
-
-            AiMode3Btn =  new cc.MenuItemImage("res/select_3.png", "res/select_3.png", self.setAiMode3, this);
-            AiMode3Btn.setPosition(cc.p(posX0+spaceX*3,bgSize.height/2-posD));
-            AiMode3Btn.setTag(103);
-            mu.addChild(AiMode3Btn);
-
-            AiMode4Btn =  new cc.MenuItemImage("res/select_4.png", "res/select_4.png", self.setAiMode4, this);
-            AiMode4Btn.setPosition(cc.p(posX0+spaceX*4,bgSize.height/2-posD));
-            AiMode4Btn.setTag(104);
-            mu.addChild(AiMode4Btn);
-
-            AiMode5Btn =  new cc.MenuItemImage("res/select_5.png", "res/select_5.png", self.setAiMode5, this);
-            AiMode5Btn.setPosition(cc.p(posX0+spaceX*5,bgSize.height/2-posD));
-            AiMode5Btn.setTag(104);
-            mu.addChild(AiMode5Btn);
-
-
-            dayCountSelect = cc.Sprite.create("res/select_bg.png");
             switch(userInfo.matchDayCount)
             {
                 case 60:
-                    dayCountSelect.setPosition(dayCount1Btn.getPosition());
+                    this.dayCountSelect.setPosition(this.dayCount1Btn.getPosition());
                     break;
                 case 120:
-                    dayCountSelect.setPosition(dayCount2Btn.getPosition());
+                    this.dayCountSelect.setPosition(this.dayCount2Btn.getPosition());
                     break;
                 case 180:
-                    dayCountSelect.setPosition(dayCount3Btn.getPosition());
+                    this.dayCountSelect.setPosition(this.dayCount3Btn.getPosition());
                     break;
                 case 240:
-                    dayCountSelect.setPosition(dayCount4Btn.getPosition());
+                    this.dayCountSelect.setPosition(this.dayCount4Btn.getPosition());
                     break;
                 default:
                     break;
             }
-            bgSprite.addChild(dayCountSelect,3);
 
-            AiModeSelect = cc.Sprite.create("res/select_bg.png");
+            if(this.AiMenu==null){
+                this.AiMenu = new cc.Menu();
+                this.AiMenu.x = 0;
+                this.AiMenu.y = 0;
+                this.bgSprite.addChild(this.AiMenu,3);
+            }
+
+            AiMode1Btn =  new cc.MenuItemImage("res/select_1.png", "res/select_1.png", self.setAiMode1, this);
+            AiMode1Btn.setPosition(cc.p(posX0+spaceX*1,bgSize.height/2-posD));
+            AiMode1Btn.setTag(101);
+            this.AiMenu.addChild(AiMode1Btn);
+
+            AiMode2Btn =  new cc.MenuItemImage("res/select_2.png", "res/select_2.png", self.setAiMode2, this);
+            AiMode2Btn.setPosition(cc.p(posX0+spaceX*2,bgSize.height/2-posD));
+            AiMode2Btn.setTag(102);
+            this.AiMenu.addChild(AiMode2Btn);
+
+            AiMode3Btn =  new cc.MenuItemImage("res/select_3.png", "res/select_3.png", self.setAiMode3, this);
+            AiMode3Btn.setPosition(cc.p(posX0+spaceX*3,bgSize.height/2-posD));
+            AiMode3Btn.setTag(103);
+            this.AiMenu.addChild(AiMode3Btn);
+
+            AiMode4Btn =  new cc.MenuItemImage("res/select_4.png", "res/select_4.png", self.setAiMode4, this);
+            AiMode4Btn.setPosition(cc.p(posX0+spaceX*4,bgSize.height/2-posD));
+            AiMode4Btn.setTag(104);
+            this.AiMenu.addChild(AiMode4Btn);
+
+            AiMode5Btn =  new cc.MenuItemImage("res/select_5.png", "res/select_5.png", self.setAiMode5, this);
+            AiMode5Btn.setPosition(cc.p(posX0+spaceX*5,bgSize.height/2-posD));
+            AiMode5Btn.setTag(104);
+            this.AiMenu.addChild(AiMode5Btn);
+
+            this.AiModeSelect = cc.Sprite.create("res/select_bg.png");
             // AiModeSelect.setScale(1.05);
             switch(userInfo.matchAiMode)
             {
                 case "DON":
-                    AiModeSelect.setPosition(AiMode1Btn.getPosition());
+                    this.AiModeSelect.setPosition(AiMode1Btn.getPosition());
                     break;
                 case "3MA":
-                    AiModeSelect.setPosition(AiMode2Btn.getPosition());
+                    this.AiModeSelect.setPosition(AiMode2Btn.getPosition());
                     break;
                 case "1MA":
-                    AiModeSelect.setPosition(AiMode3Btn.getPosition());
+                    this.AiModeSelect.setPosition(AiMode3Btn.getPosition());
                     break;
                 case "BOOL":
-                    AiModeSelect.setPosition(AiMode4Btn.getPosition());
+                    this.AiModeSelect.setPosition(AiMode4Btn.getPosition());
                     break;
                 case "3RED":
-                    AiModeSelect.setPosition(AiMode5Btn.getPosition());
+                    this.AiModeSelect.setPosition(AiMode5Btn.getPosition());
                     break;
                 default:
                     break;
             }
            // AiModeSelect.setPosition(AiMode1Btn.getPosition());
-            bgSprite.addChild(AiModeSelect,3);
+            this.bgSprite.addChild(this.AiModeSelect,3);
 
-            bgSprite.setScale(fXScale,fYScale);
-            bgSprite.setPosition(size.width/2,size.height/2);
-            this.AiBattleView.addChild(bgSprite);
+            this.bgSprite.setScale(fXScale,fYScale);
+            this.bgSprite.setPosition(size.width/2,size.height/2);
+            this.AiBattleView.addChild(this.bgSprite);
             this.addChild(this.AiBattleView);
             this.AiBattleView.setVisible(true);
         }
-        this.AiBattleView.setVisible(true);
+        if(this.AiBattleView !=null){
+            this.bgSprite.initWithFile("res/bg_select.png");
+
+
+            var posX0 = 120;
+            var spaceX = 110 ;
+            var spaceY = 60 ;
+            var fscale = 1.0;
+
+            this.AiBeginButton.setPosition(cc.p(bgSize.width/2,posY));
+            this.dayCount1Btn.setPosition(cc.p(posX0+spaceX*1,bgSize.height/2+spaceY));
+            this.dayCount1Btn.setScale(fscale);
+
+            this.dayCount2Btn.setPosition(cc.p(posX0+spaceX*2,bgSize.height/2+spaceY));
+            this.dayCount2Btn.setScale(fscale);
+
+            this.dayCount3Btn.setPosition(cc.p(posX0+spaceX*3,bgSize.height/2+spaceY));
+            this.dayCount3Btn.setScale(fscale);
+
+            this.dayCount4Btn.setPosition(cc.p(posX0+spaceX*4,bgSize.height/2+spaceY));
+            this.dayCount4Btn.setScale(fscale);
+            this.dayCountSelect.setScale(fscale);
+
+
+            switch(userInfo.matchDayCount)
+            {
+                case 60:
+                    this.dayCountSelect.setPosition(this.dayCount1Btn.getPosition());
+                    break;
+                case 120:
+                    this.dayCountSelect.setPosition(this.dayCount2Btn.getPosition());
+                    break;
+                case 180:
+                    this.dayCountSelect.setPosition(this.dayCount3Btn.getPosition());
+                    break;
+                case 240:
+                    this.dayCountSelect.setPosition(this.dayCount4Btn.getPosition());
+                    break;
+                default:
+                    break;
+            }
+
+            this.AiMenu.setVisible(true);
+            this.AiModeSelect.setVisible(true);
+            this.AiBattleView.setVisible(true);
+        }
+
         if(this.PersonBattleView !=null){
 
             this.PersonBattleView.setVisible(false);
@@ -331,22 +483,22 @@ var MatchViewLayer = cc.Layer.extend({
     setDayCount1:function()
     {
         userInfo.matchDayCount = 60;
-        dayCountSelect.setPosition(dayCount1Btn.getPosition());
+        this.dayCountSelect.setPosition(this.dayCount1Btn.getPosition());
     },
     setDayCount2:function()
     {
         userInfo.matchDayCount = 120;
-        dayCountSelect.setPosition(dayCount2Btn.getPosition());
+        this.dayCountSelect.setPosition(this.dayCount2Btn.getPosition());
     },
     setDayCount3:function()
     {
         userInfo.matchDayCount = 180;
-        dayCountSelect.setPosition(dayCount3Btn.getPosition());
+        this.dayCountSelect.setPosition(this.dayCount3Btn.getPosition());
     },
     setDayCount4:function()
     {
         userInfo.matchDayCount = 240;
-        dayCountSelect.setPosition(dayCount4Btn.getPosition());
+        this.dayCountSelect.setPosition(this.dayCount4Btn.getPosition());
     },
     // setDayCount:function(tag, pMenuItem)
     // {
@@ -368,23 +520,23 @@ var MatchViewLayer = cc.Layer.extend({
     // },
     setAiMode1:function(){
         userInfo.matchAiMode = "DON";
-        AiModeSelect.setPosition(AiMode1Btn.getPosition());
+        this.AiModeSelect.setPosition(AiMode1Btn.getPosition());
     },
     setAiMode2:function(){
         userInfo.matchAiMode = "3MA";
-        AiModeSelect.setPosition(AiMode2Btn.getPosition());
+        this.AiModeSelect.setPosition(AiMode2Btn.getPosition());
     },
     setAiMode3:function(){
         userInfo.matchAiMode = "1MA";
-        AiModeSelect.setPosition(AiMode3Btn.getPosition());
+        this.AiModeSelect.setPosition(AiMode3Btn.getPosition());
     },
     setAiMode4:function(){
         userInfo.matchAiMode = "BOOL";
-        AiModeSelect.setPosition(AiMode4Btn.getPosition());
+        this.AiModeSelect.setPosition(AiMode4Btn.getPosition());
     },
     setAiMode5:function(){
         userInfo.matchAiMode = "3RED";
-        AiModeSelect.setPosition(AiMode5Btn.getPosition());
+        this.AiModeSelect.setPosition(AiMode5Btn.getPosition());
     },
 
     setPersonBattleView:function(){
@@ -514,7 +666,7 @@ var MatchViewLayer = cc.Layer.extend({
             case 0:
             {
 
-                self.setAiBattleView();
+                self.setPracticeBattleView();
                 break;
             }
             case 1:

@@ -61,7 +61,20 @@ function resumeBgSound(){
 function pauseBgSound() {
     cc.audioEngine.pauseMusic();
 }
+function openBgSound(){
+    var musicFile = "res/sound/home_bg.mp3";
+    cc.audioEngine.playMusic(musicFile,true);
+    if(cc.audioEngine.isMusicPlaying()==false)
+    {
+        resumeBgSound();
+    }
 
+
+}
+function closeBgSound(){
+
+    cc.audioEngine.stopMusic();
+}
 function isBgMusicPlaying() {
 
     myObj.fun1FromAndroid("调用android本地方法fun1FromAndroid(String name)！！");

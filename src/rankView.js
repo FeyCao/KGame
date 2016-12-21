@@ -482,9 +482,6 @@ var RankViewLayer = cc.Layer.extend({
         // var userId = userInfo.MatchListData[cell.getIdx()]["uid"];
         // gSocketConn.SendRecordMessage(userId,matchId);
     },
-    tableCellTouched2:function () {
-        cc.log("cell touched at index: ");
-    },
 
     tableCellSizeForIndex:function (table, idx) {
         //if (idx == 2) {

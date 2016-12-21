@@ -115,7 +115,7 @@ var ControlViewLayer = cc.Layer.extend({
 
             if(userInfo.bgSoundFlag==true){
 
-                resumeBgSound();
+                openBgSound();
                // self.openBgSound();
             }else
             {
@@ -190,25 +190,6 @@ var ControlViewLayer = cc.Layer.extend({
     toMainScene:function () {
         if(this.closeCallBackFunction!=null){
             this.closeCallBackFunction();
-        }
-    },
-
-    closeBgSound:function(){
-        if(cc.audioEngine.isMusicPlaying()==true){
-            pauseBgSound();
-        }else{
-            cc.audioEngine.stopMusic();
-        }
-
-    },
-    openBgSound:function(){
-
-        if(cc.audioEngine.isMusicPlaying()==false)
-        {
-            var musicFile = "res/sound/home_bg.mp3";
-            cc.audioEngine.playMusic(musicFile,true);
-        }else {
-            resumeBgSound();
         }
     },
 

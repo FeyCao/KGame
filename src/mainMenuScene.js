@@ -74,13 +74,17 @@ var MainMenuScene =SceneBase.extend(
 		this._super();
         gMainMenuScene=this;
 		//gMainMenusSceneInst=this;
-        var musicFile = "res/sound/home_bg.mp3";
-        cc.audioEngine.playMusic(musicFile,true);
+
         cc.view.enableRetina(userInfo.viewFlag);
         if(userInfo.bgSoundFlag==true){
-            resumeBgSound();//恢复
+            if(cc.audioEngine.isMusicPlaying()==true)
+            {
+                resumeBgSound();
+            }else{
+                openBgSound();
+            }
         }else{
-            pauseBgSound();
+            closeBgSound();
         }
         var size = cc.director.getWinSize();
         var fXScale = size.width/1280;
@@ -333,21 +337,21 @@ var MainMenuScene =SceneBase.extend(
         cc.log("Waiting for thirdModeChanged");
         var self = this;
         userInfo.matchMode = 1;
-        if(this.matchViewLayer==null){
-            this.matchViewLayer=new MatchViewLayer();
-            this.matchViewLayer.setVisible(false);
-            this.matchViewLayer.setPosition(0,0);
-            this.otherMessageTipLayer.addChild(this.matchViewLayer, 1,this.matchViewLayer.getTag());
-            this.matchViewLayer.closeCallBackFunction=function(){self.matchViewLayer_Close()};
-            // this.controlViewLayer.replayCallBackFunction=function(){self.MatchEndInfoLayer_Replay()};
+        if(userInfo.operationType==2){
+            gSocketConn.BeginMatch("1");
+        }else{
+            if(this.matchViewLayer==null){
+                this.matchViewLayer=new MatchViewLayer();
+                this.matchViewLayer.setVisible(false);
+                this.matchViewLayer.setPosition(0,0);
+                this.otherMessageTipLayer.addChild(this.matchViewLayer, 1,this.matchViewLayer.getTag());
+                this.matchViewLayer.closeCallBackFunction=function(){self.matchViewLayer_Close()};
+                // this.controlViewLayer.replayCallBackFunction=function(){self.MatchEndInfoLayer_Replay()};
+            }
+            this.matchViewLayer.refreshMatchViewLayer();
+            this.matchViewLayer.showLayer();
+            this.pauseLowerLayer();
         }
-        this.matchViewLayer.refreshMatchViewLayer();
-        this.matchViewLayer.showLayer();
-        this.pauseLowerLayer();
-        // this.showProgress();
-        // var self =gMainMenuScene;
-        // userInfo.matchMode = 1;
-        // gSocketConn.BeginMatch("1");
         cc.log("Waiting for thirdModeChanged");
 
         // if(this.thirdMode.isSelected==true)
@@ -546,7 +550,8 @@ var MainMenuScene =SceneBase.extend(
 
 
         this.btnHome=new cc.MenuItemImage("res/home.png", "res/home.png", self.toHome, this);//new Button("res/home.png");
-        this.btnHome.setPosition(cc.p(40,bgSize.height-40));
+        this.btnHome.setPosition(cc.p(35,bgSize.height-35));
+        this.btnHome.setScale(0.9);
         mu.addChild(this.btnHome);
         // this.btnHome.setScale(fXScale*0.8,fYScale*0.8);
         //this.btnHome.setScale(0.8);
@@ -885,6 +890,12 @@ var MainMenuScene =SceneBase.extend(
                 //登录失败
                 self.stopProgress();
                 self.showMessageBox(packet.content,function(){self.messageBoxClosed();});
+                break;
+            }
+            case "UNMATCH":
+            {
+                cc.log("messageCallBack.mainScene.default.packet.msgType="+packet.msgType+"=== packet.content=="+ packet.content);
+
                 break;
             }
 
