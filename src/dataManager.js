@@ -95,6 +95,7 @@ var userInfo ={
 
 
     //matchMode
+    matchBeginFlag:false,
     matchMode:0,//游戏模式0：练习场，1：多人战，2：人机战
     matchDayCount:120,
     matchAiMode:"DON",//游戏模式0：练习场，1：多人战，2：人机战3|matchType#aiType#mainDayCount|

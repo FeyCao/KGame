@@ -663,7 +663,7 @@ var KLineScene = SceneBase.extend(
 		//把该用户信息排在第一位
 		for(var i=userInfo.playerListData.length-1;i>0;i--)
 		{
-			for(var j=i;j>1;j--)
+			for(var j=i;j>0;j--)
 			{
 				if(userInfo.playerListData[j]["userName"]==userInfo.nickName)
 				{
@@ -673,6 +673,7 @@ var KLineScene = SceneBase.extend(
 				}
 			}
 		}
+
 		this.playerInfoLayer.refreshScoresByData();
 
 		this.drawCandleStoped=false;
@@ -839,12 +840,12 @@ var KLineScene = SceneBase.extend(
 	getklinedata:function(jsonText)
 	{
 		cc.log("begin to parse json text");
-		if(jsonText!=""||jsonText==null){
+		if(null!=jsonText&&jsonText!=""){
 			var data=JSON.parse(jsonText);
 			cc.log("jsonText parse over");
 			this.toSetklinedata(data);
 		}else{
-			cc.log("begin to parse json text="+jsonText+"|");
+			cc.log("||jsonText== null|| begin to parse json text="+jsonText+"|");
 		}
 		// this.ongotklinedata(data);
 	},
@@ -902,7 +903,7 @@ var KLineScene = SceneBase.extend(
 		//把该用户信息排在第一位
 		for(var i=userInfo.playerListData.length-1;i>0;i--)
 		{
-			for(var j=i;j>1;j--)
+			for(var j=i;j>0;j--)
 			{
 				if(userInfo.playerListData[j]["userName"]==userInfo.nickName)
 				{
