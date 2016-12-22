@@ -103,7 +103,7 @@ var ControlViewLayer = cc.Layer.extend({
         // soundBgButton.setScale(0.8);
         soundBgButton.setClickEvent(function(){
             cc.log("soundBgButton ClickEvent cc.audioEngine.isMusicPlaying() ="+cc.audioEngine.isMusicPlaying());
-            if(soundBgButton.isSelected==false)
+            if(soundBgButton.isSelected==true)
             {
                 cc.log("soundBgButton.isSelected()==true");
                 userInfo.bgSoundFlag=true;
@@ -114,18 +114,18 @@ var ControlViewLayer = cc.Layer.extend({
             }
 
             if(userInfo.bgSoundFlag==true){
-
                 openBgSound();
                // self.openBgSound();
-            }else
+            }
+            else
             {
-                pauseBgSound();
+                closeBgSound();
               //  self.closeBgSound();
             }
             // cc.audioEngine.stopMusic();
 
         });
-        soundBgButton.setTextureByStatus(!userInfo.bgSoundFlag);
+        soundBgButton.setTextureByStatus(userInfo.bgSoundFlag);
         this.backgroundSprite.addChild(soundBgButton,5);
 
         soundButton=new CheckButton("res/btn_open.png","res/btn_close.png");//new Button("res/btn_mode1d.png");
@@ -133,7 +133,7 @@ var ControlViewLayer = cc.Layer.extend({
         // soundButton.setScale(0.8);
         soundButton.setClickEvent(function(){
             cc.log("soundButton ClickEvent cc.audioEngine.isMusicPlaying() ="+cc.audioEngine.isMusicPlaying());
-            if(soundButton.isSelected==false)
+            if(soundButton.isSelected==true)
             {
                 cc.log("soundButton.isSelected()==true");
                 userInfo.buttonSoundFlag =true;
@@ -148,7 +148,7 @@ var ControlViewLayer = cc.Layer.extend({
             // cc.audioEngine.stopMusic();
 
         });
-        soundButton.setTextureByStatus(!userInfo.buttonSoundFlag);
+        soundButton.setTextureByStatus(userInfo.buttonSoundFlag);
         this.backgroundSprite.addChild(soundButton,5);
 
 //         bdButton=new CheckButton("res/btn_general.png","res/btn_general1.png");

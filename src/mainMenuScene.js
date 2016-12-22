@@ -77,12 +77,7 @@ var MainMenuScene =SceneBase.extend(
 
         cc.view.enableRetina(userInfo.viewFlag);
         if(userInfo.bgSoundFlag==true){
-            if(cc.audioEngine.isMusicPlaying()==true)
-            {
-                resumeBgSound();
-            }else{
-                openBgSound();
-            }
+            openBgSound();
         }else{
             closeBgSound();
         }
