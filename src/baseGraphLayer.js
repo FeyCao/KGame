@@ -30,7 +30,7 @@ var BaseGraphLayer= cc.Layer.extend({
 		this.width=width;
 		this.height=height;
 		this.taisArray=[];
-		cc.log("this.width="+this.width+"this.height="+this.height);
+		cc.log("KLine this.width="+this.width+"this.height="+this.height);
 		//this.maxCandleCountPerPage=60;
 		//this.historyCandleCount=10;
 		//this.pageIndex=0;
@@ -279,7 +279,9 @@ var BaseGraphLayer= cc.Layer.extend({
 	///画位于CurrentIndex的蜡烛线，如果大小变化了则需要重画
 	drawSingleCandleLineByCurrentIndex:function(currentIndex)
 	{
+
 		var totalCandleCount=this.klineData.length;
+		cc.log("totalCandleCount=="+totalCandleCount+"currentIndex=="+currentIndex);
 		if(currentIndex>=totalCandleCount)
 		{
 			//表示已经结束了
@@ -573,7 +575,9 @@ var BaseGraphLayer= cc.Layer.extend({
 	//清除所有的内容，包括画的线和指标信息表示
 	clearAllContents:function()
 	{
-		this.graphArea.clear();
+		if(this.graphArea!=null){
+			this.graphArea.clear();
+		}
 		for(var i=0;i<this.taisInfoLabelArray.length;i++)
 		{
 			this.taisInfoLabelArray[i].setVisible(false);

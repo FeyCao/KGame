@@ -29,30 +29,34 @@ var ZhanjiTableViewCell = cc.TableViewCell.extend({
         this.addChild(touxiangSprite,2);
 
         var url = userInfo.MatchListData[idx]["headPicture"];
-        cc.loader.loadImg(url, {isCrossOrigin : false }, function(err,img){
-            if(err){
-                cc.log(err);
-            }
-            if(img){
-                cc.log("img!=null"+img);
-                var headSprite = new cc.Sprite();
-                //     this.touxiangSprite = cc.Sprite.create("res/bg_touxiang.png");
-                // cc.textureCache.addImage(imgUrl);
-                var texture2d = new cc.Texture2D();
-                texture2d.initWithElement(img);
-                texture2d.handleLoadedTexture();
-                headSprite.initWithTexture(texture2d);
+        if(url!=null){
+            cc.log("url=="+url);
+            cc.loader.loadImg(url, {isCrossOrigin : false }, function(err,img){
+                if(err){
+                    cc.log(err);
+                }
+                if(img){
+                    cc.log("img!=null"+img);
+                    var headSprite = new cc.Sprite();
+                    //     this.touxiangSprite = cc.Sprite.create("res/bg_touxiang.png");
+                    // cc.textureCache.addImage(imgUrl);
+                    var texture2d = new cc.Texture2D();
+                    texture2d.initWithElement(img);
+                    texture2d.handleLoadedTexture();
+                    headSprite.initWithTexture(texture2d);
 
-                // this.touxiangSprite.setScale(fXScale,fYScale);
+                    // this.touxiangSprite.setScale(fXScale,fYScale);
 
-                var size = headSprite.getContentSize();
-                headSprite.setScale(66/size.width,66/size.height);
-                headSprite.setPosition(cc.p(80,40));
-                self.addChild(headSprite,2);
-                // self.touxiangSprite.setValue(false);
-            }
-            cc.log("loadImg="+userInfo.headSprite); // self.addChild(logo);
-        });
+                    var size = headSprite.getContentSize();
+                    headSprite.setScale(66/size.width,66/size.height);
+                    headSprite.setPosition(cc.p(80,40));
+                    self.addChild(headSprite,2);
+                    // self.touxiangSprite.setValue(false);
+                }
+                cc.log("loadImg="+userInfo.headSprite); // self.addChild(logo);
+            });
+        }
+
 
         strNameText= userInfo.MatchListData[idx]["nickName"];
         textNameLabel = new cc.LabelTTF(cutstr(strNameText,11), "Arial", 25.0);
@@ -134,28 +138,32 @@ var ZhanjiTableViewCell = cc.TableViewCell.extend({
             // this.addChild(playerSprite,2);
 
             var url = playerdata[1]["headPicture"];
-            cc.loader.loadImg(url, {isCrossOrigin : false }, function(err,img){
-                if(err){
-                    cc.log(err);
-                }
-                if(img){
-                    cc.log("img!=null"+img);
-                    var headSpriteAI = new cc.Sprite();
-                    //     this.touxiangSprite = cc.Sprite.create("res/bg_touxiang.png");
-                    // cc.textureCache.addImage(imgUrl);
-                    var texture2d = new cc.Texture2D();
-                    texture2d.initWithElement(img);
-                    texture2d.handleLoadedTexture();
-                    headSpriteAI.initWithTexture(texture2d);
+            if(url!=null){
+                cc.log("url=="+url);
+                cc.loader.loadImg(url, {isCrossOrigin : false }, function(err,img){
+                    if(err){
+                        cc.log(err);
+                    }
+                    if(img){
+                        cc.log("img!=null"+img);
+                        var headSpriteAI = new cc.Sprite();
+                        //     this.touxiangSprite = cc.Sprite.create("res/bg_touxiang.png");
+                        // cc.textureCache.addImage(imgUrl);
+                        var texture2d = new cc.Texture2D();
+                        texture2d.initWithElement(img);
+                        texture2d.handleLoadedTexture();
+                        headSpriteAI.initWithTexture(texture2d);
 
-                    var size = headSpriteAI.getContentSize();
-                    headSpriteAI.setScale(66/size.width,66/size.height);
-                    headSpriteAI.setPosition(cc.p(530,40));
-                    self.addChild(headSpriteAI,2);
-                    // self.touxiangSprite.setValue(false);
-                }
-                cc.log("loadImg="+userInfo.headSprite); // self.addChild(logo);
-            });
+                        var size = headSpriteAI.getContentSize();
+                        headSpriteAI.setScale(66/size.width,66/size.height);
+                        headSpriteAI.setPosition(cc.p(530,40));
+                        self.addChild(headSpriteAI,2);
+                        // self.touxiangSprite.setValue(false);
+                    }
+                    cc.log("loadImg="+userInfo.headSprite); // self.addChild(logo);
+                });
+            }
+
             playerNameText= playerdata[1]["userName"];
             playerNameLabel = new cc.LabelTTF(cutstr(playerNameText,11), "Arial", 25.0);
             playerNameLabel.setPosition(cc.p(570,20));
@@ -196,30 +204,34 @@ var ZhanjiTableViewCell = cc.TableViewCell.extend({
                     this.addChild(touxiangSprite,2);
 
                     var url = userInfo.MatchListData[idx]["headPicture"];
-                    cc.loader.loadImg(url, {isCrossOrigin : false }, function(err,img){
-                        if(err){
-                            cc.log(err);
-                            cc.log("战绩：fail loadImg="+userInfo.headSprite); // self.addChild(logo);
-                        }
-                        if(img){
-                            cc.log("img!=null"+img);
-                            var headSprite = new cc.Sprite();
-                            //     this.touxiangSprite = cc.Sprite.create("res/bg_touxiang.png");
-                            // cc.textureCache.addImage(imgUrl);
-                            var texture2d = new cc.Texture2D();
-                            texture2d.initWithElement(img);
-                            texture2d.handleLoadedTexture();
-                            headSprite.initWithTexture(texture2d);
+                    if(url!=null){
+                        cc.log("url=="+url);
+                        cc.loader.loadImg(url, {isCrossOrigin : false }, function(err,img){
+                            if(err){
+                                cc.log(err);
+                                cc.log("战绩：fail loadImg="+userInfo.headSprite); // self.addChild(logo);
+                            }
+                            if(img){
+                                cc.log("img!=null"+img);
+                                var headSprite = new cc.Sprite();
+                                //     this.touxiangSprite = cc.Sprite.create("res/bg_touxiang.png");
+                                // cc.textureCache.addImage(imgUrl);
+                                var texture2d = new cc.Texture2D();
+                                texture2d.initWithElement(img);
+                                texture2d.handleLoadedTexture();
+                                headSprite.initWithTexture(texture2d);
 
-                            // this.touxiangSprite.setScale(fXScale,fYScale);
+                                // this.touxiangSprite.setScale(fXScale,fYScale);
 
-                            var size = headSprite.getContentSize();
-                            headSprite.setScale(66/size.width,66/size.height);
-                            headSprite.setPosition(cc.p(80,40));
-                            self.addChild(headSprite,2);
-                            cc.log("战绩：success loadImg="+userInfo.headSprite); // self.addChild(logo); // self.touxiangSprite.setValue(false);
-                        }
-                    });
+                                var size = headSprite.getContentSize();
+                                headSprite.setScale(66/size.width,66/size.height);
+                                headSprite.setPosition(cc.p(80,40));
+                                self.addChild(headSprite,2);
+                                cc.log("战绩：success loadImg="+userInfo.headSprite); // self.addChild(logo); // self.touxiangSprite.setValue(false);
+                            }
+                        });
+                    }
+
 
                     strNameText= userInfo.MatchListData[idx]["nickName"];
                     textNameLabel = new cc.LabelTTF(cutstr(strNameText,11), "Arial", 25.0);

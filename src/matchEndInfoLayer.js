@@ -132,34 +132,37 @@ var MatchEndInfoLayer= cc.Layer.extend({
 			// this.avatarSprite.setScale(0.4);
 			this.bgSprtie.addChild(this.avatarSprite,5);
 			// this.addChild(this.avatarSprite,5);
-			var url = userInfo.headSprite;
-			cc.loader.loadImg(url, {isCrossOrigin : false }, function(err,img){
-				if(err){
-					cc.log(err);
-					cc.log("MatchEndInfoLayer fail loadImg="+userInfo.headSprite); // self.addChild(logo);
-				}
-				if(img){
-					cc.log("img!=null"+img);
-					var headSprite = new cc.Sprite();
-					//     this.touxiangSprite = cc.Sprite.create("res/bg_touxiang.png");
-					// cc.textureCache.addImage(imgUrl);
-					var texture2d = new cc.Texture2D();
-					texture2d.initWithElement(img);
-					texture2d.handleLoadedTexture();
-					headSprite.initWithTexture(texture2d);
+			var  url= userInfo.headSprite;
+			if(url!=null){
+				cc.log("url=="+url);
+				cc.loader.loadImg(url, {isCrossOrigin : false }, function(err,img){
+					if(err){
+						cc.log(err);
+						cc.log("MatchEndInfoLayer fail loadImg="+userInfo.headSprite); // self.addChild(logo);
+					}
+					if(img){
+						cc.log("img!=null"+img);
+						var headSprite = new cc.Sprite();
+						//     this.touxiangSprite = cc.Sprite.create("res/bg_touxiang.png");
+						// cc.textureCache.addImage(imgUrl);
+						var texture2d = new cc.Texture2D();
+						texture2d.initWithElement(img);
+						texture2d.handleLoadedTexture();
+						headSprite.initWithTexture(texture2d);
 
-					// this.touxiangSprite.setScale(fXScale,fYScale);
+						// this.touxiangSprite.setScale(fXScale,fYScale);
 
-					var size = headSprite.getContentSize();
-					headSprite.setScale(110/size.width,110/size.height);
-					headSprite.setPosition(bgSize.width /4, bgSize.height-160);
-					self.bgSprtie.addChild(headSprite,5);
+						var size = headSprite.getContentSize();
+						headSprite.setScale(110/size.width,110/size.height);
+						headSprite.setPosition(bgSize.width /4, bgSize.height-160);
+						self.bgSprtie.addChild(headSprite,5);
 
-					cc.log("MatchEndInfoLayer success loadImg="+userInfo.headSprite); // self.addChild(logo);
-					// self.touxiangSprite.setValue(false);
-				}
+						cc.log("MatchEndInfoLayer success loadImg="+userInfo.headSprite); // self.addChild(logo);
+						// self.touxiangSprite.setValue(false);
+					}
+				});
+			}
 
-			});
 
 			posBtnY =70;
 

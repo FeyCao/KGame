@@ -80,6 +80,7 @@ var RankTableViewCell = cc.TableViewCell.extend({
             this.addChild(touxiangSprite,2);
 
             var url = playerInfo["headPicture"];
+
             cc.loader.loadImg(url, {isCrossOrigin : false }, function(err,img){
                 if(err){
                     cc.log(err);
