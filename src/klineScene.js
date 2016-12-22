@@ -212,8 +212,9 @@ var KLineScene = SceneBase.extend(
 		// this.zhanjiButton = new cc.MenuItemImage("res/btn_zhanji.png", "res/btn_zhanji.png", self.zhanji, this);
 
 
-        this.btnHome=new cc.MenuItemImage("res/home.png", "res/home.png", self.toHome, this);//new Button("res/home.png");
-		this.btnHome.setPosition(cc.p(40,bgSize.height-40));
+		this.btnHome=new cc.MenuItemImage("res/home.png", "res/home.png", self.toHome, this);//new Button("res/home.png");
+		this.btnHome.setPosition(cc.p(35,bgSize.height-35));
+		this.btnHome.setScale(0.9);
 		mu.addChild(this.btnHome);
 		this.btnStart=new cc.MenuItemImage("res/btnStart.png", "res/btnStart.png", self.start, this);//new cc.MenuItemImage("res/home.png", "res/home.png", self.start, this);
 		this.btnStart.setPosition(cc.p(bgSize.width/2,60));

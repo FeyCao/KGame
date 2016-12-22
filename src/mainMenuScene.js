@@ -786,10 +786,10 @@ var MainMenuScene =SceneBase.extend(
                 {
                     cc.log("call get kline data");
                     gKlineScene.getklinedata(packet.content);
-                    if(userInfo.matchBeginFlag==true){
-
+                    if(userInfo.matchBeginFlag==true&&userInfo.matchMode==1){
                         pageTimer["runScene"] = setTimeout(function(){cc.director.runScene(gKlineScene);},1000);
-
+                    }else{
+                        cc.director.runScene(gKlineScene);
                     }
                     cc.log("get kline passed");
                 }
