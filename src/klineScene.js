@@ -703,10 +703,17 @@ var KLineScene = SceneBase.extend(
 	{
 		this.matchEndInfoLayer.hideLayer();
 		this.resumeLowerLayer();
-		gSocketConn.UnRegisterEvent("onmessage",this.messageCallBack);
-		//再开始一盘
 
-		this.beginNextKLineScene();
+
+		if(userInfo.matchMode==1){
+			SceneFlag = "THIEDMODE_SELECT";
+			this.toHome();
+
+		}else{
+			gSocketConn.UnRegisterEvent("onmessage",this.messageCallBack);
+			//再开始一盘
+			this.beginNextKLineScene();
+		}
 	},
 	
 	matchEndInfoLayer_Share:function()
