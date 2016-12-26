@@ -152,10 +152,6 @@ SocketConn.prototype.BeginMatch=function(mode)
 
 SocketConn.prototype.Buy=function(index)
 {
-	if(userInfo.buttonSoundFlag==true)
-	{
-		cc.audioEngine.playEffect("res/sound/button.mp3",false);
-	}
 	var buyMsg = "6|"+index+"|";
 	if(SocketConnLogFlag!=false)
 	cc.log("send Buymsg=="+buyMsg);
@@ -164,10 +160,6 @@ SocketConn.prototype.Buy=function(index)
 
 SocketConn.prototype.Sell=function(index)
 {
-	if(userInfo.buttonSoundFlag==true)
-	{
-		cc.audioEngine.playEffect("res/sound/button.mp3",false);
-	}
 	var sellMsg = "7|"+index+"|";
 	if(SocketConnLogFlag!=false)
 	cc.log("send Sellmsg=="+sellMsg);

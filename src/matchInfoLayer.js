@@ -465,6 +465,11 @@ var MatchInfoLayer= cc.Layer.extend({
 	
 	buyClick:function()
 	{
+		if(userInfo.buttonSoundFlag==true)
+		{
+			cc.log("buyClick===== ");
+			cc.audioEngine.playEffect("res/sound/button.mp3",false);
+		}
 		var klineScene=this.parent.parent;
 		var i=klineScene.selfOperations.length;
 		if(i>0&&Math.abs(klineScene.selfOperations[i-1])>=klineScene.currentCandleIndex)
@@ -498,6 +503,10 @@ var MatchInfoLayer= cc.Layer.extend({
 	
 	sellClick:function()
 	{
+		if(userInfo.buttonSoundFlag==true)
+		{
+			cc.audioEngine.playEffect("res/sound/button.mp3",false);
+		}
 		var klineScene=this.parent.parent;
 		var i=klineScene.selfOperations.length;
 		if(i>0&&Math.abs(klineScene.selfOperations[i-1])>=klineScene.currentCandleIndex)

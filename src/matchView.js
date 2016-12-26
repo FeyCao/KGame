@@ -120,6 +120,7 @@ var MatchViewLayer = cc.Layer.extend({
                 if(null!=gMainMenuScene)
                 {
                     gSocketConn.BeginMatch(matchInfoMessage);
+                    userInfo.matchBeginFlag=true;
                     cc.log("gMainMenuScene切换KGameScene场景调用完毕");
                 }else{
                     var klineSceneNext=new KLineScene();
@@ -166,6 +167,7 @@ var MatchViewLayer = cc.Layer.extend({
                 if(null!=gMainMenuScene)
                 {
                     gSocketConn.BeginMatch(matchInfoMessage);
+                    userInfo.matchBeginFlag=true;
                     cc.log("gMainMenuScene切换KGameScene场景调用完毕");
                 }else{
                     var klineSceneNext=new KLineScene();
@@ -652,6 +654,7 @@ var MatchViewLayer = cc.Layer.extend({
             this.addChild(this.PersonBattleView);
         }
         this.PersonBattleView.setVisible(true);
+        this.textLabel.setString("匹配中...");
     },
 
 
@@ -694,6 +697,74 @@ var MatchViewLayer = cc.Layer.extend({
         }
     },
 
+    refreshMatchViewByData:function(content)
+    {
+        cc.log("refreshMatchViewByData 1=="+content);//人人人对战信息Matching|"playerList":[{"userName":"caoyongfei","score":"0.00","ranking":0,"headPicture":"http://222.66.97.203/Kgame/img/kiiikIcon.png"},{"userName":"红莲安迪","score":"0.00","ranking":0,"headPicture":"http://ohfw64y24.bkt.clouddn.com/30"}]|###
+        // cc.log(content);
+        var self=this;
+        var posD = 50;
+        var data=JSON.parse(content);
+        var playerListData=data["playerList"];
+        userInfo.playerListData=[];
+        for(var i=0;playerListData!=null&&i<playerListData.length;i++)
+        {
+            var playerData=playerListData[i];
+            cc.log("refreshMatchViewByData userName="+playerData["userName"]);
+            userInfo.playerListData.push(playerData);
+        }
+
+        //把该用户信息排在第一位
+        for(var i=userInfo.playerListData.length-1;i>0;i--)
+        {
+            cc.log("refreshMatchViewByData 2=="+content);
+            for(var j=i;j>0;j--)
+            {
+                // cc.log("refreshMatchViewByData 2=="+content);
+                if(userInfo.playerListData[j]["userName"]==userInfo.nickName)
+                {
+                    var temp = userInfo.playerListData[j];
+                    userInfo.playerListData[j] =userInfo.playerListData[j-1];
+                    userInfo.playerListData[j-1] =temp;
+                }
+            }
+        }
+
+        if(userInfo.playerListData[1]!=null)
+        {
+            cc.log("refreshMatchViewLayer 3 loadImg="); // self.addChild(logo);
+            var opponentData = userInfo.playerListData[1];
+            if(opponentData["userName"]!=null&&self.opponentNameLabel!=null)
+            {
+                cc.log("refreshMatchViewLayer userName=");
+                self.opponentNameLabel.setString(cutstr(opponentData["userName"],11));
+            }
+            var url = opponentData["headPicture"];
+            if(url!=null){
+                cc.loader.loadImg(url, {isCrossOrigin : false }, function(err,img){
+                    if(err){
+                        cc.log(err);
+                        cc.log("fail loadImg="+userInfo.headSprite); // self.addChild(logo);
+                    }
+                    if(img)
+                    {
+                        var headSprite = new cc.Sprite();
+                        var texture2d = new cc.Texture2D();
+                        texture2d.initWithElement(img);
+                        texture2d.handleLoadedTexture();
+                        headSprite.initWithTexture(texture2d);
+
+                        var size = headSprite.getContentSize();
+                        headSprite.setScale(90/size.width,90/size.height);
+                        headSprite.setPosition(bgSize.width/4*3,bgSize.height/2+posD);
+                        self.backgroundSprite.addChild(headSprite,2);
+                        cc.log("refreshMatchViewLayer2 success loadImg="+userInfo.headSprite); // self.addChild(logo);
+                    }
+                });
+            }
+
+            this.textLabel.setString("匹配成功！");
+        }
+    },
 
     showHeadChange:function()
     {

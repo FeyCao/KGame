@@ -77,12 +77,7 @@ var MainMenuScene =SceneBase.extend(
 
         cc.view.enableRetina(userInfo.viewFlag);
         if(userInfo.bgSoundFlag==true){
-            if(cc.audioEngine.isMusicPlaying()==true)
-            {
-                resumeBgSound();
-            }else{
-                openBgSound();
-            }
+            openBgSound();
         }else{
             closeBgSound();
         }
@@ -194,7 +189,7 @@ var MainMenuScene =SceneBase.extend(
         //  this.setDataforInfo();
 
         this.setButtonInfo();
-
+        userInfo.matchBeginFlag=false;
         // this.thirdMode.setDisabled(userInfo.operationType!=1);//1为登录，2为快速登录
         // this.thirdMode.setTextureByStatus(userInfo.operationType!=1);
         // this.mode1Button.setTextureByStatus(userInfo.recordMode==0);
@@ -722,9 +717,12 @@ var MainMenuScene =SceneBase.extend(
             case "Matching"://人人人对战信息Matching|"playerList":["http://7xpfdl.com1.z0.glb.clouddn.com/M1 E__1480588002710__166279_3596","http://ohfw64y24.bkt.clouddn.com/54"]|###
             {
                 cc.log("gMainMenuScene 人人机对战信息");
-                if(this.matchViewLayer!=null) {
+                if(self.matchViewLayer!=null) {
 
-                    this.matchViewLayer.stopHeadChange();
+                    cc.log("gMainMenuScene 人人机对战信息2");
+                    userInfo.matchBeginFlag=true;
+                    self.matchViewLayer.stopHeadChange();
+                    self.matchViewLayer.refreshMatchViewByData(packet.content);
                 }
                 // self.stopProgress();
                 break;
@@ -788,7 +786,12 @@ var MainMenuScene =SceneBase.extend(
                 {
                     cc.log("call get kline data");
                     gKlineScene.getklinedata(packet.content);
-                    cc.director.runScene(gKlineScene);
+                    if(userInfo.matchMode==1&&userInfo.matchBeginFlag==true){
+                        pageTimer["runScene"] = setTimeout(function(){cc.director.runScene(gKlineScene);},1000);
+                    }
+                    if(userInfo.matchMode!=1){
+                        cc.director.runScene(gKlineScene);
+                    }
                     cc.log("get kline passed");
                 }
                 self.stopProgress();
@@ -894,7 +897,12 @@ var MainMenuScene =SceneBase.extend(
             }
             case "UNMATCH":
             {
-                cc.log("messageCallBack.mainScene.default.packet.msgType="+packet.msgType+"=== packet.content=="+ packet.content);
+                if(packet.content=="SUCCESS"){
+                    userInfo.matchBeginFlag=false;
+                    cc.log("messageCallBack.mainScene.default.packet.msgType="+packet.msgType+"=== UNMATCH SUCCESSpacket.content=="+ packet.content);
+                }else {
+                    cc.log("messageCallBack.mainScene.default.packet.msgType="+packet.msgType+"=== packet.content=="+ packet.content);
+                }
 
                 break;
             }
