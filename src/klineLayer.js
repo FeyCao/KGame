@@ -15,8 +15,13 @@ var KlineLayer= BaseGraphLayer.extend({
 	onEnter:function () 
 	{
 		this._super();
+		this.clearUpDownArrows();
 	},
-	
+	onExit:function ()
+	{
+		this._super();
+		this.clearUpDownArrows();
+	},
 	//如果最大最小改变了，则需要重新绘制之前的蜡烛
 	calculateMaxMinAtIndex:function(index)
 	{
@@ -183,7 +188,7 @@ var KlineLayer= BaseGraphLayer.extend({
 		 
 		 this.upArrowSprites.push(upArrowSprite);
  		 this.upArrowSpriteIndexs.push(index);
-		 
+		 cc.log("setUpArrowIndex...");
 		 this.moveUpArrowToItsPosition(this.upArrowSpriteIndexs.length-1);
 	},
 	
@@ -245,6 +250,7 @@ var KlineLayer= BaseGraphLayer.extend({
 		 this.downArrowSprites.push(downArrowSprite);
  		 this.downArrowSpriteIndexs.push(index);
 		 this.moveDownArrowToItsPosition(this.downArrowSpriteIndexs.length-1);
+		cc.log("setDownArrowIndex...");
 	},
 	
 	moveAllDownArrowToItsPosition:function()
@@ -294,15 +300,20 @@ var KlineLayer= BaseGraphLayer.extend({
 			this.upArrowSprites[i].removeFromParent(true);
 		}
 		this.upArrowSprites=[];
-		
+		this.upArrowSprites.length=0;
 		for(var i=0;i<this.downArrowSprites.length;i++)
 		{
 			this.downArrowSprites[i].removeFromParent(true);
 		}
+
 		this.downArrowSprites=[];
-
+		this.downArrowSprites.length=0;
 		this.upArrowSpriteIndexs=[];		//向上箭头的图片是在哪个index的位置
+		this.upArrowSpriteIndexs.length=0;
 		this.downArrowSpriteIndexs=[];		//向下箭头的图片是在哪个index的位置
+		this.downArrowSpriteIndexs.length=0;
 
+		cc.log("clearUpDownArrows");
 	},
+
 });

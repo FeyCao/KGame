@@ -170,6 +170,10 @@ SceneBase = cc.Scene.extend(
 		// {
 		// 	cc.audioEngine.stopMusic();
 		// }
+		// this.cleanup()
+		this._super();
+		this.removeAllChildrenWithCleanup(true);
+		// this.cleanup();
 		cc.log("SceneBase onExit end");
 	},
 

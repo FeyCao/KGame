@@ -255,7 +255,7 @@ var PlayerInfoLayer= cc.Layer.extend({
 	refreshScore:function(currentIndex,data,selfOperations,opponentOperations)//计算收益率
 	{
 		
-		this.refreshScoreForPlayer(currentIndex,data,selfOperations,true);
+		// this.refreshScoreForPlayer(currentIndex,data,selfOperations,true);
 		// this.refreshScoreForPlayer(currentIndex,data,opponentOperations,false);
 		
 	},
@@ -330,11 +330,16 @@ var PlayerInfoLayer= cc.Layer.extend({
 				}
 				cc.log("loadImg="+userInfo.headSprite); // self.addChild(logo);
 			});
-            for(var i=0;i<userInfo.playerListData.length&&i<self.playerInfo_bg.length;i++)
+            for(var i=0;i<userInfo.playerListData.length;i++)
             {
 
 				var InfoposX =60;
-				if(i==0)
+				var selectflag =userInfo.playerListData[i]["userName"]==userInfo.nickName?true:false;
+				if(selectflag){
+					score=parseFloat(userInfo.playerListData[i]["score"]);
+					this.refreshScores(score);
+				}
+				if(i==0&&i<self.playerInfo_bg.length)
 				{
 					var url = userInfo.playerListData[i]["headPicture"];
 					cc.loader.loadImg(url, {isCrossOrigin : false }, function(err,img){
@@ -361,7 +366,7 @@ var PlayerInfoLayer= cc.Layer.extend({
 						cc.log("loadImg"+userInfo.headSprite); // self.addChild(logo);
 					});
 				}
-				if(i==1)
+				if(i==1&&i<self.playerInfo_bg.length)
 				{
 					var url = userInfo.playerListData[i]["headPicture"];
 					cc.loader.loadImg(url, {isCrossOrigin : false }, function(err,img){
@@ -392,17 +397,11 @@ var PlayerInfoLayer= cc.Layer.extend({
 				// this.playerInfo_btn[i].setTexture
                 if(this.playerNameLabel[i]!=null && this.playerNameLabel[i]!=undefined)
                 {
-                    var score=parseFloat(userInfo.playerListData[i]["score"]);
+					score=parseFloat(userInfo.playerListData[i]["score"]);
 
                     this.playerNameLabel[i].setString(cutstr(userInfo.playerListData[i]["userName"],11));
                     this.playerScoreLabel[i].setString(score.toFixed(2)+"%");
 					this.playerScoreLabel[i].setColor(setLabelColor(score));
-
-
-					var selectflag =userInfo.playerListData[i]["userName"]==userInfo.nickName?true:false;
-					if(selectflag){
-						this.refreshScores(score);
-					}
 					// this.playerHead_Sprite[i].setVisible();
 					this.playerHead_Sprite[i].setVisible(selectflag);
                 }

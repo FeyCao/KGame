@@ -61,19 +61,20 @@ function resumeBgSound(){
 function pauseBgSound() {
     cc.audioEngine.pauseMusic();
 }
+
+var musicFile = "res/sound/home_bg.mp3";
 function openBgSound(){
-    var musicFile = "res/sound/home_bg.mp3";
-    cc.audioEngine.playMusic(musicFile,true);
-    if(cc.audioEngine.isMusicPlaying()==false)
+
+    if(cc.audioEngine.isMusicPlaying()==true)
     {
         resumeBgSound();
+    }else{
+        cc.audioEngine.playMusic(musicFile,true);
     }
-
-
 }
 function closeBgSound(){
 
-    cc.audioEngine.stopMusic();
+    cc.audioEngine.stopMusic(musicFile);
 }
 function isBgMusicPlaying() {
 

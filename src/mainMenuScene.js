@@ -202,6 +202,21 @@ var MainMenuScene =SceneBase.extend(
         {
             this.onEnteredFunction();
         }
+        if(SceneFlag!=null){
+            switch(SceneFlag){
+                case "THIEDMODE_SELECT":{
+                  this.thirdModeChanged();
+                    SceneFlag=null;
+                    break;
+                }
+                default:{
+                    cc.log("SCENEFLAG=="+SceneFlag);
+                    break;
+                }
+            }
+
+        }
+
         loadTime=new Date().getTime();
         cc.log("MainMenuScene onEnter end");
 	},
