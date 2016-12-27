@@ -526,14 +526,19 @@ var KLineScene = SceneBase.extend(
 			case "5":
 			{
 				//接收到了K线数据的消息
-				cc.log("jsonText parseK线数据over");
-				self.getklinedata(packet.content);
+				if(null!=packet.content&&packet.content!=""){
+					cc.log("jsonText parseK线数据over");
+					self.getklinedata(packet.content);
 
-				self.stopProgress();
-				// self.setDataForLlineLayerTest();
-				self.setDataForLlineLayer();
+					self.stopProgress();
+					// self.setDataForLlineLayerTest();
+					self.setDataForLlineLayer();
 
-				cc.log("get kline K线数据 passed");
+					cc.log("get kline K线数据 passed");
+				}else{
+					cc.log("||packet.content== null|| packet.content text="+packet.content+"|");
+				}
+
 				break;
 			}
 			case "G":
@@ -681,6 +686,9 @@ var KLineScene = SceneBase.extend(
 
 		this.playerInfoLayer.refreshScoresByData();
 
+		if(userInfo.matchMode==1){
+			userInfo.matchModeFlag=false;
+		}
 		// this.drawCandleStoped=false;
 	},
 	matchEndInfoLayer_Replay:function()
@@ -1024,9 +1032,9 @@ var KLineScene = SceneBase.extend(
 	},
     drawCandlesOneByOneForMatch:function()//匹配赛
     {
-        if(this.drawCandleStoped==false)
+        if(this.drawCandleStoped==false&&userInfo.matchModeFlag==false)
         {
-            this.drawCandleStoped=true;
+			userInfo.matchModeFlag=true;
             // this.refreshScores(this.currentCandleIndex);
             var ended=this.klineLayerMain.drawSingleCandleLineByCurrentIndex(this.currentCandleIndex);
             this.volumnTechLayerMain.drawSingleCandleLineByCurrentIndex(this.currentCandleIndex);
@@ -1160,6 +1168,7 @@ var KLineScene = SceneBase.extend(
 		if(userInfo.matchMode==1){
 			if(gKlineScene!=null)
 			{
+				userInfo.matchModeFlag=false;
 				gSocketConn.SendBeginMessage();
 				gKlineScene.setCountDownSprite();
 			}

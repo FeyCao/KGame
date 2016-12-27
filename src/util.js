@@ -61,10 +61,8 @@ function resumeBgSound(){
 function pauseBgSound() {
     cc.audioEngine.pauseMusic();
 }
-
 var musicFile = "res/sound/home_bg.mp3";
 function openBgSound(){
-
     if(cc.audioEngine.isMusicPlaying()==true)
     {
         resumeBgSound();
